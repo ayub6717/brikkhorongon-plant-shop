@@ -3,8 +3,7 @@
 import { Menu, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
-import { Link } from "@/i18n/navigation";
-import { NAV } from "./nav";
+import { MobileNavLinks } from "./NavLinks";
 
 export function MobileNav() {
   const t = useTranslations("Nav");
@@ -36,19 +35,7 @@ export function MobileNav() {
           aria-label="Primary"
           className="absolute inset-x-0 top-16 border-b border-border bg-background px-4 pb-4 pt-2 shadow-soft"
         >
-          <ul>
-            {NAV.map(({ href, key }) => (
-              <li key={key}>
-                <Link
-                  href={href}
-                  onClick={() => setOpen(false)}
-                  className="block rounded-xl px-3 py-3 text-lg font-medium text-foreground/85 transition hover:bg-muted"
-                >
-                  {t(key)}
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <MobileNavLinks onNavigate={() => setOpen(false)} />
         </nav>
       )}
     </div>

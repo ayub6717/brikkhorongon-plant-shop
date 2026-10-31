@@ -4,7 +4,7 @@ import { Link } from "@/i18n/navigation";
 import { CartCount } from "@/components/cart/CartCount";
 import { LocaleSwitcher } from "./LocaleSwitcher";
 import { MobileNav } from "./MobileNav";
-import { NAV } from "./nav";
+import { DesktopNavLinks } from "./NavLinks";
 import { ThemeToggle } from "./ThemeToggle";
 
 export function Header() {
@@ -18,13 +18,7 @@ export function Header() {
           {t("Brand.name")}
         </Link>
 
-        <nav aria-label="Primary" className="ml-4 hidden gap-6 text-sm font-medium lg:flex">
-          {NAV.map(({ href, key }) => (
-            <Link key={key} href={href} className="text-foreground/75 transition hover:text-primary">
-              {t(`Nav.${key}`)}
-            </Link>
-          ))}
-        </nav>
+        <DesktopNavLinks />
 
         <div className="ml-auto flex items-center gap-0.5 sm:gap-2">
           <LocaleSwitcher />
