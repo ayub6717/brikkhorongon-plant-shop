@@ -4,7 +4,23 @@ import type { CheckoutValues } from "@/lib/checkout-schema";
 
 export type OrderLine = { slug: string; name: string; image: string; price: number; qty: number };
 
-export type OrderStatus = "ordered" | "packed" | "shipped" | "outForDelivery" | "delivered";
+export const ORDER_STEPS = ["ordered", "packed", "shipped", "outForDelivery", "delivered"] as const;
+export type OrderStatus = (typeof ORDER_STEPS)[number];
+
+export const REQUEST_TYPES = ["pot", "giftNote", "date", "custom"] as const;
+export type RequestType = (typeof REQUEST_TYPES)[number];
+export type RequestStatus = "pending" | "approved" | "declined";
+
+export type ModRequest = {
+  id: string;
+  type: RequestType;
+  /** Free text from the customer (pot choice label, note text, reason…). */
+  detail: string;
+  /** Machine value for requests that change the order (new date key, new gift note). */
+  value?: string;
+  status: RequestStatus;
+  at: string;
+};
 
 export type Order = {
   id: string;
@@ -20,12 +36,24 @@ export type Order = {
   note: string;
   status: OrderStatus;
   history: { status: OrderStatus; at: string }[];
+  requests: ModRequest[];
 };
+
+/** Changes are only possible before the order leaves our hands. */
+export function canModify(order: Pick<Order, "status">): boolean {
+  return order.status === "ordered" || order.status === "packed";
+}
 
 type OrdersState = {
   orders: Order[];
   addOrder: (order: Order) => void;
+  addRequest: (orderId: string, request: Omit<ModRequest, "id" | "status" | "at">) => void;
+  /** Demo helpers: stand in for the shop team until a real API exists. */
+  advanceStatus: (orderId: string) => void;
+  resolveRequest: (orderId: string, requestId: string, status: Exclude<RequestStatus, "pending">) => void;
 };
+
+const patch = (orders: Order[], id: string, fn: (o: Order) => Order) => orders.map((o) => (o.id === id ? fn(o) : o));
 
 // Mock persistence until a real API exists: orders live in this browser only.
 export const useOrders = create<OrdersState>()(
@@ -33,8 +61,50 @@ export const useOrders = create<OrdersState>()(
     (set) => ({
       orders: [],
       addOrder: (order) => set((s) => ({ orders: [order, ...s.orders] })),
+      addRequest: (orderId, request) =>
+        set((s) => ({
+          orders: patch(s.orders, orderId, (o) =>
+            canModify(o)
+              ? {
+                  ...o,
+                  requests: [{ ...request, id: `REQ-${Date.now().toString(36).toUpperCase()}`, status: "pending", at: new Date().toISOString() }, ...o.requests],
+                }
+              : o,
+          ),
+        })),
+      advanceStatus: (orderId) =>
+        set((s) => ({
+          orders: patch(s.orders, orderId, (o) => {
+            const next = ORDER_STEPS[ORDER_STEPS.indexOf(o.status) + 1];
+            if (!next) return o;
+            return { ...o, status: next, history: [...o.history, { status: next, at: new Date().toISOString() }] };
+          }),
+        })),
+      resolveRequest: (orderId, requestId, status) =>
+        set((s) => ({
+          orders: patch(s.orders, orderId, (o) => {
+            const req = o.requests.find((r) => r.id === requestId);
+            if (!req || req.status !== "pending") return o;
+            let next: Order = { ...o, requests: o.requests.map((r) => (r.id === requestId ? { ...r, status } : r)) };
+            if (status === "approved" && req.value) {
+              if (req.type === "date") next = { ...next, delivery: { ...next.delivery, date: req.value } };
+              if (req.type === "giftNote") next = { ...next, giftNote: req.value };
+            }
+            return next;
+          }),
+        })),
     }),
-    { name: "brikkhorongon-orders", version: 1 },
+    {
+      name: "brikkhorongon-orders",
+      version: 2,
+      migrate: (persisted, version) => {
+        const state = persisted as { orders?: Order[] };
+        if (version < 2 && state.orders) {
+          state.orders = state.orders.map((o) => ({ ...o, requests: o.requests ?? [] }));
+        }
+        return state as OrdersState;
+      },
+    },
   ),
 );
 

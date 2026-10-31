@@ -105,6 +105,7 @@ export function CheckoutForm() {
       note: v.note,
       status: "ordered",
       history: [{ status: "ordered", at: now }],
+      requests: [],
     };
     addOrder(order);
     clearCart();
