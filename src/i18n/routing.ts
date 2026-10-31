@@ -5,6 +5,8 @@ export const routing = defineRouting({
   defaultLocale: "en",
   // English lives at "/", Bangla at "/bn"
   localePrefix: "as-needed",
+  // Always open in English unless the URL says /bn. Ignore browser language and the saved locale cookie.
+  localeDetection: false,
 });
 
 export type Locale = (typeof routing.locales)[number];
