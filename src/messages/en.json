@@ -420,5 +420,208 @@
       "years": "About {count} years",
       "cm": "About {count} cm"
     }
+  },
+  "Learn": {
+    "title": "Care guides",
+    "subtitle": "Plain-language advice for happier plants, from watering and light to repotting, orchids and bonsai.",
+    "minutes": "{count} min read",
+    "allGuides": "All guides",
+    "related": "Plants to try",
+    "tipsTitle": "Quick tips",
+    "start": "Read guide",
+    "quizTitle": "Not sure what to grow?",
+    "quizBody": "Answer a few questions about your light, space and routine and we'll suggest plants that suit you.",
+    "quizCta": "Take the plant quiz",
+    "guides": {
+      "watering": {
+        "title": "How to water your plants",
+        "summary": "The most common reason houseplants struggle is too much or too little water. Here is how to get it right.",
+        "sections": [
+          {
+            "h": "Check the soil, not the calendar",
+            "p": "Push a finger 2 to 3 cm into the soil. If it feels dry, water. If it's still damp, wait. Fixed schedules fail because light, season and pot size all change how fast soil dries."
+          },
+          {
+            "h": "Water deeply, then let it drain",
+            "p": "Pour until water runs out of the drainage holes, then empty the saucer after about 15 minutes. Frequent small sips keep roots shallow, and standing water leads to rot."
+          },
+          {
+            "h": "Use the right water",
+            "p": "Room-temperature tap water suits most plants. Calatheas and orchids prefer rainwater, which is gentler on their leaf tips."
+          },
+          {
+            "h": "Water less when it's cooler",
+            "p": "Growth slows in the cooler months, so soil stays wet longer. Check carefully and expect to water less often."
+          }
+        ],
+        "tips": [
+          "Lift the pot. A light pot usually means dry soil.",
+          "Soft, yellowing leaves often mean too much water.",
+          "Crisp edges and drooping often mean too little."
+        ]
+      },
+      "light": {
+        "title": "Understanding light",
+        "summary": "Light is a plant's food. Learn to read your rooms and every plant gets easier.",
+        "sections": [
+          {
+            "h": "Bright, indirect and low",
+            "p": "Direct light means sun rays fall on the leaves. Bright indirect light is a bright room where the sun doesn't touch the plant. Low light is a spot several metres from a window."
+          },
+          {
+            "h": "The hand-shadow test",
+            "p": "Hold your hand about 30 cm above the leaves at midday. A sharp, dark shadow means bright light. A soft, blurry shadow means medium. A barely visible one means low."
+          },
+          {
+            "h": "Match the plant to the window",
+            "p": "South and west windows can be harsh in the afternoon, so use a sheer curtain. East windows give gentle morning sun that most plants enjoy."
+          },
+          {
+            "h": "Rotate for even growth",
+            "p": "Turn the pot a quarter turn every week or two so every side gets light and the plant stays balanced."
+          }
+        ],
+        "tips": [
+          "Pale, stretched growth usually means too little light.",
+          "Scorched, bleached patches mean too much direct sun.",
+          "Variegated leaves need more light to keep their pattern."
+        ]
+      },
+      "repotting": {
+        "title": "When and how to repot",
+        "summary": "A fresh pot gives roots room to breathe. Do it at the right moment and your plant barely notices.",
+        "sections": [
+          {
+            "h": "Signs it's time",
+            "p": "Roots circling out of the drainage holes, water running straight through, a top-heavy plant or stalled growth all point to a tight pot. Fast growers may need it every 1 to 2 years."
+          },
+          {
+            "h": "Choose the next size",
+            "p": "Go up by only 2 to 4 cm in width. A much bigger pot holds extra water and can rot the roots. Always pick a pot with a drainage hole."
+          },
+          {
+            "h": "Step by step",
+            "p": "Water the day before. Ease the plant out, loosen the roots gently, and trim any that are black or mushy. Set it at the same depth in fresh mix and water lightly."
+          },
+          {
+            "h": "Pick the right moment",
+            "p": "Repot in warm, active growing months. Avoid orchids in bloom and plants that are already stressed."
+          }
+        ],
+        "tips": [
+          "Use a mix that suits the plant: chunky for succulents and orchids, richer for leafy plants.",
+          "Don't fertilise for a few weeks after repotting.",
+          "Keep it out of strong sun for a few days."
+        ]
+      },
+      "calathea": {
+        "title": "Calathea and humidity",
+        "summary": "Calatheas are worth the effort for their painted leaves. Understanding what they want makes them far easier.",
+        "sections": [
+          {
+            "h": "Why they're fussy",
+            "p": "They come from humid rainforest floors, so their leaves lose moisture quickly in dry air. Most problems trace back to humidity and watering."
+          },
+          {
+            "h": "Raise the humidity",
+            "p": "Group plants together, use a tray of wet pebbles, or place them in a bright bathroom. Keep them away from air-conditioner and fan drafts."
+          },
+          {
+            "h": "Keep soil evenly moist",
+            "p": "The soil should feel lightly damp, never soggy and never bone dry. Rainwater or water left to sit overnight helps avoid brown tips."
+          },
+          {
+            "h": "Bright, indirect light",
+            "p": "Direct sun fades the patterns and scorches leaves. A spot near a bright window with a curtain is ideal."
+          }
+        ],
+        "tips": [
+          "Curling leaves usually mean thirst or dry air.",
+          "Brown tips often point to low humidity or harsh water.",
+          "Leaves folding up at night is normal."
+        ]
+      },
+      "orchids": {
+        "title": "Orchid care basics",
+        "summary": "Moth orchids are the friendliest place to start, and they can bloom again and again.",
+        "sections": [
+          {
+            "h": "Light and place",
+            "p": "Give bright, indirect light. An east-facing window is ideal. Leaves that turn dark green and floppy want more light; yellow or bleached leaves want less."
+          },
+          {
+            "h": "Watering",
+            "p": "Orchids grow in bark, not soil. Soak the roots for about 10 minutes when they look silvery, drain completely, and never leave water sitting in the crown."
+          },
+          {
+            "h": "Feeding",
+            "p": "Use a diluted orchid fertiliser every second watering during active growth, and plain water now and then to flush salts."
+          },
+          {
+            "h": "After the blooms fade",
+            "p": "If the stem is still green, cut just above a node to encourage new flowers. If it turns brown, cut it near the base."
+          }
+        ],
+        "tips": [
+          "Clear pots let you see root health.",
+          "Healthy roots are green or silvery. Brown, mushy roots are rotting.",
+          "Avoid cold drafts when buds are forming."
+        ]
+      },
+      "bonsai": {
+        "title": "Bonsai care for beginners",
+        "summary": "A bonsai is a normal tree in a small pot, and it needs the same basics done carefully.",
+        "sections": [
+          {
+            "h": "Know indoor from outdoor",
+            "p": "Junipers, pines, hinoki cypress and bougainvillea are outdoor trees and need real sun and weather. Ficus and Chinese elm cope well indoors in a bright spot."
+          },
+          {
+            "h": "Watering",
+            "p": "Small pots dry quickly. Water thoroughly when the top of the soil begins to dry, and check daily in hot weather. Never let the root ball dry out completely."
+          },
+          {
+            "h": "Pruning and shaping",
+            "p": "Trim new shoots back to two or three leaf pairs to keep the shape. Little and often works better than one big cut."
+          },
+          {
+            "h": "Feeding and repotting",
+            "p": "Feed with a balanced fertiliser during the growing season. Repot every two or three years in fresh, free-draining bonsai soil, trimming roots lightly."
+          }
+        ],
+        "tips": [
+          "Never leave a bonsai standing in a full saucer.",
+          "Move new trees to their permanent spot and keep them there.",
+          "Wire only after you have learned the basics."
+        ]
+      },
+      "troubleshooting": {
+        "title": "Solving common plant problems",
+        "summary": "Leaves tell you what's wrong. Here is how to read them.",
+        "sections": [
+          {
+            "h": "Yellow leaves",
+            "p": "Usually too much water or poor drainage. Let the soil dry, check the roots for rot, and make sure the pot drains. Old lower leaves yellowing slowly is normal."
+          },
+          {
+            "h": "Brown, crispy tips",
+            "p": "Often dry air, irregular watering or salts from tap water. Trim the brown edges, water more evenly and try rainwater."
+          },
+          {
+            "h": "Drooping",
+            "p": "A thirsty plant perks up soon after watering. If the soil is wet and the plant still droops, suspect root rot."
+          },
+          {
+            "h": "Pests",
+            "p": "Fluffy white spots are mealybugs. Isolate the plant, wipe them with a cotton bud dipped in diluted soapy water or rubbing alcohol, and repeat weekly."
+          }
+        ],
+        "tips": [
+          "Look under leaves when you water.",
+          "Change one thing at a time so you know what helped.",
+          "Quarantine new plants for two weeks."
+        ]
+      }
+    }
   }
 }
