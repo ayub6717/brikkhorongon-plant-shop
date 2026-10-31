@@ -14,23 +14,21 @@ export function Categories() {
         <h2 className="font-display text-3xl font-semibold sm:text-4xl">{t("Home.categories.title")}</h2>
         <p className="mt-3 max-w-xl text-muted-foreground">{t("Home.categories.subtitle")}</p>
       </Reveal>
-      <ul className="mt-10 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-5">
+      <ul className="mt-10 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-6">
         {categories.map(({ slug, cover }, i) => {
           const img = getProductImage(cover)!;
           return (
-            <li key={slug} className="last:col-span-2 lg:last:col-span-1">
+            <li key={slug}>
               <Reveal delay={i * 0.06}>
                 <Link
                   href={`/shop?category=${slug}`}
-                  className={`group relative block overflow-hidden rounded-card border border-border ${
-                    i === categories.length - 1 ? "aspect-[3/4] max-lg:aspect-[16/9]" : "aspect-[3/4]"
-                  }`}
+                  className="group relative block aspect-[3/4] overflow-hidden rounded-card border border-border"
                 >
                   <Image
                     src={img.src}
                     alt=""
                     fill
-                    sizes="(min-width: 1024px) 20vw, 50vw"
+                    sizes="(min-width: 1024px) 17vw, 50vw"
                     className="object-cover transition duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />

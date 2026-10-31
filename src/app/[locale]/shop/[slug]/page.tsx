@@ -9,7 +9,7 @@ import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { getAllProducts, getProductBySlug, getRelatedProducts } from "@/lib/catalog";
 import { formatPrice } from "@/lib/format";
-import { SITE_URL } from "@/lib/site";
+import { absoluteUrl, SITE_URL } from "@/lib/site";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
@@ -49,7 +49,7 @@ export default async function ProductPage({ params }: Props) {
     "@type": "Product",
     name: product.name,
     description: product.description,
-    image: `${SITE_URL}${product.image.src}`,
+    image: absoluteUrl(product.image.src),
     category: product.category,
     offers: { "@type": "Offer", price: product.price, priceCurrency: "BDT", url: `${SITE_URL}/shop/${product.slug}` },
   };
@@ -95,6 +95,25 @@ export default async function ProductPage({ params }: Props) {
               <span>{t("Product.packed")}</span>
             </li>
           </ul>
+
+          {product.bonsai && (
+            <section aria-labelledby="bonsai-heading" className="mt-10">
+              <h2 id="bonsai-heading" className="font-display text-2xl font-semibold">{t("Bonsai.details.title")}</h2>
+              <dl className="mt-4 grid grid-cols-2 gap-px overflow-hidden rounded-card border border-border bg-border text-sm">
+                {[
+                  [t("Bonsai.details.style"), t(`Bonsai.styles.${product.bonsai.style}.name`)],
+                  [t("Bonsai.details.age"), t("Bonsai.details.years", { count: product.bonsai.ageYears })],
+                  [t("Bonsai.details.height"), t("Bonsai.details.cm", { count: product.bonsai.heightCm })],
+                  [t("Bonsai.details.placement"), t(`Bonsai.placement.${product.bonsai.placement}`)],
+                ].map(([label, value]) => (
+                  <div key={label} className="bg-surface p-4">
+                    <dt className="text-muted-foreground">{label}</dt>
+                    <dd className="mt-0.5 font-medium">{value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+          )}
 
           <section aria-labelledby="care-heading" className="mt-10">
             <h2 id="care-heading" className="font-display text-2xl font-semibold">{t("Product.careTitle")}</h2>

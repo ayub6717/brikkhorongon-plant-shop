@@ -63,9 +63,10 @@
       "cta": "Take the plant quiz"
     },
     "bonsai": {
-      "badge": "Coming soon",
+      "badge": "New collection",
       "title": "The Bonsai Collection",
-      "body": "Living miniature trees, shaped with patience over the years. Styles, ages and care levels, with a story for every tree."
+      "body": "Living miniature trees, shaped with patience over the years. Styles, ages and care levels, with a story for every tree.",
+      "cta": "Explore bonsai"
     }
   },
   "Footer": {
@@ -90,6 +91,9 @@
     },
     "orchids": {
       "name": "Orchids"
+    },
+    "bonsai": {
+      "name": "Bonsai"
     }
   },
   "Care": {
@@ -345,5 +349,76 @@
     "demoDone": "Order delivered",
     "demoApprove": "Approve",
     "demoDecline": "Decline"
+  },
+  "Bonsai": {
+    "badge": "New collection",
+    "title": "The Bonsai Collection",
+    "subtitle": "Living miniature trees, shaped with patience over the years. Choose a style, bring one home, and watch it grow with you.",
+    "cta": "Browse the trees",
+    "stylesTitle": "Find your style",
+    "stylesSubtitle": "Every bonsai follows a classic form. Tap a style to see the trees shaped that way.",
+    "styles": {
+      "formalUpright": {
+        "name": "Formal upright",
+        "desc": "A straight, tapering trunk with evenly layered branches. Calm and symmetrical."
+      },
+      "informalUpright": {
+        "name": "Informal upright",
+        "desc": "A trunk with gentle curves that still rises to a balanced crown. The most natural look."
+      },
+      "windswept": {
+        "name": "Windswept",
+        "desc": "Branches sweep to one side as if shaped by years of wind. Dramatic and full of movement."
+      },
+      "semiCascade": {
+        "name": "Semi-cascade",
+        "desc": "The crown flows down past the pot's rim, like a tree growing off a cliff."
+      },
+      "literati": {
+        "name": "Literati",
+        "desc": "A tall, slender, often curving trunk with little foliage. Elegant and minimal."
+      },
+      "broom": {
+        "name": "Broom",
+        "desc": "A straight trunk that opens into a rounded, fan-shaped crown. Soft and graceful."
+      }
+    },
+    "treesTitle": "Trees available",
+    "count": "{count} trees",
+    "placementTitle": "Where it lives",
+    "styleTitle": "Style",
+    "all": "All",
+    "placement": {
+      "indoor": "Indoor",
+      "outdoor": "Outdoor"
+    },
+    "emptyTitle": "No trees match those filters",
+    "emptyBody": "Try a different style or location.",
+    "reset": "Show all bonsai",
+    "basicsTitle": "Bonsai basics",
+    "basics": {
+      "light": {
+        "title": "Light",
+        "body": "Most bonsai want several hours of bright light a day. Outdoor species belong on a sunny balcony or rooftop, not behind glass."
+      },
+      "water": {
+        "title": "Water",
+        "body": "Water thoroughly when the top of the soil starts to dry. Small pots dry fast, so check daily in hot weather."
+      },
+      "prune": {
+        "title": "Pruning",
+        "body": "Trim new growth back to keep the shape. Little and often works better than one big cut."
+      }
+    },
+    "learnMore": "Read the full care guides",
+    "details": {
+      "title": "Bonsai details",
+      "style": "Style",
+      "age": "Age",
+      "height": "Height",
+      "placement": "Best placed",
+      "years": "About {count} years",
+      "cm": "About {count} cm"
+    }
   }
 }
