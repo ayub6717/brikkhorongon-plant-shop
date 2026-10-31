@@ -623,5 +623,115 @@
         ]
       }
     }
+  },
+  "Finder": {
+    "title": "Find your perfect plant",
+    "subtitle": "Five quick questions about your space and habits. We'll match you with plants that will actually thrive.",
+    "step": "Question {current} of {total}",
+    "back": "Back",
+    "q": {
+      "light": {
+        "title": "How much light does the spot get?",
+        "options": {
+          "low": {
+            "label": "Not much",
+            "hint": "A shady room or a corner away from windows"
+          },
+          "medium": {
+            "label": "Some",
+            "hint": "Bright room, but little direct sun"
+          },
+          "bright": {
+            "label": "Plenty",
+            "hint": "Near a bright window or a sunny balcony"
+          }
+        }
+      },
+      "water": {
+        "title": "How do you feel about watering?",
+        "options": {
+          "forgetful": {
+            "label": "I forget sometimes",
+            "hint": "I'd like a plant that forgives a dry spell"
+          },
+          "regular": {
+            "label": "I'm fairly regular",
+            "hint": "Every week or so is no problem"
+          },
+          "keen": {
+            "label": "I love it",
+            "hint": "I'm happy to check and water often"
+          }
+        }
+      },
+      "care": {
+        "title": "How much care do you want to give?",
+        "options": {
+          "easy": {
+            "label": "As little as possible",
+            "hint": "Only forgiving, beginner-friendly plants"
+          },
+          "any": {
+            "label": "I'm happy to learn",
+            "hint": "Show me everything, including the fussier ones"
+          }
+        }
+      },
+      "style": {
+        "title": "What kind of plant do you like?",
+        "options": {
+          "leafy": {
+            "label": "Lush and leafy",
+            "hint": "Greenery, patterns and trailing leaves"
+          },
+          "flowering": {
+            "label": "Flowering",
+            "hint": "Orchids with long-lasting blooms"
+          },
+          "sculptural": {
+            "label": "Tall and sculptural",
+            "hint": "Statement trees with strong shapes"
+          },
+          "bonsai": {
+            "label": "Bonsai",
+            "hint": "Miniature trees shaped over the years"
+          },
+          "any": {
+            "label": "Surprise me",
+            "hint": "Show the best matches overall"
+          }
+        }
+      },
+      "budget": {
+        "title": "What's your budget?",
+        "options": {
+          "under500": {
+            "label": "Under ৳500",
+            "hint": "Small, friendly starters"
+          },
+          "upTo1500": {
+            "label": "Up to ৳1,500",
+            "hint": "Most of our range"
+          },
+          "any": {
+            "label": "No limit",
+            "hint": "Show me the best fit regardless of price"
+          }
+        }
+      }
+    },
+    "resultsTitle": "Your plant matches",
+    "resultsSubtitle": "Ranked by how well they suit your answers.",
+    "best": "Best match",
+    "lowLightNote": "Very few plants love deep shade. These cope best with the light you have, but place them as close to a window as you can.",
+    "reasons": {
+      "light": "Suits your light",
+      "water": "Fits your watering",
+      "easy": "Easy care",
+      "style": "Your style",
+      "budget": "In budget"
+    },
+    "retake": "Retake the quiz",
+    "browse": "Browse all plants"
   }
 }
