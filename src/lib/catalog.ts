@@ -1,10 +1,12 @@
 import { products } from "@/data/products";
-import type { CategorySlug, Difficulty, Light, Product } from "@/data/types";
+import type { BonsaiStyle, CategorySlug, Difficulty, Light, Placement, Product } from "@/data/types";
 
-export const CATEGORY_SLUGS: CategorySlug[] = ["indoor", "calathea", "dracaena", "ficus", "orchids"];
+export const CATEGORY_SLUGS: CategorySlug[] = ["indoor", "calathea", "dracaena", "ficus", "orchids", "bonsai"];
 export const LIGHTS: Light[] = ["low", "medium", "bright"];
 export const LEVELS: Difficulty[] = ["easy", "moderate"];
 export const PRICE_BUCKETS = ["under500", "500-1500", "over1500"] as const;
+export const BONSAI_STYLES: BonsaiStyle[] = ["formalUpright", "informalUpright", "windswept", "semiCascade", "literati", "broom"];
+export const PLACEMENTS: Placement[] = ["indoor", "outdoor"];
 export const SORTS = ["featured", "priceAsc", "priceDesc", "nameAsc"] as const;
 
 export type PriceBucket = (typeof PRICE_BUCKETS)[number];
@@ -79,4 +81,14 @@ export function filterProducts(f: ShopFilters): Product[] {
     default:
       return list.sort((a, b) => Number(!!b.featured) - Number(!!a.featured) || a.id - b.id);
   }
+}
+
+export const getBonsai = (): Product[] => products.filter((p) => p.category === "bonsai");
+
+/** Bonsai filtered by untrusted URL params (style / placement). */
+export function filterBonsai(raw: RawParams): { items: Product[]; style?: BonsaiStyle; placement?: Placement } {
+  const style = pick(first(raw.style), BONSAI_STYLES);
+  const placement = pick(first(raw.placement), PLACEMENTS);
+  const items = getBonsai().filter((p) => (!style || p.bonsai?.style === style) && (!placement || p.bonsai?.placement === placement));
+  return { items, style, placement };
 }
