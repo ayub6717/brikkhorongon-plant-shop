@@ -117,18 +117,18 @@ export default async function ProductPage({ params }: Props) {
 
           <section aria-labelledby="care-heading" className="mt-10">
             <h2 id="care-heading" className="font-display text-2xl font-semibold">{t("Product.careTitle")}</h2>
-            <dl className="mt-4 divide-y divide-border rounded-card border border-border bg-surface">
+            <ul className="mt-4 divide-y divide-border rounded-card border border-border bg-surface">
               {careRows.map(({ icon: Icon, label, value, hint }) => (
-                <div key={label} className="flex items-start gap-4 p-4">
+                <li key={label} className="flex items-start gap-4 p-4">
                   <span className="grid size-10 shrink-0 place-items-center rounded-2xl bg-muted text-primary"><Icon className="size-5" aria-hidden /></span>
                   <div>
-                    <dt className="text-sm text-muted-foreground">{label}</dt>
-                    <dd className="font-medium">{value}</dd>
-                    <dd className="mt-0.5 text-sm text-muted-foreground">{hint}</dd>
+                    <p className="text-sm text-muted-foreground">{label}</p>
+                    <p className="font-medium">{value}</p>
+                    <p className="mt-0.5 text-sm text-muted-foreground">{hint}</p>
                   </div>
-                </div>
+                </li>
               ))}
-            </dl>
+            </ul>
           </section>
         </div>
       </div>

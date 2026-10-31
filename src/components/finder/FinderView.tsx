@@ -64,7 +64,7 @@ export function FinderView() {
             </button>
           )}
         </div>
-        <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-muted" role="progressbar" aria-valuemin={1} aria-valuemax={QUESTIONS.length} aria-valuenow={step + 1}>
+        <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-muted" role="progressbar" aria-label={t("progress")} aria-valuemin={1} aria-valuemax={QUESTIONS.length} aria-valuenow={step + 1}>
           <div className="h-full rounded-full bg-primary transition-all duration-300" style={{ width: `${((step + 1) / QUESTIONS.length) * 100}%` }} />
         </div>
 

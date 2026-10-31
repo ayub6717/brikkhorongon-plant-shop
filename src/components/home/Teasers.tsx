@@ -33,7 +33,7 @@ export function Teasers() {
           <p className="mt-3 max-w-md text-white/85">{t("bonsai.body")}</p>
           <Link
             href="/bonsai"
-            className="mt-auto inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 font-medium text-primary transition hover:opacity-90"
+            className="mt-auto inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 font-medium text-neutral-900 transition hover:opacity-90"
           >
             {t("bonsai.cta")} <ArrowRight className="mt-0 size-4 rtl:rotate-180" aria-hidden />
           </Link>

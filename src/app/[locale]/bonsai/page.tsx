@@ -54,7 +54,7 @@ export default async function BonsaiPage({ params, searchParams }: Props) {
           <span className="rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground">{t("badge")}</span>
           <h1 className="mt-5 max-w-2xl font-display text-5xl font-semibold leading-tight sm:text-6xl">{t("title")}</h1>
           <p className="mt-5 max-w-xl text-lg text-white/85">{t("subtitle")}</p>
-          <Link href="#trees" className="mt-8 inline-block rounded-full bg-white px-7 py-3.5 font-medium text-primary shadow-soft transition hover:opacity-90">{t("cta")}</Link>
+          <Link href="#trees" className="mt-8 inline-block rounded-full bg-white px-7 py-3.5 font-medium text-neutral-900 shadow-soft transition hover:opacity-90">{t("cta")}</Link>
         </div>
       </section>
 

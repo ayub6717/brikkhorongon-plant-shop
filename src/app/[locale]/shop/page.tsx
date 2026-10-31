@@ -35,6 +35,8 @@ export default async function ShopPage({ params, searchParams }: Props) {
       </Suspense>
 
       {items.length > 0 ? (
+        <>
+        <h2 className="sr-only">{t("resultsTitle")}</h2>
         <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {items.map((p, i) => (
             <li key={p.id} className="flex">
@@ -44,6 +46,7 @@ export default async function ShopPage({ params, searchParams }: Props) {
             </li>
           ))}
         </ul>
+        </>
       ) : (
         <div className="mt-12 rounded-card border border-dashed border-border bg-surface/60 p-10 text-center">
           <h2 className="font-display text-2xl font-semibold">{t("emptyTitle")}</h2>

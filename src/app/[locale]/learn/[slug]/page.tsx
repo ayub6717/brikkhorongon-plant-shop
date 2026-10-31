@@ -64,12 +64,12 @@ export default async function GuidePage({ params }: Props) {
           ))}
         </div>
 
-        <aside className="mt-12 rounded-card border border-border bg-muted/50 p-6">
-          <h2 className="font-display text-xl font-semibold">{t("tipsTitle")}</h2>
+        <section aria-labelledby="tips-heading" className="mt-12 rounded-card border border-border bg-muted/50 p-6">
+          <h2 id="tips-heading" className="font-display text-xl font-semibold">{t("tipsTitle")}</h2>
           <ul className="mt-3 list-disc space-y-2 ps-5 text-muted-foreground marker:text-primary">
             {tips.map((tip) => <li key={tip}>{tip}</li>)}
           </ul>
-        </aside>
+        </section>
       </article>
 
       {related.length > 0 && (
