@@ -1,0 +1,171 @@
+{
+  "Brand": {
+    "name": "Brikkhorongon",
+    "tagline": "Living green, delivered with care"
+  },
+  "Nav": {
+    "shop": "Shop",
+    "bonsai": "Bonsai",
+    "learn": "Care Guides",
+    "finder": "Plant Finder",
+    "track": "Track Order",
+    "cart": "Cart",
+    "menu": "Menu",
+    "toggleTheme": "Toggle theme",
+    "language": "Language"
+  },
+  "Home": {
+    "hero": {
+      "eyebrow": "Plants & Bonsai",
+      "title": "Bring a little forest home.",
+      "subtitle": "Healthy, hand-picked plants and living bonsai with care guidance for every shelf, window and corner.",
+      "ctaShop": "Shop plants",
+      "ctaFinder": "Find my plant",
+      "trust1": "24-hour arrival guarantee",
+      "trust2": "Carefully packed & delivered",
+      "trust3": "Care guide with every plant",
+      "badgeLabel": "Hand-picked",
+      "badgeValue": "Fresh from the nursery"
+    },
+    "categories": {
+      "title": "Shop by category",
+      "subtitle": "From easy leafy companions to elegant orchids.",
+      "count": "{count, plural, one {# plant} other {# plants}}"
+    },
+    "featured": {
+      "title": "Hand-picked for you",
+      "subtitle": "A few of our favourites, easy to love and easy to care for.",
+      "viewAll": "View all plants"
+    },
+    "why": {
+      "title": "Plants, with peace of mind",
+      "subtitle": "We look after the plant and the experience, from nursery to your doorstep.",
+      "healthy": {
+        "title": "Healthy on arrival",
+        "body": "Every plant is checked before it leaves us and packed to travel safely."
+      },
+      "care": {
+        "title": "Care made simple",
+        "body": "Light, water and difficulty on every plant, plus easy guides to keep it thriving."
+      },
+      "track": {
+        "title": "Track your delivery",
+        "body": "Follow your order step by step, from packing to your front door."
+      },
+      "modify": {
+        "title": "Make it yours",
+        "body": "Want a different pot, a gift note or a new delivery date? Just send a request."
+      }
+    },
+    "finder": {
+      "title": "Not sure which plant fits?",
+      "body": "Answer a few quick questions about light, space and pets, and we'll suggest the right plants for you.",
+      "cta": "Take the plant quiz"
+    },
+    "bonsai": {
+      "badge": "Coming soon",
+      "title": "The Bonsai Collection",
+      "body": "Living miniature trees, shaped with patience over the years. Styles, ages and care levels, with a story for every tree."
+    }
+  },
+  "Footer": {
+    "about": "Healthy plants, honest care advice and careful delivery.",
+    "shop": "Shop",
+    "help": "Help",
+    "guarantee": "24-hour arrival guarantee",
+    "rights": "All rights reserved."
+  },
+  "Categories": {
+    "indoor": {
+      "name": "Indoor"
+    },
+    "calathea": {
+      "name": "Calathea"
+    },
+    "dracaena": {
+      "name": "Dracaena"
+    },
+    "ficus": {
+      "name": "Ficus"
+    },
+    "orchids": {
+      "name": "Orchids"
+    }
+  },
+  "Care": {
+    "light": {
+      "low": "Low light",
+      "medium": "Medium light",
+      "bright": "Bright light"
+    },
+    "water": {
+      "low": "Low water",
+      "moderate": "Moderate water",
+      "high": "Loves water"
+    },
+    "difficulty": {
+      "easy": "Easy",
+      "moderate": "Moderate"
+    }
+  },
+  "Shop": {
+    "title": "Shop all plants",
+    "subtitle": "Find the right plant by light, care level and budget.",
+    "searchPlaceholder": "Search plants",
+    "filters": "Filters",
+    "category": "Category",
+    "light": "Light",
+    "level": "Care level",
+    "price": "Price",
+    "priceRanges": {
+      "under500": "Under ৳500",
+      "500-1500": "৳500 – ৳1,500",
+      "over1500": "Over ৳1,500"
+    },
+    "sortBy": "Sort by",
+    "sort": {
+      "featured": "Featured",
+      "priceAsc": "Price: low to high",
+      "priceDesc": "Price: high to low",
+      "nameAsc": "Name: A–Z"
+    },
+    "clear": "Clear all filters",
+    "results": "{count, plural, one {# plant} other {# plants}}",
+    "emptyTitle": "No plants match your filters",
+    "emptyBody": "Try removing a filter or searching for something else."
+  },
+  "Product": {
+    "home": "Home",
+    "addToCart": "Add to cart",
+    "added": "Added to cart",
+    "quantity": "Quantity",
+    "decrease": "Decrease quantity",
+    "increase": "Increase quantity",
+    "guarantee": "24-hour arrival guarantee: if your plant arrives damaged, send us a photo within 24 hours and we'll make it right.",
+    "packed": "Carefully packed to travel safely to your door.",
+    "careTitle": "Care at a glance",
+    "light": "Light",
+    "water": "Water",
+    "level": "Care level",
+    "related": "You might also like",
+    "lightHint": {
+      "low": "Copes with shaded, low-light spots.",
+      "medium": "Likes bright, indirect light away from harsh sun.",
+      "bright": "Happiest near a bright window."
+    },
+    "waterHint": {
+      "low": "Water only when the soil has dried out; avoid overwatering.",
+      "moderate": "Water when the top of the soil feels dry.",
+      "high": "Keep the soil lightly and evenly moist."
+    },
+    "levelHint": {
+      "easy": "Forgiving and great for beginners.",
+      "moderate": "Needs a little attention to light, water and humidity."
+    }
+  },
+  "NotFound": {
+    "title": "This page has gone to seed",
+    "body": "We couldn't find what you were looking for.",
+    "cta": "Browse all plants"
+  }
+}
