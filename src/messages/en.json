@@ -265,5 +265,85 @@
     "continue": "Continue shopping",
     "notFoundTitle": "Order not found",
     "notFoundBody": "We couldn't find this order on this device."
+  },
+  "Track": {
+    "title": "Track your order",
+    "subtitle": "Enter your order number to see where your plants are, or to change something before they ship.",
+    "lookupLabel": "Order number",
+    "lookupPlaceholder": "e.g. BRK-7K2M9Q",
+    "lookupBtn": "Track",
+    "recent": "Recent orders on this device",
+    "notFoundTitle": "We couldn't find that order",
+    "notFoundBody": "No order {id} on this device. Check the number in your confirmation and try again.",
+    "deviceNote": "For now, orders are stored in this browser only.",
+    "orderNo": "Order",
+    "viewOrder": "View order details",
+    "eta": "Arriving",
+    "items": "Your items",
+    "timelineLabel": "Order progress",
+    "now": "Now",
+    "steps": {
+      "ordered": "Order placed",
+      "packed": "Packed with care",
+      "shipped": "Shipped",
+      "outForDelivery": "Out for delivery",
+      "delivered": "Delivered"
+    },
+    "stepHints": {
+      "ordered": "We've received your order",
+      "packed": "Plants wrapped and boxed",
+      "shipped": "On its way to your city",
+      "outForDelivery": "With our rider today",
+      "delivered": "Enjoy your new plants"
+    },
+    "modTitle": "Change your order",
+    "modIntro": "Tell us what you'd like to change. Our team will confirm before your plants are packed.",
+    "modLocked": "This order has already shipped, so it can no longer be changed. Need help? Contact us and we'll sort it out.",
+    "types": {
+      "pot": "Change pot",
+      "giftNote": "Gift note",
+      "date": "Delivery date",
+      "custom": "Something else"
+    },
+    "potLabel": "New pot",
+    "potHint": "Price differences, if any, will be confirmed by our team.",
+    "pots": {
+      "terracotta": "Classic terracotta",
+      "whiteCeramic": "White ceramic",
+      "cement": "Modern cement",
+      "woven": "Woven basket",
+      "none": "No pot (plant only)"
+    },
+    "giftLabel": "New gift note",
+    "giftHint": "{count}/200 characters",
+    "dateLabel": "New delivery date",
+    "dateChoose": "Choose a date",
+    "customLabel": "Tell us what you need",
+    "customPlaceholder": "e.g. Please leave the plant with the guard at the gate.",
+    "submit": "Send request",
+    "submitted": "Request sent. We'll confirm shortly.",
+    "errors": {
+      "required": "This field is required.",
+      "tooShort": "Please add a little more detail (at least 5 characters).",
+      "tooLong": "That's too long. Please shorten it."
+    },
+    "yourRequests": "Your requests",
+    "noRequests": "No change requests yet.",
+    "reqStatus": {
+      "pending": "Waiting for confirmation",
+      "approved": "Approved",
+      "declined": "Declined"
+    },
+    "describe": {
+      "pot": "Change pot to {pot}",
+      "giftNote": "New gift note: “{note}”",
+      "date": "Move delivery to {date}"
+    },
+    "demoTitle": "Demo mode",
+    "demoBody": "There's no backend yet, so you play the shop team here. This box disappears once a real API is connected.",
+    "demoAdvance": "Move to next status",
+    "demoDone": "Order delivered",
+    "demoApprove": "Approve",
+    "demoDecline": "Decline"
   }
 }
