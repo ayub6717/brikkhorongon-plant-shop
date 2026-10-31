@@ -1,6 +1,5 @@
 "use client";
 
-import { MotionConfig } from "framer-motion";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import { useState, type ReactNode } from "react";
@@ -16,7 +15,7 @@ export function Providers({ children }: { children: ReactNode }) {
   return (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
       <QueryClientProvider client={client}>
-        <MotionConfig reducedMotion="user">{children}</MotionConfig>
+        {children}
       </QueryClientProvider>
     </ThemeProvider>
   );

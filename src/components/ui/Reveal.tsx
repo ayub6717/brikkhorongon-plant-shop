@@ -1,8 +1,15 @@
 "use client";
 
-import { motion } from "framer-motion";
-import type { ReactNode } from "react";
+import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 
+/**
+ * Fades a block in as it scrolls into view.
+ *
+ * Content is visible by default (also in the server HTML), so the page never depends on
+ * JavaScript or an animation library to show up. Only blocks that start below the fold are
+ * hidden after hydration and revealed when they enter the viewport. Honors reduced motion.
+ * The animation itself lives in globals.css ([data-reveal]).
+ */
 export function Reveal({
   children,
   delay = 0,
@@ -12,15 +19,33 @@ export function Reveal({
   delay?: number;
   className?: string;
 }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (el.getBoundingClientRect().top < window.innerHeight - 80) return; // already on screen
+
+    el.dataset.reveal = "hidden";
+    if (!("IntersectionObserver" in window)) {
+      el.dataset.reveal = "shown";
+      return;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        el.dataset.reveal = "shown";
+        observer.disconnect();
+      },
+      { rootMargin: "0px 0px -80px 0px" },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <motion.div
-      className={className}
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
-    >
+    <div ref={ref} className={className} style={{ "--reveal-delay": `${delay}s` } as CSSProperties}>
       {children}
-    </motion.div>
+    </div>
   );
 }
