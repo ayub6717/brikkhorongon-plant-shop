@@ -1,13 +1,11 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useMounted } from "@/lib/useMounted";
 import { selectCount, useCart } from "@/store/cart";
-
-const subscribeNoop = () => () => {};
 
 /** Small count bubble; renders nothing until hydrated so server and client HTML match. */
 export function CartCount() {
-  const mounted = useSyncExternalStore(subscribeNoop, () => true, () => false);
+  const mounted = useMounted();
   const count = useCart(selectCount);
   if (!mounted || count === 0) return null;
 
