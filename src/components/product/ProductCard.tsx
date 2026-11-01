@@ -4,12 +4,14 @@ import { useLocale, useTranslations } from "next-intl";
 import { CompareButton } from "@/components/compare/CompareButton";
 import { WishlistButton } from "@/components/wishlist/WishlistButton";
 import { Link } from "@/i18n/navigation";
+import { localizeProduct } from "@/lib/localize";
 import { formatPrice } from "@/lib/format";
 import type { Product } from "@/data/types";
 
-export function ProductCard({ product, priority = false }: { product: Product; priority?: boolean }) {
+export function ProductCard({ product: raw, priority = false }: { product: Product; priority?: boolean }) {
   const t = useTranslations();
   const locale = useLocale();
+  const product = localizeProduct(raw, locale);
 
   return (
     <article className="group relative flex flex-col overflow-hidden rounded-card border border-border bg-surface shadow-soft transition duration-300 hover:-translate-y-1">

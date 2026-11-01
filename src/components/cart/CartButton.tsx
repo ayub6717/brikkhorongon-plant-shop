@@ -16,6 +16,7 @@ export function CartButton() {
   return (
     <Link
       href="/cart"
+      data-cart-target
       aria-label={t("cart")}
       aria-haspopup={onCartPage ? undefined : "dialog"}
       onClick={(e) => {

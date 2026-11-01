@@ -19,7 +19,7 @@ export function PaletteTrigger() {
         onClick={() => setOpen(true)}
         aria-label={t("open")}
         aria-keyshortcuts="Control+K Meta+K"
-        className="hidden items-center gap-2 rounded-full border border-border bg-surface px-3 py-2 text-sm text-muted-foreground transition hover:border-primary/50 hover:text-foreground xl:flex"
+        className="hidden items-center gap-2 rounded-full border border-border bg-surface px-3 py-2 text-sm text-muted-foreground transition hover:border-primary/50 hover:text-foreground 2xl:flex"
       >
         <Search className="size-4" aria-hidden />
         <span>{t("trigger")}</span>
@@ -29,7 +29,7 @@ export function PaletteTrigger() {
         type="button"
         onClick={() => setOpen(true)}
         aria-label={t("open")}
-        className="grid size-9 place-items-center rounded-full text-foreground/80 transition hover:bg-muted sm:size-10 xl:hidden"
+        className="grid size-9 place-items-center rounded-full text-foreground/80 transition hover:bg-muted sm:size-10 2xl:hidden"
       >
         <Search className="size-5" aria-hidden />
       </button>

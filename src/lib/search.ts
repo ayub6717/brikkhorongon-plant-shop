@@ -1,3 +1,4 @@
+import { productsBn } from "@/data/products.bn";
 import type { Product } from "@/data/types";
 
 /** Lower-cases and strips diacritics so "Calathéa" matches "calathea". */
@@ -19,9 +20,10 @@ export function searchProducts(
 
   return items
     .map((p) => {
-      const name = norm(p.name);
+      const bn = productsBn[p.slug];
+      const name = norm(`${p.name} ${bn?.name ?? ""}`);
       const cat = norm(`${categoryLabel(p)} ${p.category}`);
-      const desc = norm(p.description);
+      const desc = norm(`${p.description} ${bn?.description ?? ""}`);
       let score = 0;
       for (const w of words) {
         if (name.startsWith(w)) score += 100;

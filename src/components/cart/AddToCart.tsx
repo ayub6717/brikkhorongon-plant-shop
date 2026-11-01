@@ -3,6 +3,8 @@
 import { Check, Minus, Plus, ShoppingBag } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
+import { getProductBySlug } from "@/lib/catalog";
+import { flyToCart } from "@/lib/fly";
 import { useCart } from "@/store/cart";
 import { useUi } from "@/store/ui";
 
@@ -16,9 +18,11 @@ export function AddToCart({ slug }: { slug: string }) {
 
   useEffect(() => () => clearTimeout(timer.current), []);
 
-  const onAdd = () => {
+  const onAdd = (e: React.MouseEvent<HTMLButtonElement>) => {
     add(slug, qty);
-    setCart(true);
+    const src = getProductBySlug(slug)?.image.src;
+    if (src) void flyToCart(e.currentTarget.getBoundingClientRect(), src).then(() => setCart(true));
+    else setCart(true);
     setAdded(true);
     clearTimeout(timer.current);
     timer.current = setTimeout(() => setAdded(false), 2000);

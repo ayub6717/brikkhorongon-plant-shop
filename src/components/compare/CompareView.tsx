@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { AddToCart } from "@/components/cart/AddToCart";
 import { Link } from "@/i18n/navigation";
 import { getProductBySlug } from "@/lib/catalog";
+import { localizeProduct } from "@/lib/localize";
 import { formatPrice } from "@/lib/format";
 import { useMounted } from "@/lib/useMounted";
 import { useCompare } from "@/store/compare";
@@ -16,7 +17,7 @@ export function CompareView() {
   const mounted = useMounted();
   const slugs = useCompare((s) => s.slugs);
   const remove = useCompare((s) => s.remove);
-  const items = slugs.flatMap((s) => { const p = getProductBySlug(s); return p ? [p] : []; });
+  const items = slugs.flatMap((s) => { const p = getProductBySlug(s); return p ? [localizeProduct(p, locale)] : []; });
 
   if (!mounted) return <div className="h-64" aria-hidden />;
 

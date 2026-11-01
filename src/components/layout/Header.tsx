@@ -1,4 +1,4 @@
-import { Heart, Leaf } from "lucide-react";
+import { Heart, Leaf, Sprout } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { CartButton } from "@/components/cart/CartButton";
@@ -26,6 +26,13 @@ export function Header() {
           <PaletteTrigger />
           <LocaleSwitcher />
           <ThemeToggle />
+          <Link
+            href="/garden"
+            aria-label={t("Nav.garden")}
+            className="hidden size-9 place-items-center rounded-full text-foreground/80 transition hover:bg-muted sm:grid sm:size-10"
+          >
+            <Sprout className="size-5" aria-hidden />
+          </Link>
           <Link
             href="/wishlist"
             aria-label={t("Nav.wishlist")}

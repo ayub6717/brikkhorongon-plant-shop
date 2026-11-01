@@ -1,7 +1,9 @@
 import { addDays, WATER_INTERVAL_DAYS } from "./care";
 import type { Water } from "@/data/types";
 
-export type CareReminder = { slug: string; name: string; water: Water; startKey: string; orderId?: string };
+export type CareReminder = { slug: string; name: string; water: Water; startKey: string; orderId?: string;
+  /** Days between waterings; defaults to the plant's general rhythm. */
+  intervalDays?: number };
 
 const esc = (s: string) => s.replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
 const compact = (key: string) => key.replace(/-/g, "");
@@ -38,7 +40,7 @@ export function buildCareIcs(
   const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Brikkhorongon//Plant care//EN", "CALSCALE:GREGORIAN", `X-WR-CALNAME:${esc(opts.calendarName)}`];
 
   for (const r of reminders) {
-    const interval = WATER_INTERVAL_DAYS[r.water];
+    const interval = r.intervalDays ?? WATER_INTERVAL_DAYS[r.water];
     const first = addDays(r.startKey, interval);
     lines.push(
       "BEGIN:VEVENT",

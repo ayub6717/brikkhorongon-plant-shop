@@ -1,0 +1,12 @@
+.gc { --gc-a: #2f5d46; --gc-b: #7fb894; perspective: 800px; }
+.gc-leaf { --gc-a: #2f5d46; --gc-b: #8fc7a2; }
+.gc-bloom { --gc-a: #b4547a; --gc-b: #f3b6cc; }
+.gc-sunrise { --gc-a: #c8683b; --gc-b: #f6c978; }
+.gc-card { background: linear-gradient(135deg, var(--gc-a), var(--gc-b)); transform: rotateX(4deg) rotateY(-6deg); transition: transform 0.4s ease; animation: gc-in 0.5s ease-out backwards; }
+.gc:hover .gc-card { transform: rotateX(0) rotateY(0); }
+@keyframes gc-in { from { opacity: 0; transform: translateY(12px) rotateX(10deg); } }
+@keyframes gc-float { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-4px) rotate(4deg); } }
+.gc-deco { animation: gc-float 4s ease-in-out infinite; }
+.gc-deco:nth-child(2) { animation-delay: -1.3s; }
+.gc-deco:nth-child(3) { animation-delay: -2.4s; }
+@media (prefers-reduced-motion: reduce) { .gc-card, .gc-deco { animation: none; } }

@@ -13,7 +13,7 @@ export function DesktopNavLinks() {
   const pathname = usePathname();
 
   return (
-    <nav aria-label="Primary" className="ml-4 hidden gap-1 text-sm font-medium lg:flex">
+    <nav aria-label="Primary" className="ml-4 hidden gap-1 text-sm font-medium xl:flex">
       {NAV.map(({ href, key }) => {
         const active = isActive(pathname, href);
         return (
@@ -22,7 +22,7 @@ export function DesktopNavLinks() {
             href={href}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "relative rounded-full px-3 py-1.5 transition",
+              "relative whitespace-nowrap rounded-full px-2.5 py-1.5 transition",
               active ? "bg-muted text-primary" : "text-foreground/75 hover:text-primary",
             )}
           >

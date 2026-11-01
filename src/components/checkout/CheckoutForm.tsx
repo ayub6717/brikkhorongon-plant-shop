@@ -14,6 +14,8 @@ import { useMounted, useTodayKey } from "@/lib/useMounted";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/store/cart";
 import { createOrderId, useOrders, type Order } from "@/store/orders";
+import { GiftCardPreview } from "@/components/gift/GiftCardPreview";
+import { GIFT_CARDS } from "@/lib/gift";
 import { Select } from "@/components/ui/Select";
 import { CouponBox } from "@/components/cart/CouponBox";
 import { OrderLines } from "./OrderLines";
@@ -64,15 +66,18 @@ export function CheckoutForm() {
     formState: { errors, isSubmitting },
   } = useForm<CheckoutValues>({
     resolver: zodResolver(checkoutSchema),
-    defaultValues: { name: "", phone: "", email: "", district: undefined, area: "", address: "", date: "", slot: undefined, payment: "cod", giftNote: "", note: "" },
+    defaultValues: { name: "", phone: "", email: "", district: undefined, area: "", address: "", date: "", slot: undefined, payment: "cod", giftCard: "none", giftNote: "", note: "" },
   });
 
   const district = useWatch({ control, name: "district" });
   const area = useWatch({ control, name: "area" });
+  const giftCard = useWatch({ control, name: "giftCard" });
+  const giftNote = useWatch({ control, name: "giftNote" });
+  const giftName = useWatch({ control, name: "name" });
 
   if (!mounted) return <div className="h-64" aria-hidden />;
 
-  const resolved = resolveLines(lines);
+  const resolved = resolveLines(lines, locale);
   if (resolved.length === 0) {
     return (
       <div className="mx-auto max-w-lg rounded-card border border-dashed border-border bg-surface/60 p-12 text-center">
@@ -106,6 +111,7 @@ export function CheckoutForm() {
       customer: { name: v.name, phone: v.phone, email: v.email, district: v.district, area: v.area, address: v.address },
       delivery: { date: v.date, slot: v.slot },
       payment: v.payment,
+      giftCard: v.giftCard,
       giftNote: v.giftNote,
       note: v.note,
       status: "ordered",
@@ -192,6 +198,22 @@ export function CheckoutForm() {
         </Section>
 
         <Section title={t("extrasTitle")}>
+          <div role="radiogroup" aria-label={t("giftDesign")}>
+            <p className="mb-1.5 text-sm font-medium">{t("giftDesign")}</p>
+            <Controller control={control} name="giftCard" render={({ field }) => (
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                {GIFT_CARDS.map((g) => (
+                  <label key={g} className={cn("cursor-pointer rounded-xl border px-3 py-2.5 text-center text-sm transition has-[:focus-visible]:border-primary", field.value === g ? "border-primary bg-muted/70 font-medium" : "border-border hover:border-primary/50")}>
+                    <input type="radio" name={field.name} value={g} checked={field.value === g} onChange={() => field.onChange(g)} className="sr-only" />
+                    {t(`giftDesigns.${g}`)}
+                  </label>
+                ))}
+              </div>
+            )} />
+          </div>
+          {giftCard !== "none" && (
+            <GiftCardPreview design={giftCard} note={giftNote.trim() || t("giftSample")} from={giftName.trim().split(" ")[0] || undefined} label={t("giftPreview")} />
+          )}
           <Field id={`${uid}-gift`} label={t("giftNote")} hint={t("giftHint")} error={err("giftNote")}>
             <textarea id={`${uid}-gift`} rows={2} className={inputCls} {...aria("giftNote", `${uid}-gift`)} {...register("giftNote")} />
           </Field>

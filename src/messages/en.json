@@ -17,7 +17,8 @@
     "search": "Search",
     "garden": "My Garden",
     "wishlist": "Wishlist",
-    "compare": "Compare"
+    "compare": "Compare",
+    "doctor": "Plant Doctor"
   },
   "Home": {
     "hero": {
@@ -261,7 +262,16 @@
       "slot": "Please choose a time slot.",
       "payment": "Please choose a payment method.",
       "tooLong": "That's a bit too long."
-    }
+    },
+    "giftDesign": "Gift card design",
+    "giftDesigns": {
+      "none": "No card",
+      "leaf": "Leaf",
+      "bloom": "Bloom",
+      "sunrise": "Sunrise"
+    },
+    "giftPreview": "Your gift card",
+    "giftSample": "Your message will appear here."
   },
   "Order": {
     "title": "Order confirmed",
@@ -832,7 +842,31 @@
     "every": "Every {days} days",
     "remindAll": "Add reminders to calendar",
     "onTheWay": "{count, plural, one {# plant is} other {# plants are}} on the way",
-    "browse": "Shop plants"
+    "browse": "Shop plants",
+    "season": {
+      "summer": "Summer",
+      "monsoon": "Monsoon",
+      "autumn": "Early autumn",
+      "lateAutumn": "Late autumn",
+      "winter": "Winter",
+      "spring": "Spring"
+    },
+    "seasonTip": {
+      "summer": "Hot and dry: pots dry out fast, so check the soil often. Keep plants out of harsh afternoon sun.",
+      "monsoon": "Humid and rainy: water less, wipe away dust, and watch for fungus gnats and leaf spots.",
+      "autumn": "Mild again: a good time to repot, trim tired leaves and feed lightly.",
+      "lateAutumn": "Cooler and drier: growth slows, so ease off watering and feeding.",
+      "winter": "Cool: water sparingly, keep plants away from cold draughts and give them the brightest spot.",
+      "spring": "New growth: resume regular watering, start feeding and repot if roots are crowded."
+    },
+    "seasonNow": "Now: {season}",
+    "everySeason": "About every {days} days this season",
+    "addPhoto": "Add a photo",
+    "photoOf": "Photo of {name}, {date}",
+    "removePhoto": "Remove this photo",
+    "photoHint": "Photos stay on this device only.",
+    "photoFull": "Couldn't save the photo: browser storage is full.",
+    "photos": "Growth photos"
   },
   "Reminders": {
     "button": "Add care reminders",
@@ -851,5 +885,299 @@
     "offlineTitle": "You're offline",
     "offlineBody": "Check your connection. Care guides you've already opened still work.",
     "retry": "Try again"
+  },
+  "Doctor": {
+    "title": "Plant Doctor",
+    "subtitle": "Tell us what you see and we'll point to the most likely cause and what to do about it.",
+    "pick": "What's going on with your plant?",
+    "back": "Back",
+    "again": "Start over",
+    "cause": "Most likely cause",
+    "doThis": "What to do",
+    "guides": "Read the care guides",
+    "note": "General guidance, not a diagnosis. If a plant keeps declining, check the roots and ask a nursery.",
+    "step": "Step {n} of 2",
+    "shop": "Browse healthy plants",
+    "symptoms": {
+      "yellowLeaves": {
+        "name": "Yellow leaves",
+        "q": "Where are the yellow leaves, and how is the soil?",
+        "options": {
+          "lowerWet": {
+            "label": "Lower leaves, soil stays wet",
+            "cause": "Overwatering. Roots can't breathe in constantly wet soil.",
+            "fix": [
+              "Let the top 3–4 cm of soil dry before watering again.",
+              "Make sure the pot has drainage holes and never stands in water.",
+              "Remove the yellow leaves. If the soil smells sour, repot into fresh, airy mix."
+            ]
+          },
+          "dryPale": {
+            "label": "Many leaves pale, soil dry and light",
+            "cause": "Underwatering or hungry soil.",
+            "fix": [
+              "Water slowly until it runs out of the bottom, then empty the saucer.",
+              "Feed lightly once a month in the growing season.",
+              "Set a weekly reminder in My Garden so it doesn't slip."
+            ]
+          },
+          "oldFew": {
+            "label": "Just a few old leaves, the rest look fine",
+            "cause": "Normal ageing. Plants shed their oldest leaves.",
+            "fix": [
+              "Pull the old leaves off gently.",
+              "No other change needed. Keep your usual routine."
+            ]
+          }
+        }
+      },
+      "brownTips": {
+        "name": "Brown or crispy tips",
+        "q": "What's the air like, and what do you water with?",
+        "options": {
+          "dryAir": {
+            "label": "Dry air, AC or a fan nearby",
+            "cause": "Low humidity pulls moisture from leaf tips.",
+            "fix": [
+              "Move the plant away from AC vents and fans.",
+              "Group plants together or stand the pot on a tray of wet pebbles.",
+              "Mist is a weak fix; a humidifier or bathroom spot works better."
+            ]
+          },
+          "tapWater": {
+            "label": "Tap water, and tips crisp over time",
+            "cause": "Mineral and salt build-up, common in calatheas.",
+            "fix": [
+              "Flush the pot with plenty of water every month or two.",
+              "Use rested (left overnight), filtered or rain water.",
+              "Trim the brown tips with clean scissors, following the leaf shape."
+            ]
+          },
+          "sunScorch": {
+            "label": "Brown patches after strong sun",
+            "cause": "Sunburn from harsh direct light.",
+            "fix": [
+              "Move to bright but indirect light.",
+              "Use a sheer curtain in hot afternoon sun.",
+              "Damaged leaves won't recover; new ones will grow in fine."
+            ]
+          }
+        }
+      },
+      "droopy": {
+        "name": "Drooping or wilting",
+        "q": "How does the soil feel?",
+        "options": {
+          "dry": {
+            "label": "Bone dry",
+            "cause": "The plant is thirsty.",
+            "fix": [
+              "Water thoroughly until it drains from the bottom.",
+              "If water runs straight through, soak the pot in a basin for 15 minutes.",
+              "It should perk up within a day."
+            ]
+          },
+          "soggy": {
+            "label": "Wet and heavy",
+            "cause": "Possible root rot from too much water.",
+            "fix": [
+              "Stop watering and let the soil dry.",
+              "Slide the plant out: healthy roots are firm and pale; rotten ones are brown and mushy.",
+              "Trim rotten roots and repot into fresh, well-draining mix."
+            ]
+          },
+          "moved": {
+            "label": "Soil is fine, but it drooped after a move or draught",
+            "cause": "Shock from a change of place, light or temperature.",
+            "fix": [
+              "Keep it in one bright, steady spot.",
+              "Avoid cold or hot draughts.",
+              "Be patient. Recovery can take a couple of weeks."
+            ]
+          }
+        }
+      },
+      "leafDrop": {
+        "name": "Leaves dropping",
+        "q": "What changed recently?",
+        "options": {
+          "moved": {
+            "label": "I moved it or just brought it home",
+            "cause": "Acclimation. Ficus and fiddle-leaf figs hate being moved.",
+            "fix": [
+              "Pick a spot and leave it there.",
+              "Don't repot or prune right now.",
+              "Keep watering steady, not more."
+            ]
+          },
+          "draught": {
+            "label": "It sits near a window, door or AC",
+            "cause": "Temperature swings or cold draughts.",
+            "fix": [
+              "Move it away from vents, doors and cold glass.",
+              "Keep the room temperature steady."
+            ]
+          },
+          "rhythm": {
+            "label": "Nothing changed, but I water irregularly",
+            "cause": "Uneven watering stresses the plant.",
+            "fix": [
+              "Water on a steady rhythm: check the soil, then water deeply.",
+              "Use the schedule in My Garden for your plant."
+            ]
+          }
+        }
+      },
+      "spots": {
+        "name": "Spots on leaves",
+        "q": "What do the spots look like?",
+        "options": {
+          "wetRing": {
+            "label": "Brown spots with a yellow ring, leaves often wet",
+            "cause": "A fungal or bacterial leaf spot.",
+            "fix": [
+              "Remove affected leaves and bin them.",
+              "Water the soil, not the leaves.",
+              "Give the plant more airflow and don't crowd it."
+            ]
+          },
+          "sunPatch": {
+            "label": "Dry tan patches on the sunny side",
+            "cause": "Sun scorch.",
+            "fix": [
+              "Move out of direct sun or filter it with a curtain.",
+              "Cut off badly damaged leaves."
+            ]
+          },
+          "sticky": {
+            "label": "Sticky residue or tiny insects",
+            "cause": "Sap-sucking pests such as scale or mealybugs.",
+            "fix": [
+              "Wipe leaves with a cloth and mild soapy water.",
+              "Check under leaves and along stems.",
+              "Repeat weekly for a few weeks."
+            ]
+          }
+        }
+      },
+      "pests": {
+        "name": "Bugs or webbing",
+        "q": "What do you see?",
+        "options": {
+          "webbing": {
+            "label": "Fine webs, speckled leaves",
+            "cause": "Spider mites, common in hot, dry air.",
+            "fix": [
+              "Rinse the whole plant in the shower.",
+              "Raise humidity and keep it cooler.",
+              "Wipe leaves with neem or insecticidal soap weekly."
+            ]
+          },
+          "cottony": {
+            "label": "White cottony fluff in leaf joints",
+            "cause": "Mealybugs.",
+            "fix": [
+              "Dab each one with a cotton bud dipped in diluted rubbing alcohol.",
+              "Isolate the plant from others.",
+              "Repeat every few days until clear."
+            ]
+          },
+          "gnats": {
+            "label": "Tiny flies around the soil",
+            "cause": "Fungus gnats, attracted by constantly damp soil.",
+            "fix": [
+              "Let the top of the soil dry out between waterings.",
+              "Use yellow sticky traps.",
+              "Replace the top 2 cm of soil if it persists."
+            ]
+          }
+        }
+      },
+      "leggy": {
+        "name": "Tall, stretched and sparse",
+        "q": "How much light does it get?",
+        "options": {
+          "lowLight": {
+            "label": "Dim spot, far from the window",
+            "cause": "The plant is stretching for light.",
+            "fix": [
+              "Move it closer to a bright window.",
+              "Prune the long stems to encourage branching.",
+              "Cuttings can often be rooted in water."
+            ]
+          },
+          "neverTurned": {
+            "label": "Bright, but it leans to one side",
+            "cause": "Growth bends towards the light source.",
+            "fix": [
+              "Turn the pot a quarter turn every week.",
+              "Prune to even out the shape."
+            ]
+          }
+        }
+      },
+      "noBlooms": {
+        "name": "Won't flower",
+        "q": "What's its routine?",
+        "options": {
+          "lowLight": {
+            "label": "Dim or only indirect low light",
+            "cause": "Not enough light to set buds.",
+            "fix": [
+              "Give bright, indirect light for most of the day.",
+              "Avoid hot afternoon sun."
+            ]
+          },
+          "noRest": {
+            "label": "An orchid that bloomed once",
+            "cause": "Many orchids need a rest and a cooler night to rebloom.",
+            "fix": [
+              "After flowers fall, cut the spike above a node.",
+              "Give a few degrees cooler nights for several weeks.",
+              "Water less while it rests."
+            ]
+          },
+          "overfed": {
+            "label": "Lots of green growth, very few flowers",
+            "cause": "Too much nitrogen fertiliser.",
+            "fix": [
+              "Switch to a bloom (higher phosphorus) feed.",
+              "Feed less often and flush the pot monthly."
+            ]
+          }
+        }
+      },
+      "soilMold": {
+        "name": "Mold or bad smell in the soil",
+        "q": "What does it look like?",
+        "options": {
+          "whiteFuzz": {
+            "label": "White fuzz on top of the soil",
+            "cause": "Harmless surface mold from damp, still air.",
+            "fix": [
+              "Scrape off the top 2 cm and replace it.",
+              "Water less and improve airflow.",
+              "Move to a brighter place."
+            ]
+          },
+          "smelly": {
+            "label": "Sour or rotten smell",
+            "cause": "Rotting roots in waterlogged soil.",
+            "fix": [
+              "Unpot and cut away brown, mushy roots.",
+              "Repot in fresh, free-draining mix and a pot with holes.",
+              "Water only when the top of the soil is dry."
+            ]
+          }
+        }
+      }
+    }
+  },
+  "Error": {
+    "title": "Something went wrong",
+    "body": "We couldn't load this page. Try again, or head back home.",
+    "ref": "Reference: {id}",
+    "retry": "Try again",
+    "home": "Go home"
   }
 }

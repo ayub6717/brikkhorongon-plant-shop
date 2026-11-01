@@ -59,7 +59,7 @@ export default async function LocaleLayout({
       lang={locale}
       suppressHydrationWarning
     >
-      <body className="flex min-h-screen flex-col">
+      <body className="flex min-h-screen flex-col" suppressHydrationWarning>
         <NextIntlClientProvider>
           <Providers>
             <a href="#main" className="sr-only z-50 rounded-full bg-primary px-5 py-2.5 font-medium text-primary-foreground focus:not-sr-only focus:fixed focus:left-4 focus:top-4">

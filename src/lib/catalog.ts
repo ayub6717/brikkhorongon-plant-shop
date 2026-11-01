@@ -1,4 +1,5 @@
 import { products } from "@/data/products";
+import { productsBn } from "@/data/products.bn";
 import type { BonsaiStyle, CategorySlug, Difficulty, Light, Placement, Product } from "@/data/types";
 
 export const CATEGORY_SLUGS: CategorySlug[] = ["indoor", "calathea", "dracaena", "ficus", "orchids", "bonsai"];
@@ -68,7 +69,7 @@ export function filterProducts(f: ShopFilters): Product[] {
       (!f.light || p.care.light === f.light) &&
       (!f.level || p.care.difficulty === f.level) &&
       (!f.price || inBucket(p.price, f.price)) &&
-      (!q || p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q)),
+      (!q || `${p.name} ${productsBn[p.slug]?.name ?? ""} ${p.description} ${productsBn[p.slug]?.description ?? ""}`.toLowerCase().includes(q)),
   );
 
   switch (f.sort) {

@@ -3,6 +3,7 @@ export const NAV = [
   { href: "/bonsai", key: "bonsai" },
   { href: "/learn", key: "learn" },
   { href: "/finder", key: "finder" },
+  { href: "/doctor", key: "doctor" },
   { href: "/track", key: "track" },
 ] as const;
 

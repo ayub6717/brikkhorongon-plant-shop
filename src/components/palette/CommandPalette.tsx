@@ -1,12 +1,13 @@
 "use client";
 
-import { BookOpen, Compass, Heart, Languages, Leaf, Moon, PackageSearch, Scale, Search, ShoppingBag, Sprout, Store, TreePine, type LucideIcon } from "lucide-react";
+import { BookOpen, Compass, Heart, Languages, Leaf, Moon, PackageSearch, Scale, Search, ShoppingBag, Sprout, Stethoscope, Store, TreePine, type LucideIcon } from "lucide-react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { Modal } from "@/components/ui/Modal";
 import { getAllProducts, getFeaturedProducts } from "@/lib/catalog";
+import { localizeProduct } from "@/lib/localize";
 import { formatPrice } from "@/lib/format";
 import { searchProducts } from "@/lib/search";
 import { usePathname, useRouter } from "@/i18n/navigation";
@@ -21,6 +22,7 @@ const PAGES: { href: string; key: string; icon: LucideIcon }[] = [
   { href: "/bonsai", key: "bonsai", icon: TreePine },
   { href: "/learn", key: "learn", icon: BookOpen },
   { href: "/finder", key: "finder", icon: Compass },
+  { href: "/doctor", key: "doctor", icon: Stethoscope },
   { href: "/track", key: "track", icon: PackageSearch },
   { href: "/garden", key: "garden", icon: Sprout },
   { href: "/wishlist", key: "wishlist", icon: Heart },
@@ -74,7 +76,7 @@ export function CommandPalette() {
       { id: "act-lang", group: "actions", label: t("switchLang", { lang: other === "bn" ? "বাংলা" : "English" }), icon: Languages, run: () => { close(); router.replace(pathname, { locale: other }); } },
     ];
     const plant = (p: ReturnType<typeof getAllProducts>[number]): Item => ({
-      id: `plant-${p.slug}`, group: "plants", label: p.name, hint: `${tcat(`${p.category}.name`)} · ${formatPrice(p.price, locale)}`, image: p.image.src, run: () => go(`/shop/${p.slug}`),
+      id: `plant-${p.slug}`, group: "plants", label: localizeProduct(p, locale).name, hint: `${tcat(`${p.category}.name`)} · ${formatPrice(p.price, locale)}`, image: p.image.src, run: () => go(`/shop/${p.slug}`),
     });
 
     if (!q) return [...getFeaturedProducts(4).map(plant), ...pageItems, ...actions];

@@ -30,7 +30,7 @@ export function CartDrawer() {
   useEffect(() => { setCart(false); }, [pathname, setCart]);
 
   const close = () => setCart(false);
-  const resolved = mounted ? resolveLines(lines) : [];
+  const resolved = mounted ? resolveLines(lines, locale) : [];
   const subtotal = subtotalOf(resolved);
   const count = resolved.reduce((n, l) => n + l.qty, 0);
   const remaining = Math.max(FREE_SHIPPING_THRESHOLD - subtotal, 0);

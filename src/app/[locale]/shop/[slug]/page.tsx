@@ -12,6 +12,7 @@ import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { getAllProducts, getProductBySlug, getRelatedProducts } from "@/lib/catalog";
 import { formatPrice } from "@/lib/format";
+import { localizeProduct } from "@/lib/localize";
 import { absoluteUrl, SITE_URL } from "@/lib/site";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -21,9 +22,10 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const product = getProductBySlug(slug);
-  if (!product) return {};
+  const { locale, slug } = await params;
+  const raw = getProductBySlug(slug);
+  if (!raw) return {};
+  const product = localizeProduct(raw, locale);
   return {
     title: product.name,
     description: product.description,
@@ -34,8 +36,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ProductPage({ params }: Props) {
   const { locale, slug } = await params;
   setRequestLocale(locale);
-  const product = getProductBySlug(slug);
-  if (!product) notFound();
+  const raw = getProductBySlug(slug);
+  if (!raw) notFound();
+  const product = localizeProduct(raw, locale);
 
   const t = await getTranslations();
   await getFormatter(); // keeps number/date formatting in sync with the locale

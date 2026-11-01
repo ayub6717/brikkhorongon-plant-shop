@@ -2,6 +2,7 @@ import { Droplets, Scissors, Sun } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { BonsaiArt } from "@/components/bonsai/BonsaiArt";
 import { ProductCard } from "@/components/product/ProductCard";
 import { Reveal } from "@/components/ui/Reveal";
 import { Link } from "@/i18n/navigation";
@@ -67,7 +68,8 @@ export default async function BonsaiPage({ params, searchParams }: Props) {
           {BONSAI_STYLES.map((s, i) => (
             <li key={s}>
               <Reveal delay={i * 0.05} className="h-full">
-                <Link href={href({ style: s })} className="block h-full rounded-card border border-border bg-surface p-5 transition hover:-translate-y-0.5 hover:border-primary/50">
+                <Link href={href({ style: s })} className="bs-card block h-full rounded-card border border-border bg-surface p-5 transition hover:-translate-y-0.5 hover:border-primary/50">
+                  <BonsaiArt style={s} className="mx-auto mb-4 h-32 w-auto" />
                   <p className="font-display text-xl font-semibold">{t(`styles.${s}.name`)}</p>
                   <p className="mt-2 text-sm text-muted-foreground">{t(`styles.${s}.desc`)}</p>
                 </Link>

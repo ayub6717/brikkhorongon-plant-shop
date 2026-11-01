@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { GIFT_CARDS } from "./gift";
 import { DISTRICTS, PAYMENTS, SLOTS } from "./shipping";
 
 /** Bangladeshi mobile: 01[3-9]XXXXXXXX with optional +88 / 88 prefix. */
@@ -15,6 +16,7 @@ export const checkoutSchema = z.object({
   date: z.string().min(1, "date"),
   slot: z.enum(SLOTS, { error: "slot" }),
   payment: z.enum(PAYMENTS, { error: "payment" }),
+  giftCard: z.enum(GIFT_CARDS),
   giftNote: z.string().trim().max(200, "tooLong"),
   note: z.string().trim().max(300, "tooLong"),
 });

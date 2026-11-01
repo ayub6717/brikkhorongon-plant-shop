@@ -2,9 +2,11 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import { CareReminderButton } from "@/components/garden/CareReminderButton";
+import { GiftCardPreview } from "@/components/gift/GiftCardPreview";
 import { OrderLines } from "@/components/checkout/OrderLines";
 import { GrowingPlant } from "@/components/order/GrowingPlant";
 import { Link } from "@/i18n/navigation";
+import { localizeProduct } from "@/lib/localize";
 import { getProductBySlug } from "@/lib/catalog";
 import { formatDateKey } from "@/lib/shipping";
 import { useMounted } from "@/lib/useMounted";
@@ -31,7 +33,7 @@ export function OrderConfirmation({ id }: { id: string }) {
 
   const reminders = order.lines.flatMap((l) => {
     const p = getProductBySlug(l.slug);
-    return p ? [{ slug: p.slug, name: p.name, water: p.care.water, startKey: order.delivery.date, orderId: order.id }] : [];
+    return p ? [{ slug: p.slug, name: localizeProduct(p, locale).name, water: p.care.water, startKey: order.delivery.date, orderId: order.id }] : [];
   });
   const placed = new Intl.DateTimeFormat(locale === "bn" ? "bn-BD" : "en-GB", { dateStyle: "medium", timeStyle: "short" }).format(new Date(order.createdAt));
 
@@ -65,6 +67,13 @@ export function OrderConfirmation({ id }: { id: string }) {
           <p className="mt-4 text-xs text-muted-foreground">{t("placedOn", { date: placed })}</p>
         </section>
       </div>
+
+      {order.giftCard && order.giftCard !== "none" && order.giftNote && (
+        <section className="mt-6 rounded-card border border-border bg-surface p-5">
+          <h2 className="mb-4 font-display text-lg font-semibold">{tc("giftPreview")}</h2>
+          <GiftCardPreview design={order.giftCard} note={order.giftNote} from={order.customer.name.split(" ")[0]} label={tc("giftPreview")} />
+        </section>
+      )}
 
       <section className="mt-6 rounded-card border border-border bg-surface p-5">
         <h2 className="mb-2 font-display text-lg font-semibold">{t("items")}</h2>

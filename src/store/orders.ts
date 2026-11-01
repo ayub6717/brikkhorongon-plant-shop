@@ -35,6 +35,8 @@ export type Order = {
   customer: Pick<CheckoutValues, "name" | "phone" | "email" | "district" | "area" | "address">;
   delivery: Pick<CheckoutValues, "date" | "slot">;
   payment: CheckoutValues["payment"];
+  /** Card design shipped with the gift note (absent on older orders). */
+  giftCard?: CheckoutValues["giftCard"];
   giftNote: string;
   note: string;
   status: OrderStatus;

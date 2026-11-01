@@ -1,0 +1,7 @@
+.bs-art { --bs-trunk: #7a5a3c; --bs-pot: #b4734f; --bs-soil: #5a4231; }
+.dark .bs-art { --bs-trunk: #a88361; --bs-pot: #c98a66; --bs-soil: #3c2d22; }
+.bs-sway { transform-box: fill-box; transform-origin: 50% 100%; animation: bs-sway 5.5s ease-in-out infinite alternate; }
+.bs-sway-2 { animation-duration: 7s; animation-delay: -2s; }
+@keyframes bs-sway { from { transform: rotate(-1.6deg); } to { transform: rotate(1.6deg); } }
+.bs-card:hover .bs-sway { animation-duration: 2.4s; }
+@media (prefers-reduced-motion: reduce) { .bs-sway { animation: none; } }

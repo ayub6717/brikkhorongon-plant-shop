@@ -25,7 +25,7 @@ export function CartView() {
 
   if (!mounted) return <div className="h-64" aria-hidden />;
 
-  const resolved = resolveLines(lines);
+  const resolved = resolveLines(lines, locale);
 
   if (resolved.length === 0) {
     return (
