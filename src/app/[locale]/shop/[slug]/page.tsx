@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import { getFormatter, getTranslations, setRequestLocale } from "next-intl/server";
 import { AddToCart } from "@/components/cart/AddToCart";
 import { CompareButton } from "@/components/compare/CompareButton";
+import { RatingBadge } from "@/components/reviews/RatingBadge";
+import { Reviews } from "@/components/reviews/Reviews";
 import { RecentlyViewed, RecordView } from "@/components/product/RecentlyViewed";
 import { WishlistButton } from "@/components/wishlist/WishlistButton";
 import { ProductCard } from "@/components/product/ProductCard";
@@ -84,7 +86,8 @@ export default async function ProductPage({ params }: Props) {
         <div>
           <p className="text-sm font-semibold uppercase tracking-widest text-accent">{t(`Categories.${product.category}.name`)}</p>
           <h1 className="mt-2 font-display text-4xl font-semibold leading-tight sm:text-5xl">{product.name}</h1>
-          <p className="mt-4 text-3xl font-semibold text-primary">{formatPrice(product.price, locale)}</p>
+          <div className="mt-3"><RatingBadge slug={product.slug} /></div>
+          <p className="mt-3 text-3xl font-semibold text-primary">{formatPrice(product.price, locale)}</p>
           <p className="mt-6 max-w-prose text-lg leading-relaxed text-muted-foreground">{product.description}</p>
 
           <div className="mt-8">
@@ -142,6 +145,8 @@ export default async function ProductPage({ params }: Props) {
           </section>
         </div>
       </div>
+
+      <Reviews slug={product.slug} name={product.name} />
 
       <RecordView slug={product.slug} />
       <RecentlyViewed excludeSlug={product.slug} />

@@ -271,7 +271,8 @@
       "sunrise": "Sunrise"
     },
     "giftPreview": "Your gift card",
-    "giftSample": "Your message will appear here."
+    "giftSample": "Your message will appear here.",
+    "giftTeaser": "Sending this as a gift? Add a card and message at checkout."
   },
   "Order": {
     "title": "Order confirmed",
@@ -1179,5 +1180,26 @@
     "ref": "Reference: {id}",
     "retry": "Try again",
     "home": "Go home"
+  },
+  "Reviews": {
+    "title": "Reviews",
+    "none": "No reviews yet. Be the first to share how this plant is doing.",
+    "count": "{count, plural, one {# review} other {# reviews}}",
+    "outOf": "{value} out of 5 stars",
+    "distribution": "Reviews by star rating",
+    "localNote": "Reviews are saved on this device only until accounts are added.",
+    "write": "Review {name}",
+    "yourRating": "Your rating",
+    "starsOption": "{count, plural, one {# star} other {# stars}}",
+    "yourName": "Your name",
+    "reviewTitle": "Headline (optional)",
+    "yourReview": "Your review",
+    "submit": "Post review",
+    "thanks": "Thanks! Your review is posted.",
+    "delete": "Delete this review",
+    "errRating": "Please choose a rating.",
+    "errName": "Please enter your name.",
+    "errText": "Please write at least 10 characters.",
+    "badgeAria": "Rated {avg} out of 5 from {count} reviews"
   }
 }

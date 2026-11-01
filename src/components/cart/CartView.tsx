@@ -16,6 +16,7 @@ export function CartView() {
   const t = useTranslations("Cart");
   const tc = useTranslations("Categories");
   const tcp = useTranslations("Coupon");
+  const tco = useTranslations("Checkout");
   const locale = useLocale();
   const mounted = useMounted();
   const lines = useCart((s) => s.lines);
@@ -104,6 +105,7 @@ export function CartView() {
         <Link href="/checkout" className="block rounded-full bg-primary px-6 py-3.5 text-center font-medium text-primary-foreground shadow-soft transition hover:opacity-90">
           {t("checkout")}
         </Link>
+        <p className="text-center text-xs text-muted-foreground">🎁 {tco("giftTeaser")}</p>
         <Link href="/shop" className="block text-center text-sm font-medium text-primary hover:underline">{t("continue")}</Link>
       </aside>
     </div>

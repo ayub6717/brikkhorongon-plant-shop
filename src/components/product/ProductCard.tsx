@@ -2,6 +2,7 @@ import { Droplets, Sun } from "lucide-react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { CompareButton } from "@/components/compare/CompareButton";
+import { RatingBadge } from "@/components/reviews/RatingBadge";
 import { WishlistButton } from "@/components/wishlist/WishlistButton";
 import { Link } from "@/i18n/navigation";
 import { localizeProduct } from "@/lib/localize";
@@ -38,6 +39,7 @@ export function ProductCard({ product: raw, priority = false }: { product: Produ
             {product.name}
           </Link>
         </h3>
+        <RatingBadge slug={product.slug} />
         <ul className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
           <li className="flex items-center gap-1.5">
             <Sun className="size-3.5" aria-hidden />
