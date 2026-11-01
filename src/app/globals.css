@@ -56,6 +56,9 @@
 
 html {
   scroll-behavior: smooth;
+  /* Always reserve the scrollbar space so pages with and without a scrollbar don't shift sideways. */
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
 }
 
 body {
