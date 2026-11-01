@@ -1,8 +1,8 @@
 "use client";
 
-import { CheckCircle2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { OrderLines } from "@/components/checkout/OrderLines";
+import { GrowingPlant } from "@/components/order/GrowingPlant";
 import { Link } from "@/i18n/navigation";
 import { formatDateKey } from "@/lib/shipping";
 import { useMounted } from "@/lib/useMounted";
@@ -32,7 +32,7 @@ export function OrderConfirmation({ id }: { id: string }) {
   return (
     <div className="mx-auto max-w-3xl">
       <div className="text-center">
-        <CheckCircle2 className="mx-auto size-14 text-primary" aria-hidden />
+        <GrowingPlant className="mx-auto h-56 w-auto sm:h-64" />
         <h1 className="mt-5 font-display text-4xl font-semibold">{t("thanks", { name: order.customer.name.split(" ")[0] })}</h1>
         <p className="mt-2 text-muted-foreground">{t("placedBody")}</p>
         <p className="mt-5 inline-block rounded-full bg-muted px-5 py-2 text-sm">
