@@ -23,7 +23,7 @@ import { OrderLines } from "./OrderLines";
 const inputCls =
   "w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition placeholder:text-muted-foreground focus:border-primary aria-[invalid=true]:border-accent";
 
-function Field({ label, error, hint, children, id }: { label: string; error?: string; hint?: string; children: ReactNode; id: string }) {
+function Field({ label, error, hint, children, id }: Readonly<{ label: string; error?: string; hint?: string; children: ReactNode; id: string }>) {
   return (
     <div>
       <label htmlFor={id} className="mb-1.5 block text-sm font-medium">{label}</label>
@@ -34,7 +34,7 @@ function Field({ label, error, hint, children, id }: { label: string; error?: st
   );
 }
 
-function Section({ title, children }: { title: string; children: ReactNode }) {
+function Section({ title, children }: Readonly<{ title: string; children: ReactNode }>) {
   return (
     <section className="space-y-4 rounded-card border border-border bg-surface p-5 sm:p-6">
       <h2 className="font-display text-xl font-semibold">{title}</h2>
@@ -198,8 +198,8 @@ export function CheckoutForm() {
         </Section>
 
         <Section title={t("extrasTitle")}>
-          <div role="radiogroup" aria-label={t("giftDesign")}>
-            <p className="mb-1.5 text-sm font-medium">{t("giftDesign")}</p>
+          <fieldset className="min-w-0">
+            <legend className="mb-1.5 text-sm font-medium">{t("giftDesign")}</legend>
             <Controller control={control} name="giftCard" render={({ field }) => (
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                 {GIFT_CARDS.map((g) => (
@@ -210,7 +210,7 @@ export function CheckoutForm() {
                 ))}
               </div>
             )} />
-          </div>
+          </fieldset>
           {giftCard !== "none" && (
             <GiftCardPreview design={giftCard} note={giftNote.trim() || t("giftSample")} from={giftName.trim().split(" ")[0] || undefined} label={t("giftPreview")} />
           )}

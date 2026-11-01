@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { CheckoutForm } from "@/components/checkout/CheckoutForm";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -10,9 +10,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: t("title"), robots: { index: false } };
 }
 
-export default async function CheckoutPage({ params }: Props) {
-  const { locale } = await params;
-  setRequestLocale(locale);
+export default async function CheckoutPage() {
   const t = await getTranslations("Checkout");
 
   return (

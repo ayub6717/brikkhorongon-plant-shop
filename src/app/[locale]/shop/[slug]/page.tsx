@@ -2,7 +2,7 @@ import { Droplets, Gauge, PackageCheck, ShieldCheck, Sun } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getFormatter, getTranslations, setRequestLocale } from "next-intl/server";
+import { getFormatter, getTranslations } from "next-intl/server";
 import { AddToCart } from "@/components/cart/AddToCart";
 import { CompareButton } from "@/components/compare/CompareButton";
 import { RatingBadge } from "@/components/reviews/RatingBadge";
@@ -17,7 +17,7 @@ import { formatPrice } from "@/lib/format";
 import { localizeProduct } from "@/lib/localize";
 import { absoluteUrl, SITE_URL } from "@/lib/site";
 
-type Props = { params: Promise<{ locale: string; slug: string }> };
+type Props = Readonly<{ params: Promise<{ locale: string; slug: string }> }>;
 
 export function generateStaticParams() {
   return routing.locales.flatMap((locale) => getAllProducts().map((p) => ({ locale, slug: p.slug })));
@@ -37,7 +37,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ProductPage({ params }: Props) {
   const { locale, slug } = await params;
-  setRequestLocale(locale);
   const raw = getProductBySlug(slug);
   if (!raw) notFound();
   const product = localizeProduct(raw, locale);
@@ -64,7 +63,7 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, String.raw`\u003c`) }} />
 
       <nav aria-label="Breadcrumb" className="mb-6 text-sm text-muted-foreground">
         <ol className="flex flex-wrap items-center gap-2">
@@ -79,7 +78,7 @@ export default async function ProductPage({ params }: Props) {
       </nav>
 
       <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
-        <div className="relative aspect-[4/5] overflow-hidden rounded-card border border-border bg-muted shadow-soft">
+        <div className="relative aspect-4/5 overflow-hidden rounded-card border border-border bg-muted shadow-soft">
           <Image src={product.image.src} alt={product.name} fill priority sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" />
         </div>
 

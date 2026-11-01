@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { ProductCard } from "@/components/product/ProductCard";
 import { ShopFilters } from "@/components/shop/ShopFilters";
@@ -17,9 +17,7 @@ export async function generateMetadata({ params }: Pick<Props, "params">): Promi
   return { title: t("title"), description: t("subtitle") };
 }
 
-export default async function ShopPage({ params, searchParams }: Props) {
-  const { locale } = await params;
-  setRequestLocale(locale);
+export default async function ShopPage({ searchParams }: Props) {
   const t = await getTranslations("Shop");
   const items = filterProducts(parseFilters(await searchParams));
 

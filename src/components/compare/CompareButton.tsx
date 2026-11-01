@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { MAX_COMPARE, useCompare } from "@/store/compare";
 import "@/components/product/product-actions.css";
 
-export function CompareButton({ slug, name, className }: { slug: string; name: string; className?: string }) {
+export function CompareButton({ slug, name, className }: Readonly<{ slug: string; name: string; className?: string }>) {
   const t = useTranslations("Compare");
   const mounted = useMounted();
   const selected = useCompare((s) => s.slugs.includes(slug));
@@ -36,9 +36,9 @@ export function CompareButton({ slug, name, className }: { slug: string; name: s
         {on ? <Check key="on" className="pa-pop size-[18px]" aria-hidden /> : <Scale className="size-[18px]" aria-hidden />}
       </button>
       {full && (
-        <span role="status" className="pa-tip absolute end-0 top-11 z-20 w-44 rounded-xl border border-border bg-background px-3 py-2 text-xs shadow-soft">
+        <output className="pa-tip absolute inset-e-0 top-11 z-20 w-44 rounded-xl border border-border bg-background px-3 py-2 text-xs shadow-soft">
           {t("full", { max: MAX_COMPARE })}
-        </span>
+        </output>
       )}
     </span>
   );

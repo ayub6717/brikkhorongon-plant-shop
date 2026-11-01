@@ -19,7 +19,7 @@ export function Hero() {
 
   return (
     <section className="relative overflow-hidden">
-      <div aria-hidden className="absolute -right-24 -top-24 size-[28rem] rounded-full bg-sage/30 blur-3xl" />
+      <div aria-hidden className="absolute -right-24 -top-24 size-112 rounded-full bg-sage/30 blur-3xl" />
       <div className="relative mx-auto grid max-w-7xl items-center gap-14 px-4 py-14 sm:px-6 lg:grid-cols-2 lg:py-24">
         <Reveal>
           <p className="text-sm font-semibold uppercase tracking-widest text-accent">{t("eyebrow")}</p>
@@ -52,7 +52,7 @@ export function Hero() {
         </Reveal>
 
         <Reveal delay={0.15} className="relative mx-auto w-full max-w-md lg:max-w-none">
-          <div className="relative mx-auto aspect-[4/5] w-[82%] overflow-hidden rounded-t-[999px] rounded-b-[2rem] border border-border bg-surface shadow-soft">
+          <div className="relative mx-auto aspect-4/5 w-[82%] overflow-hidden rounded-t-[999px] rounded-b-4xl border border-border bg-surface shadow-soft">
             <Image
               src={main.image.src}
               alt={main.name}

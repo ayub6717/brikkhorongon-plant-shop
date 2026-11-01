@@ -1,6 +1,6 @@
 import { Clock, Compass } from "lucide-react";
 import type { Metadata } from "next";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { GuideIcon } from "@/components/learn/GuideIcon";
 import { Reveal } from "@/components/ui/Reveal";
 import { guides } from "@/data/guides";
@@ -14,9 +14,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: t("title"), description: t("subtitle") };
 }
 
-export default async function LearnPage({ params }: Props) {
-  const { locale } = await params;
-  setRequestLocale(locale);
+export default async function LearnPage() {
   const t = await getTranslations("Learn");
 
   return (

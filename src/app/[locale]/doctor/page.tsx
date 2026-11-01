@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { DoctorView } from "@/components/doctor/DoctorView";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -10,9 +10,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: t("title"), description: t("subtitle") };
 }
 
-export default async function DoctorPage({ params }: Props) {
-  const { locale } = await params;
-  setRequestLocale(locale);
+export default async function DoctorPage() {
   const t = await getTranslations("Doctor");
   return (
     <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6">

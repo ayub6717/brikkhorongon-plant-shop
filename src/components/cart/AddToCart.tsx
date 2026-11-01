@@ -8,7 +8,7 @@ import { flyToCart } from "@/lib/fly";
 import { useCart } from "@/store/cart";
 import { useUi } from "@/store/ui";
 
-export function AddToCart({ slug }: { slug: string }) {
+export function AddToCart({ slug }: Readonly<{ slug: string }>) {
   const t = useTranslations("Product");
   const add = useCart((s) => s.add);
   const setCart = useUi((s) => s.setCart);
@@ -30,7 +30,7 @@ export function AddToCart({ slug }: { slug: string }) {
 
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <div className="flex items-center rounded-full border border-border bg-surface" role="group" aria-label={t("quantity")}>
+      <fieldset className="flex items-center rounded-full border border-border bg-surface min-w-0" aria-label={t("quantity")}>
         <button type="button" aria-label={t("decrease")} disabled={qty <= 1} onClick={() => setQty((q) => q - 1)} className="grid size-11 place-items-center rounded-full disabled:opacity-40">
           <Minus className="size-4" aria-hidden />
         </button>
@@ -38,7 +38,7 @@ export function AddToCart({ slug }: { slug: string }) {
         <button type="button" aria-label={t("increase")} disabled={qty >= 10} onClick={() => setQty((q) => q + 1)} className="grid size-11 place-items-center rounded-full disabled:opacity-40">
           <Plus className="size-4" aria-hidden />
         </button>
-      </div>
+      </fieldset>
       <button
         type="button"
         onClick={onAdd}

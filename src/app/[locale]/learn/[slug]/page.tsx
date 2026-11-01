@@ -1,7 +1,7 @@
 import { Clock } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { ProductCard } from "@/components/product/ProductCard";
 import { guides, getGuide } from "@/data/guides";
 import { Link } from "@/i18n/navigation";
@@ -24,7 +24,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function GuidePage({ params }: Props) {
   const { locale, slug } = await params;
-  setRequestLocale(locale);
   const guide = getGuide(slug);
   if (!guide) notFound();
 

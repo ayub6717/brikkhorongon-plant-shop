@@ -23,7 +23,7 @@ type Props = {
 };
 
 /** The site's one dropdown: a button + listbox that always opens below the trigger, unlike the native select popup. */
-export function Select({ value, onChange, options, label, id, placeholder, variant = "pill", invalid, describedBy, className }: Props) {
+export function Select({ value, onChange, options, label, id, placeholder, variant = "pill", invalid, describedBy, className }: Readonly<Props>) {
   const auto = useId();
   const base = id ?? auto;
   const root = useRef<HTMLDivElement>(null);
@@ -33,6 +33,9 @@ export function Select({ value, onChange, options, label, id, placeholder, varia
   const [active, setActive] = useState(0);
   const selected = options.findIndex((o) => o.value === value);
   const field = variant === "field";
+  let border = "border-border hover:border-primary/50";
+  if (invalid) border = "border-accent";
+  if (open) border = "border-primary";
 
   useEffect(() => {
     if (!open) return;
@@ -83,7 +86,7 @@ export function Select({ value, onChange, options, label, id, placeholder, varia
         className={cn(
           "flex items-center gap-2 border bg-surface text-sm transition focus-visible:border-primary",
           field ? "w-full justify-between rounded-xl bg-background px-4 py-3 text-start" : "rounded-full py-2.5 pe-3 ps-4",
-          open ? "border-primary" : invalid ? "border-accent" : "border-border hover:border-primary/50",
+          border,
         )}
       >
         <span className={cn("truncate", selected < 0 && "text-muted-foreground")}>{selected >= 0 ? options[selected].label : placeholder}</span>
@@ -95,7 +98,7 @@ export function Select({ value, onChange, options, label, id, placeholder, varia
           id={`${base}-list`}
           role="listbox"
           aria-label={label}
-          className={cn("absolute top-full z-30 mt-2 max-h-64 overflow-y-auto rounded-2xl border border-border bg-background p-1 shadow-soft", field ? "start-0 w-full" : "end-0 min-w-full")}
+          className={cn("absolute top-full z-30 mt-2 max-h-64 overflow-y-auto rounded-2xl border border-border bg-background p-1 shadow-soft", field ? "inset-s-0 w-full" : "inset-e-0 min-w-full")}
         >
           {options.map((o, i) => (
             <li
@@ -105,6 +108,7 @@ export function Select({ value, onChange, options, label, id, placeholder, varia
               aria-selected={i === selected}
               onMouseEnter={() => setActive(i)}
               onClick={() => pick(i)}
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") pick(i); }}
               className={cn("flex cursor-pointer items-center gap-2 rounded-xl px-3 py-2 text-sm", !field && "whitespace-nowrap", i === active && "bg-muted", i === selected && "font-medium text-primary")}
             >
               <Check className={cn("size-4 shrink-0", i === selected ? "opacity-100" : "opacity-0")} aria-hidden />

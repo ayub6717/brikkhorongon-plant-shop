@@ -1,12 +1,8 @@
 import { WifiOff } from "lucide-react";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 
-type Props = { params: Promise<{ locale: string }> };
-
-export default async function OfflinePage({ params }: Props) {
-  const { locale } = await params;
-  setRequestLocale(locale);
+export default async function OfflinePage() {
   const t = await getTranslations("Pwa");
   return (
     <div className="mx-auto max-w-md px-4 py-24 text-center">

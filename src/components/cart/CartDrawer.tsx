@@ -4,6 +4,7 @@ import { Minus, Plus, ShoppingBag, Trash2, Truck, X } from "lucide-react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect } from "react";
+import { ProgressBar } from "@/components/ui/ProgressBar";
 import { Modal } from "@/components/ui/Modal";
 import { Link, usePathname } from "@/i18n/navigation";
 import { resolveLines, subtotalOf } from "@/lib/cart-math";
@@ -65,11 +66,11 @@ export function CartDrawer() {
                     <p className="text-sm font-semibold text-primary">{formatPrice(product.price * qty, locale)}</p>
                   </div>
                   <div className="mt-auto flex items-center justify-between pt-2">
-                    <div className="flex items-center rounded-full border border-border" role="group" aria-label={t("quantity", { name: product.name })}>
+                    <fieldset className="flex items-center rounded-full border border-border min-w-0" aria-label={t("quantity", { name: product.name })}>
                       <button type="button" aria-label={t("decrease")} disabled={qty <= 1} onClick={() => setQty(product.slug, qty - 1)} className="grid size-8 place-items-center rounded-full disabled:opacity-40"><Minus className="size-3.5" aria-hidden /></button>
                       <span className="w-6 text-center text-sm font-medium tabular-nums">{qty}</span>
                       <button type="button" aria-label={t("increase")} disabled={qty >= 20} onClick={() => setQty(product.slug, qty + 1)} className="grid size-8 place-items-center rounded-full disabled:opacity-40"><Plus className="size-3.5" aria-hidden /></button>
-                    </div>
+                    </fieldset>
                     <button type="button" onClick={() => remove(product.slug)} aria-label={t("removeAria", { name: product.name })} className="p-1.5 text-muted-foreground transition hover:text-accent"><Trash2 className="size-4" aria-hidden /></button>
                   </div>
                 </div>
@@ -80,9 +81,7 @@ export function CartDrawer() {
           <div className="space-y-4 border-t border-border bg-surface/60 px-5 py-4">
             <div className="text-sm">
               <p className="flex items-center gap-2 font-medium"><Truck className="size-4 text-primary" aria-hidden />{remaining > 0 ? t("freeAway", { amount: formatPrice(remaining, locale) }) : t("freeUnlocked")}</p>
-              <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-border" role="progressbar" aria-label={t("freeProgress")} aria-valuenow={Math.round(progress)} aria-valuemin={0} aria-valuemax={100}>
-                <div className="h-full rounded-full bg-primary transition-all duration-500" style={{ width: `${progress}%` }} />
-              </div>
+              <ProgressBar className="mt-2" value={Math.round(progress)} label={t("freeProgress")} />
             </div>
             <p className="flex justify-between text-base font-semibold"><span>{t("subtotal")}</span><span className="text-primary">{formatPrice(subtotal, locale)}</span></p>
             <div className="grid gap-2">

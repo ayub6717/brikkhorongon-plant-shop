@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { OrderConfirmation } from "@/components/order/OrderConfirmation";
 
 type Props = { params: Promise<{ locale: string; id: string }> };
@@ -11,8 +11,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function OrderPage({ params }: Props) {
-  const { locale, id } = await params;
-  setRequestLocale(locale);
+  const { id } = await params;
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6">

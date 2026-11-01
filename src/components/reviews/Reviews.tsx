@@ -10,7 +10,7 @@ import { Stars } from "./Stars";
 
 const inputCls = "w-full rounded-xl border border-border bg-background px-4 py-3 text-sm placeholder:text-muted-foreground focus:border-primary aria-[invalid=true]:border-accent";
 
-export function Reviews({ slug, name }: { slug: string; name: string }) {
+export function Reviews({ slug, name }: Readonly<{ slug: string; name: string }>) {
   const t = useTranslations("Reviews");
   const locale = useLocale();
   const uid = useId();
@@ -31,7 +31,7 @@ export function Reviews({ slug, name }: { slug: string; name: string }) {
   const reviews = mounted ? all.filter((r) => r.slug === slug) : [];
   const { count, average, distribution } = summarize(reviews);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     const next = { rating: rating < 1, author: author.trim().length < 2, text: text.trim().length < 10 };
     setErrors(next);
@@ -70,8 +70,8 @@ export function Reviews({ slug, name }: { slug: string; name: string }) {
         <div className="space-y-8">
           <form onSubmit={submit} noValidate className="space-y-4 rounded-card border border-border bg-surface p-5 sm:p-6">
             <h3 className="font-display text-xl font-semibold">{t("write", { name })}</h3>
-            <div role="radiogroup" aria-label={t("yourRating")} aria-invalid={errors.rating ? true : undefined} onMouseLeave={() => setHover(0)}>
-              <p className="mb-1.5 text-sm font-medium">{t("yourRating")}</p>
+            <fieldset aria-invalid={errors.rating ? true : undefined} onMouseLeave={() => setHover(0)} className="min-w-0">
+              <legend className="mb-1.5 text-sm font-medium">{t("yourRating")}</legend>
               <div className="flex gap-1">
                 {[1, 2, 3, 4, 5].map((s) => (
                   <label key={s} className="cursor-pointer rounded-md p-1 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary" onMouseEnter={() => setHover(s)}>
@@ -82,7 +82,7 @@ export function Reviews({ slug, name }: { slug: string; name: string }) {
                 ))}
               </div>
               {errors.rating && <p role="alert" className="mt-1.5 text-xs font-medium text-accent">{t("errRating")}</p>}
-            </div>
+            </fieldset>
             <div>
               <label htmlFor={`${uid}-name`} className="mb-1.5 block text-sm font-medium">{t("yourName")}</label>
               <input id={`${uid}-name`} value={author} onChange={(e) => setAuthor(e.target.value)} maxLength={40} autoComplete="name" aria-invalid={errors.author ? true : undefined} className={inputCls} />
@@ -100,7 +100,7 @@ export function Reviews({ slug, name }: { slug: string; name: string }) {
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <button type="submit" className="rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition hover:opacity-90">{t("submit")}</button>
-              {thanks && <p role="status" className="text-sm font-medium text-primary">{t("thanks")}</p>}
+              {thanks && <output className="text-sm font-medium text-primary">{t("thanks")}</output>}
             </div>
           </form>
 

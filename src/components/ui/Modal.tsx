@@ -11,8 +11,8 @@ const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), selec
  * (the scrollbar gutter stays reserved, so nothing shifts) and focus returns to the opener.
  * Give one element `data-autofocus` to choose what receives focus first.
  */
-export function Modal({ open, onClose, label, side = false, className, children }: { open: boolean; onClose: () => void; label: string; side?: boolean; className?: string; children: ReactNode }) {
-  const panel = useRef<HTMLDivElement>(null);
+export function Modal({ open, onClose, label, side = false, className, children }: Readonly<{ open: boolean; onClose: () => void; label: string; side?: boolean; className?: string; children: ReactNode }>) {
+  const panel = useRef<HTMLDialogElement>(null);
   const close = useRef(onClose);
   useEffect(() => { close.current = onClose; });
 
@@ -36,7 +36,7 @@ export function Modal({ open, onClose, label, side = false, className, children 
       const items = [...el.querySelectorAll<HTMLElement>(FOCUSABLE)].filter((n) => n.offsetParent !== null);
       if (items.length === 0) { e.preventDefault(); return; }
       const first = items[0];
-      const last = items[items.length - 1];
+      const last = items.at(-1) ?? first;
       if (e.shiftKey && (document.activeElement === first || document.activeElement === el)) { e.preventDefault(); last.focus(); }
       else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
     };
@@ -53,22 +53,22 @@ export function Modal({ open, onClose, label, side = false, className, children 
   return (
     <div className="fixed inset-0 z-50">
       <div className="modal-backdrop absolute inset-0 bg-foreground/40 backdrop-blur-[2px]" onClick={onClose} aria-hidden />
-      <div
+      <dialog
         ref={panel}
-        role="dialog"
+        open
         aria-modal="true"
         aria-label={label}
         tabIndex={-1}
         className={cn(
-          "outline-none",
+          "h-auto text-foreground outline-none",
           side
-            ? "modal-side absolute inset-y-0 end-0 flex w-full max-w-md flex-col border-s border-border bg-background shadow-2xl"
-            : "modal-center absolute inset-x-3 top-[10vh] mx-auto flex max-h-[75vh] max-w-xl flex-col overflow-hidden rounded-2xl border border-border bg-background shadow-2xl",
+            ? "modal-side absolute inset-y-0 inset-e-0 flex w-full max-w-md flex-col border-s border-border bg-background shadow-2xl"
+            : "modal-center absolute inset-x-3 w-auto top-[10vh] mx-auto flex max-h-[75vh] max-w-xl flex-col overflow-hidden rounded-2xl border border-border bg-background shadow-2xl",
           className,
         )}
       >
         {children}
-      </div>
+      </dialog>
     </div>
   );
 }

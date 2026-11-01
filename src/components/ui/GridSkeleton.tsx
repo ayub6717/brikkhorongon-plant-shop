@@ -10,7 +10,7 @@ export function GridSkeleton({ count = 8 }: { count?: number }) {
       <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {Array.from({ length: count }, (_, i) => (
           <li key={i} className="space-y-3">
-            <div className="aspect-[4/5] animate-pulse rounded-card bg-surface" />
+            <div className="aspect-4/5 animate-pulse rounded-card bg-surface" />
             <div className="h-4 w-3/4 animate-pulse rounded bg-surface" />
             <div className="h-4 w-1/3 animate-pulse rounded bg-surface" />
           </li>

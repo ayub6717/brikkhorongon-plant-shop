@@ -9,14 +9,14 @@ import { localizeProduct } from "@/lib/localize";
 import { formatPrice } from "@/lib/format";
 import type { Product } from "@/data/types";
 
-export function ProductCard({ product: raw, priority = false }: { product: Product; priority?: boolean }) {
+export function ProductCard({ product: raw, priority = false }: Readonly<{ product: Product; priority?: boolean }>) {
   const t = useTranslations();
   const locale = useLocale();
   const product = localizeProduct(raw, locale);
 
   return (
     <article className="group relative flex flex-col overflow-hidden rounded-card border border-border bg-surface shadow-soft transition duration-300 hover:-translate-y-1">
-      <div className="relative aspect-[4/5] overflow-hidden bg-muted">
+      <div className="relative aspect-4/5 overflow-hidden bg-muted">
         <Image
           src={product.image.src}
           alt={product.name}

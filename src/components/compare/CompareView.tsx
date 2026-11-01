@@ -54,7 +54,7 @@ export function CompareView() {
 
   return (
     <div className="overflow-x-auto rounded-card border border-border bg-surface shadow-soft">
-      <table className="w-full min-w-[34rem] border-collapse text-sm">
+      <table className="w-full min-w-136 border-collapse text-sm">
         <caption className="sr-only">{t("Compare.title")}</caption>
         <thead>
           <tr>
@@ -62,8 +62,8 @@ export function CompareView() {
             {items.map((p) => (
               <th key={p.slug} scope="col" className="p-4 text-start align-top font-normal">
                 <div className="relative">
-                  <button type="button" onClick={() => remove(p.slug)} aria-label={t("Compare.remove", { name: p.name })} className="absolute end-0 top-0 z-10 grid size-7 place-items-center rounded-full bg-background/90 shadow-soft hover:bg-muted"><X className="size-4" aria-hidden /></button>
-                  <Link href={`/shop/${p.slug}`} className="relative block aspect-[4/5] overflow-hidden rounded-2xl bg-muted"><Image src={p.image.src} alt="" fill sizes="(min-width: 768px) 25vw, 50vw" className="object-cover" /></Link>
+                  <button type="button" onClick={() => remove(p.slug)} aria-label={t("Compare.remove", { name: p.name })} className="absolute inset-e-0 top-0 z-10 grid size-7 place-items-center rounded-full bg-background/90 shadow-soft hover:bg-muted"><X className="size-4" aria-hidden /></button>
+                  <Link href={`/shop/${p.slug}`} className="relative block aspect-4/5 overflow-hidden rounded-2xl bg-muted"><Image src={p.image.src} alt="" fill sizes="(min-width: 768px) 25vw, 50vw" className="object-cover" /></Link>
                   <Link href={`/shop/${p.slug}`} className="mt-3 block font-display text-lg font-semibold hover:text-primary">{p.name}</Link>
                 </div>
               </th>
@@ -75,7 +75,7 @@ export function CompareView() {
             <tr key={r.label} className="border-t border-border">
               <th scope="row" className="p-4 text-start font-medium text-muted-foreground">{r.label}</th>
               {r.cells.map((c, i) => (
-                <td key={i} className={c.best ? "p-4 font-semibold text-primary" : "p-4"}>
+                <td key={items[i].slug} className={c.best ? "p-4 font-semibold text-primary" : "p-4"}>
                   {c.text}
                   {c.best && <span className="ms-2 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium">{t("Compare.lowest")}</span>}
                 </td>

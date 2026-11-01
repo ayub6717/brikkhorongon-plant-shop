@@ -9,6 +9,7 @@ import { formatPrice } from "@/lib/format";
 import { computeTotals } from "@/lib/totals";
 import { FREE_SHIPPING_THRESHOLD } from "@/lib/shipping";
 import { useMounted } from "@/lib/useMounted";
+import { ProgressBar } from "@/components/ui/ProgressBar";
 import { useCart } from "@/store/cart";
 import { CouponBox } from "./CouponBox";
 
@@ -66,7 +67,7 @@ export function CartView() {
                 <p className="font-semibold text-primary">{formatPrice(product.price * qty, locale)}</p>
               </div>
               <div className="mt-auto flex items-center justify-between pt-3">
-                <div className="flex items-center rounded-full border border-border" role="group" aria-label={t("quantity", { name: product.name })}>
+                <fieldset className="flex items-center rounded-full border border-border min-w-0" aria-label={t("quantity", { name: product.name })}>
                   <button type="button" aria-label={t("decrease")} disabled={qty <= 1} onClick={() => setQty(product.slug, qty - 1)} className="grid size-9 place-items-center rounded-full disabled:opacity-40">
                     <Minus className="size-4" aria-hidden />
                   </button>
@@ -74,7 +75,7 @@ export function CartView() {
                   <button type="button" aria-label={t("increase")} disabled={qty >= 20} onClick={() => setQty(product.slug, qty + 1)} className="grid size-9 place-items-center rounded-full disabled:opacity-40">
                     <Plus className="size-4" aria-hidden />
                   </button>
-                </div>
+                </fieldset>
                 <button type="button" onClick={() => remove(product.slug)} className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition hover:text-accent" aria-label={t("removeAria", { name: product.name })}>
                   <Trash2 className="size-4" aria-hidden />
                   {t("remove")}
@@ -92,9 +93,7 @@ export function CartView() {
             <Truck className="size-4 text-primary" aria-hidden />
             {remaining > 0 ? t("freeAway", { amount: formatPrice(remaining, locale) }) : t("freeUnlocked")}
           </p>
-          <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-border" role="progressbar" aria-valuenow={Math.round(progress)} aria-valuemin={0} aria-valuemax={100}>
-            <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${progress}%` }} />
-          </div>
+          <ProgressBar className="mt-3" value={Math.round(progress)} label={t("freeProgress")} valueClassName="duration-300" />
         </div>
         <CouponBox subtotal={subtotal} />
         <dl className="space-y-3 text-sm">

@@ -12,14 +12,14 @@ export function OrderLines({
   total,
   discount = 0,
   couponCode,
-}: {
+}: Readonly<{
   lines: OrderLine[];
   subtotal: number;
   shipping: number;
   total: number;
   discount?: number;
   couponCode?: string | null;
-}) {
+}>) {
   const t = useTranslations("Cart");
   const tc = useTranslations("Coupon");
   const locale = useLocale();

@@ -1,7 +1,7 @@
 import { Droplets, Scissors, Sun } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { BonsaiArt } from "@/components/bonsai/BonsaiArt";
 import { ProductCard } from "@/components/product/ProductCard";
 import { Reveal } from "@/components/ui/Reveal";
@@ -23,9 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const chip = (active: boolean) =>
   cn("rounded-full border px-4 py-2 text-sm transition", active ? "border-primary bg-primary text-primary-foreground" : "border-border hover:border-primary/50 hover:bg-muted");
 
-export default async function BonsaiPage({ params, searchParams }: Props) {
-  const { locale } = await params;
-  setRequestLocale(locale);
+export default async function BonsaiPage({ searchParams }: Props) {
   const t = await getTranslations("Bonsai");
   const { items, style, placement } = filterBonsai(await searchParams);
   const hero = getProductBySlug("cloud-pine-bonsai")!.image;

@@ -6,7 +6,7 @@ import { useMounted } from "@/lib/useMounted";
 import { summarize, useReviews } from "@/store/reviews";
 
 /** Small "★ 4.5 (3)" shown on product cards once a plant has reviews. */
-export function RatingBadge({ slug }: { slug: string }) {
+export function RatingBadge({ slug }: Readonly<{ slug: string }>) {
   const t = useTranslations("Reviews");
   const locale = useLocale();
   const mounted = useMounted();

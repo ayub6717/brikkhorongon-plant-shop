@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { artFor } from "@/components/finder/OptionArt";
 import "./finder.css";
+import { ProgressBar } from "@/components/ui/ProgressBar";
 import { ProductCard } from "@/components/product/ProductCard";
 import { products } from "@/data/products";
 import { Link, useRouter } from "@/i18n/navigation";
@@ -77,9 +78,7 @@ export function FinderView() {
           )}
         </div>
         <div className="relative mt-3">
-          <div className="h-1.5 overflow-hidden rounded-full bg-muted" role="progressbar" aria-label={t("progress")} aria-valuemin={1} aria-valuemax={QUESTIONS.length} aria-valuenow={step + 1}>
-            <div className="h-full rounded-full bg-primary transition-all duration-500" style={{ width: `${((step + 1) / QUESTIONS.length) * 100}%` }} />
-          </div>
+          <ProgressBar track="muted" value={step + 1} min={1} max={QUESTIONS.length} label={t("progress")} />
           <div aria-hidden className="fa-sprout absolute top-0 -translate-y-1/2" style={{ left: `${((step + 1) / QUESTIONS.length) * 100}%` }}>
             <span key={step} className="text-primary"><Sprout className="size-5" /></span>
           </div>
@@ -120,7 +119,7 @@ export function FinderView() {
   );
 }
 
-function Results({ answers, onRestart }: { answers: Answers; onRestart: () => void }) {
+function Results({ answers, onRestart }: Readonly<{ answers: Answers; onRestart: () => void }>) {
   const t = useTranslations("Finder");
   const matches = rankProducts(products, answers);
   const setFinder = usePrefs((st) => st.setFinder);
@@ -145,7 +144,7 @@ function Results({ answers, onRestart }: { answers: Answers; onRestart: () => vo
         {matches.map(({ product, reasons }, i) => (
           <li key={product.id} className="flex flex-col gap-3">
             <div className="relative">
-              {i === 0 && <span className="absolute -top-3 start-4 z-10 rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground shadow-soft">{t("best")}</span>}
+              {i === 0 && <span className="absolute -top-3 inset-s-4 z-10 rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground shadow-soft">{t("best")}</span>}
               <ProductCard product={product} />
             </div>
             {reasons.length > 0 && (
