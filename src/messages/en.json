@@ -350,7 +350,15 @@
     "demoAdvance": "Move to next status",
     "demoDone": "Order delivered",
     "demoApprove": "Approve",
-    "demoDecline": "Decline"
+    "demoDecline": "Decline",
+    "story": {
+      "load": "Picking the freshest plants",
+      "ride": "On the way to you",
+      "arrive": "Almost there…",
+      "knock": "Knock, knock!",
+      "handover": "Handing them over",
+      "joy": "Delivered with a smile"
+    }
   },
   "Bonsai": {
     "badge": "New collection",

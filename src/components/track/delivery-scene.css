@@ -1,0 +1,113 @@
+/* Delivery story: scene colours, phase poses and loops. See DeliveryScene.tsx. */
+.ds-root {
+  --ds-sky1: #dcecd9; --ds-sky2: #f7f4ea; --ds-hill: #cfe1c9; --ds-hill2: #bcd4b6; --ds-pave: #ddd8ca; --ds-road: #5d6863;
+  --ds-dash: #f1eedf; --ds-cloud: #ffffff; --ds-glass: #e8f3ee; --ds-house: #f3e6d3; --ds-wood: #b98a5b;
+}
+:is(.dark) .ds-root {
+  --ds-sky1: #1b2a23; --ds-sky2: #27362e; --ds-hill: #2c4337; --ds-hill2: #355146; --ds-pave: #3b413d; --ds-road: #2a2f2d;
+  --ds-dash: #8c9188; --ds-cloud: #3c4b44; --ds-glass: #2c4036; --ds-house: #4a4036; --ds-wood: #7d5d3d;
+}
+
+.ds-stage { transition: opacity 0.5s ease; }
+.ds-root[data-phase="reset"] .ds-stage { opacity: 0; }
+
+/* ---------- keyframes ---------- */
+@keyframes ds-spin { to { transform: rotate(360deg); } }
+@keyframes ds-road { to { transform: translateX(-70px); } }
+@keyframes ds-bob { from { transform: translateY(0); } to { transform: translateY(-1.5px); } }
+@keyframes ds-pedal { from { transform: rotate(-22deg); } to { transform: rotate(26deg); } }
+@keyframes ds-wiggle { from { transform: rotate(-4deg); } to { transform: rotate(4deg); } }
+@keyframes ds-walk { from { transform: rotate(-24deg); } to { transform: rotate(24deg); } }
+@keyframes ds-step { from { transform: translateY(0); } to { transform: translateY(-1.8px); } }
+@keyframes ds-knock { from { transform: rotate(-78deg); } to { transform: rotate(-104deg); } }
+@keyframes ds-wave { from { transform: rotate(-142deg); } to { transform: rotate(-172deg); } }
+@keyframes ds-jump { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-9px); } 60% { transform: translateY(-9px); } }
+@keyframes ds-cheer { from { transform: rotate(150deg); } to { transform: rotate(178deg); } }
+@keyframes ds-heart { 0% { transform: translate(var(--hx, 0), 0) scale(0.4); opacity: 0; } 20% { opacity: 1; } 100% { transform: translate(var(--hx, 0), -34px) scale(1.2); opacity: 0; } }
+@keyframes ds-spark { 0%, 100% { transform: scale(0.3); opacity: 0.3; } 50% { transform: scale(1.2); opacity: 1; } }
+@keyframes ds-knockfx { 0%, 100% { opacity: 0; } 35% { opacity: 1; } }
+@keyframes ds-cloud { from { transform: translateX(-30px); } to { transform: translateX(60px); } }
+@keyframes ds-glow { 0%, 100% { opacity: 0.15; } 50% { opacity: 0.32; } }
+@keyframes ds-cap { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes ds-load {
+  0% { transform: translate(var(--sx), var(--sy)); }
+  45% { transform: translate(calc((var(--sx) + var(--px)) / 2), calc(var(--sy) - 38px)); }
+  100% { transform: translate(var(--px), var(--py)); }
+}
+
+/* ---------- always-on ambience ---------- */
+.ds-cloud { animation: ds-cloud 26s ease-in-out var(--cd, 0s) infinite alternate; }
+.ds-glow { transform-box: fill-box; transform-origin: center; animation: ds-glow 4s ease-in-out infinite; }
+.ds-cap { animation: ds-cap 0.45s ease-out both; }
+
+/* ---------- elements: rest state ---------- */
+.ds-bike { transform: translate(250px, 246px); }
+.ds-rider { transform: translate(470px, 0); opacity: 0; transition: opacity 0.3s ease; }
+.ds-seated { transition: opacity 0.3s ease; }
+.ds-customer { transform: translate(618px, 200px) scale(0.6); opacity: 0; }
+.ds-door { transform-origin: 602px 175px; }
+.ds-arm, .ds-carm { transform-origin: 0 0; transform: rotate(0); }
+.ds-heart, .ds-spark, .ds-knockfx { opacity: 0; transform-box: fill-box; transform-origin: center; }
+.ds-pot { transform: translate(var(--px, 130px), var(--py, 186px)); }
+.ds-plant { transform-origin: 0 -11px; }
+.ds-spin, .ds-pedal, .ds-dashes, .ds-bob { animation-play-state: paused; }
+.ds-spin { transform-origin: 0 0; animation: ds-spin 0.55s linear infinite paused; }
+.ds-pedal { transform-origin: 0 0; animation: ds-pedal 0.34s ease-in-out infinite alternate paused; }
+.ds-dashes { animation: ds-road 0.5s linear infinite paused; }
+.ds-bob { animation: ds-bob 0.3s ease-in-out infinite alternate paused; }
+.ds-leg { transform-box: fill-box; transform-origin: 50% 0; }
+
+/* ---------- pots ---------- */
+.ds-root[data-phase="prep"] .ds-pot { --px: calc(130px + var(--i) * 18px); --py: 186px; }
+.ds-root[data-phase="load"] .ds-pot {
+  --sx: calc(130px + var(--i) * 18px); --sy: 186px; --px: calc(206px + var(--i) * 15px); --py: 208px;
+  animation: ds-load 1.05s ease-in-out calc(var(--i) * 0.65s + 0.25s) backwards;
+}
+.ds-root[data-phase="loaded"] .ds-pot { --px: calc(206px + var(--i) * 15px); --py: 208px; }
+.ds-root[data-phase="riding"] .ds-pot { --px: calc(316px + var(--i) * 15px); --py: 208px; transition: transform 1.2s ease-in-out; }
+.ds-root[data-phase="ride"] .ds-pot { --px: calc(426px + var(--i) * 15px); --py: 208px; transition: transform 5.6s ease-in-out; }
+.ds-root[data-phase="arrive"] .ds-pot { --px: calc(578px + var(--i) * 9px); --py: 196px; transition: transform 2.2s ease-in-out; }
+.ds-root[data-phase="knock"] .ds-pot { --px: calc(578px + var(--i) * 9px); --py: 196px; }
+.ds-root:is([data-phase="handover"], [data-phase="joy"], [data-phase="reset"]) .ds-pot { --px: calc(596px + var(--i) * 9px); --py: 192px; }
+.ds-root[data-phase="handover"] .ds-pot { transition: transform 1s ease-in-out 0.7s; }
+
+/* ---------- bike ---------- */
+.ds-root[data-phase="riding"] .ds-bike { transform: translate(360px, 246px); transition: transform 1.2s ease-in-out; }
+.ds-root[data-phase="ride"] .ds-bike { transform: translate(470px, 246px); transition: transform 5.6s ease-in-out; }
+.ds-root:is([data-phase="arrive"], [data-phase="knock"], [data-phase="handover"], [data-phase="joy"], [data-phase="reset"]) .ds-bike { transform: translate(470px, 246px); }
+.ds-root:is([data-phase="riding"], [data-phase="ride"]) :is(.ds-spin, .ds-pedal, .ds-dashes, .ds-bob) { animation-play-state: running; }
+.ds-root:is([data-phase="riding"], [data-phase="ride"]) .ds-plant { animation: ds-wiggle 0.4s ease-in-out infinite alternate; }
+.ds-root:is([data-phase="arrive"], [data-phase="knock"], [data-phase="handover"], [data-phase="joy"], [data-phase="reset"]) .ds-seated { opacity: 0; }
+
+/* ---------- rider on foot ---------- */
+.ds-root:is([data-phase="arrive"], [data-phase="knock"], [data-phase="handover"], [data-phase="joy"], [data-phase="reset"]) .ds-rider { opacity: 1; }
+.ds-root[data-phase="arrive"] .ds-rider { transform: translate(566px, 0); transition: transform 2.2s ease-in-out, opacity 0.3s ease; }
+.ds-root:is([data-phase="knock"], [data-phase="handover"], [data-phase="joy"], [data-phase="reset"]) .ds-rider { transform: translate(566px, 0); }
+.ds-root[data-phase="arrive"] .ds-leg-a { animation: ds-walk 0.36s ease-in-out infinite alternate; }
+.ds-root[data-phase="arrive"] .ds-leg-b { animation: ds-walk 0.36s ease-in-out infinite alternate-reverse; }
+.ds-root[data-phase="arrive"] .ds-bob2 { animation: ds-step 0.18s ease-in-out infinite alternate; }
+.ds-root:is([data-phase="arrive"]) .ds-arm { transform: rotate(-38deg); }
+.ds-root[data-phase="knock"] .ds-arm { animation: ds-knock 0.3s ease-in-out infinite alternate; }
+.ds-root[data-phase="handover"] .ds-arm { transform: rotate(-82deg); transition: transform 0.6s ease; }
+.ds-root:is([data-phase="joy"], [data-phase="reset"]) .ds-arm { animation: ds-wave 0.45s ease-in-out infinite alternate; }
+.ds-root[data-phase="knock"] .ds-knockfx { animation: ds-knockfx 0.6s ease-in-out infinite; }
+
+/* ---------- door + customer ---------- */
+.ds-door { transition: transform 0.6s ease-in-out; }
+.ds-root:is([data-phase="handover"], [data-phase="joy"], [data-phase="reset"]) .ds-door { transform: scaleX(0.12); }
+.ds-root:is([data-phase="handover"], [data-phase="joy"], [data-phase="reset"]) .ds-customer { opacity: 1; transform: translate(618px, 200px) scale(1); }
+.ds-root[data-phase="handover"] .ds-customer { transition: opacity 0.4s ease 0.3s, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s; }
+.ds-root[data-phase="handover"] .ds-carm { transform: rotate(78deg); transition: transform 0.5s ease 0.9s; }
+.ds-root[data-phase="handover"] .ds-carm-b { transform: rotate(78deg); }
+.ds-root:is([data-phase="joy"], [data-phase="reset"]) .ds-carm { animation: ds-cheer 0.4s ease-in-out infinite alternate; }
+.ds-root:is([data-phase="joy"], [data-phase="reset"]) .ds-carm-b { animation: ds-cheer 0.4s ease-in-out infinite alternate-reverse; }
+.ds-root:is([data-phase="joy"], [data-phase="reset"]) :is(.ds-jump, .ds-potbob) { animation: ds-jump 0.9s ease-in-out infinite; }
+.ds-root:is([data-phase="joy"], [data-phase="reset"]) .ds-heart { animation: ds-heart 2s ease-out var(--d, 0s) infinite; }
+.ds-root:is([data-phase="joy"], [data-phase="reset"]) .ds-spark { animation: ds-spark 1.4s ease-in-out var(--d, 0s) infinite; }
+.ds-root:is([data-phase="joy"], [data-phase="reset"]) .ds-spark, .ds-root:is([data-phase="joy"], [data-phase="reset"]) .ds-heart { opacity: 1; }
+.ds-heart { --hx: 0px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-root *, .ds-cap { animation: none !important; transition: none !important; }
+  .ds-root[data-phase="joy"] :is(.ds-heart, .ds-spark) { opacity: 1; }
+}
