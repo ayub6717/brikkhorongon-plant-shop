@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { getProductBySlug } from "@/lib/catalog";
+import { HeroOrchid } from "@/components/home/HeroOrchid";
 import { Reveal } from "@/components/ui/Reveal";
 
 export function Hero() {
@@ -61,6 +62,7 @@ export function Hero() {
               className="object-cover"
             />
           </div>
+          <HeroOrchid />
           <div className="absolute -bottom-6 left-0 size-36 overflow-hidden rounded-full border-4 border-background shadow-soft sm:size-44">
             <Image src={second.image.src} alt={second.name} fill sizes="180px" className="object-cover" />
           </div>
