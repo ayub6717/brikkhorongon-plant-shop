@@ -1,9 +1,11 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
+import { CareReminderButton } from "@/components/garden/CareReminderButton";
 import { OrderLines } from "@/components/checkout/OrderLines";
 import { GrowingPlant } from "@/components/order/GrowingPlant";
 import { Link } from "@/i18n/navigation";
+import { getProductBySlug } from "@/lib/catalog";
 import { formatDateKey } from "@/lib/shipping";
 import { useMounted } from "@/lib/useMounted";
 import { useOrders } from "@/store/orders";
@@ -27,6 +29,10 @@ export function OrderConfirmation({ id }: { id: string }) {
     );
   }
 
+  const reminders = order.lines.flatMap((l) => {
+    const p = getProductBySlug(l.slug);
+    return p ? [{ slug: p.slug, name: p.name, water: p.care.water, startKey: order.delivery.date, orderId: order.id }] : [];
+  });
   const placed = new Intl.DateTimeFormat(locale === "bn" ? "bn-BD" : "en-GB", { dateStyle: "medium", timeStyle: "short" }).format(new Date(order.createdAt));
 
   return (
@@ -62,12 +68,15 @@ export function OrderConfirmation({ id }: { id: string }) {
 
       <section className="mt-6 rounded-card border border-border bg-surface p-5">
         <h2 className="mb-2 font-display text-lg font-semibold">{t("items")}</h2>
-        <OrderLines lines={order.lines} subtotal={order.subtotal} shipping={order.shipping} total={order.total} />
+        <OrderLines lines={order.lines} subtotal={order.subtotal} shipping={order.shipping} total={order.total} discount={order.discount} couponCode={order.coupon} />
       </section>
 
       <div className="mt-8 flex flex-wrap justify-center gap-3">
         <Link href={`/track?id=${order.id}`} className="rounded-full bg-primary px-7 py-3.5 font-medium text-primary-foreground shadow-soft">{t("track")}</Link>
         <Link href="/shop" className="rounded-full border border-border px-7 py-3.5 font-medium hover:bg-muted">{t("continue")}</Link>
+      </div>
+      <div className="mt-6 text-center">
+        <CareReminderButton reminders={reminders} />
       </div>
     </div>
   );

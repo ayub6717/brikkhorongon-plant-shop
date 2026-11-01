@@ -8,11 +8,13 @@ import { Controller, useForm, useWatch } from "react-hook-form";
 import { Link, useRouter } from "@/i18n/navigation";
 import { resolveLines, subtotalOf } from "@/lib/cart-math";
 import { checkoutSchema, type CheckoutValues } from "@/lib/checkout-schema";
-import { calcShipping, DISTRICTS, formatDateKey, getDeliveryDates, PAYMENTS, SLOTS } from "@/lib/shipping";
+import { computeTotals } from "@/lib/totals";
+import { DISTRICTS, INNER_DHAKA_AREAS, formatDateKey, getDeliveryDates, PAYMENTS, SLOTS } from "@/lib/shipping";
 import { useMounted, useTodayKey } from "@/lib/useMounted";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/store/cart";
 import { createOrderId, useOrders, type Order } from "@/store/orders";
+import { CouponBox } from "@/components/cart/CouponBox";
 import { OrderLines } from "./OrderLines";
 
 const inputCls =
@@ -51,6 +53,7 @@ export function CheckoutForm() {
 
   const lines = useCart((s) => s.lines);
   const clearCart = useCart((s) => s.clear);
+  const coupon = useCart((s) => s.coupon);
   const addOrder = useOrders((s) => s.addOrder);
 
   const {
@@ -64,6 +67,7 @@ export function CheckoutForm() {
   });
 
   const district = useWatch({ control, name: "district" });
+  const area = useWatch({ control, name: "area" });
 
   if (!mounted) return <div className="h-64" aria-hidden />;
 
@@ -79,8 +83,7 @@ export function CheckoutForm() {
   }
 
   const subtotal = subtotalOf(resolved);
-  const shipping = calcShipping(subtotal, district);
-  const total = subtotal + shipping;
+  const { discount, shipping, total, couponCode } = computeTotals({ subtotal, coupon, district, area });
   const orderLines = resolved.map(({ product, qty }) => ({ slug: product.slug, name: product.name, image: product.image.src, price: product.price, qty }));
   const dates = todayKey ? getDeliveryDates(todayKey) : [];
   const err = (key: keyof CheckoutValues) => (errors[key]?.message ? t(`errors.${errors[key]?.message}`) : undefined);
@@ -96,6 +99,7 @@ export function CheckoutForm() {
       createdAt: now,
       lines: orderLines,
       subtotal,
+      ...(couponCode ? { discount, coupon: couponCode } : {}),
       shipping,
       total,
       customer: { name: v.name, phone: v.phone, email: v.email, district: v.district, area: v.area, address: v.address },
@@ -138,7 +142,8 @@ export function CheckoutForm() {
               </select>
             </Field>
             <Field id={`${uid}-area`} label={t("area")} error={err("area")}>
-              <input id={`${uid}-area`} autoComplete="address-level2" className={inputCls} {...aria("area", `${uid}-area`)} {...register("area")} />
+              <input id={`${uid}-area`} list={`${uid}-areas`} autoComplete="address-level2" className={inputCls} {...aria("area", `${uid}-area`)} {...register("area")} />
+              <datalist id={`${uid}-areas`}>{INNER_DHAKA_AREAS.filter((a) => /^[a-z]/i.test(a)).map((a) => <option key={a} value={a.replace(/^./, (c) => c.toUpperCase())} />)}</datalist>
             </Field>
           </div>
           <Field id={`${uid}-address`} label={t("address")} hint={t("addressHint")} error={err("address")}>
@@ -200,7 +205,8 @@ export function CheckoutForm() {
 
       <aside className="h-fit space-y-5 rounded-card border border-border bg-surface p-6 lg:sticky lg:top-24">
         <h2 className="font-display text-2xl font-semibold">{t("summary")}</h2>
-        <OrderLines lines={orderLines} subtotal={subtotal} shipping={shipping} total={total} />
+        <CouponBox subtotal={subtotal} />
+        <OrderLines lines={orderLines} subtotal={subtotal} shipping={shipping} total={total} discount={discount} couponCode={couponCode} />
         <button type="submit" disabled={isSubmitting} className="w-full rounded-full bg-primary px-6 py-3.5 font-medium text-primary-foreground shadow-soft transition hover:opacity-90 disabled:opacity-60">
           {isSubmitting ? t("placing") : t("placeOrder")}
         </button>

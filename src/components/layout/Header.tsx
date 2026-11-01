@@ -1,7 +1,9 @@
-import { Leaf, ShoppingBag } from "lucide-react";
+import { Heart, Leaf } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { CartCount } from "@/components/cart/CartCount";
+import { CartButton } from "@/components/cart/CartButton";
+import { PaletteTrigger } from "@/components/palette/PaletteTrigger";
+import { WishlistCount } from "@/components/wishlist/WishlistCount";
 import { LocaleSwitcher } from "./LocaleSwitcher";
 import { MobileNav } from "./MobileNav";
 import { DesktopNavLinks } from "./NavLinks";
@@ -21,16 +23,18 @@ export function Header() {
         <DesktopNavLinks />
 
         <div className="ml-auto flex items-center gap-0.5 sm:gap-2">
+          <PaletteTrigger />
           <LocaleSwitcher />
           <ThemeToggle />
           <Link
-            href="/cart"
-            aria-label={t("Nav.cart")}
-            className="grid size-9 place-items-center sm:size-10 relative rounded-full bg-primary text-primary-foreground transition hover:opacity-90"
+            href="/wishlist"
+            aria-label={t("Nav.wishlist")}
+            className="relative hidden size-9 place-items-center rounded-full text-foreground/80 transition hover:bg-muted sm:grid sm:size-10"
           >
-            <ShoppingBag className="size-5" aria-hidden />
-            <CartCount />
+            <Heart className="size-5" aria-hidden />
+            <WishlistCount />
           </Link>
+          <CartButton />
           <MobileNav />
         </div>
       </div>

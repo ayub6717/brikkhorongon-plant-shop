@@ -4,10 +4,12 @@ import { Check, Minus, Plus, ShoppingBag } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import { useCart } from "@/store/cart";
+import { useUi } from "@/store/ui";
 
 export function AddToCart({ slug }: { slug: string }) {
   const t = useTranslations("Product");
   const add = useCart((s) => s.add);
+  const setCart = useUi((s) => s.setCart);
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -16,6 +18,7 @@ export function AddToCart({ slug }: { slug: string }) {
 
   const onAdd = () => {
     add(slug, qty);
+    setCart(true);
     setAdded(true);
     clearTimeout(timer.current);
     timer.current = setTimeout(() => setAdded(false), 2000);

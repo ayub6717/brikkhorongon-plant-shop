@@ -27,6 +27,9 @@ export type Order = {
   createdAt: string;
   lines: OrderLine[];
   subtotal: number;
+  /** Coupon discount in BDT (absent on orders placed before coupons existed). */
+  discount?: number;
+  coupon?: string;
   shipping: number;
   total: number;
   customer: Pick<CheckoutValues, "name" | "phone" | "email" | "district" | "area" | "address">;

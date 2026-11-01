@@ -6,18 +6,22 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { resolveLines, subtotalOf } from "@/lib/cart-math";
 import { formatPrice } from "@/lib/format";
+import { computeTotals } from "@/lib/totals";
 import { FREE_SHIPPING_THRESHOLD } from "@/lib/shipping";
 import { useMounted } from "@/lib/useMounted";
 import { useCart } from "@/store/cart";
+import { CouponBox } from "./CouponBox";
 
 export function CartView() {
   const t = useTranslations("Cart");
   const tc = useTranslations("Categories");
+  const tcp = useTranslations("Coupon");
   const locale = useLocale();
   const mounted = useMounted();
   const lines = useCart((s) => s.lines);
   const setQty = useCart((s) => s.setQty);
   const remove = useCart((s) => s.remove);
+  const coupon = useCart((s) => s.coupon);
 
   if (!mounted) return <div className="h-64" aria-hidden />;
 
@@ -37,8 +41,10 @@ export function CartView() {
   }
 
   const subtotal = subtotalOf(resolved);
-  const remaining = Math.max(FREE_SHIPPING_THRESHOLD - subtotal, 0);
-  const progress = Math.min((subtotal / FREE_SHIPPING_THRESHOLD) * 100, 100);
+  const { discount, couponCode } = computeTotals({ subtotal, coupon });
+  const payable = subtotal - discount;
+  const remaining = Math.max(FREE_SHIPPING_THRESHOLD - payable, 0);
+  const progress = Math.min((payable / FREE_SHIPPING_THRESHOLD) * 100, 100);
 
   return (
     <div className="grid gap-10 lg:grid-cols-[1fr_22rem]">
@@ -89,8 +95,10 @@ export function CartView() {
             <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${progress}%` }} />
           </div>
         </div>
+        <CouponBox subtotal={subtotal} />
         <dl className="space-y-3 text-sm">
           <div className="flex justify-between"><dt className="text-muted-foreground">{t("subtotal")}</dt><dd className="font-medium">{formatPrice(subtotal, locale)}</dd></div>
+          {discount > 0 && <div className="flex justify-between text-primary"><dt>{tcp("discount")} ({couponCode})</dt><dd className="font-medium">−{formatPrice(discount, locale)}</dd></div>}
           <div className="flex justify-between"><dt className="text-muted-foreground">{t("delivery")}</dt><dd className="text-muted-foreground">{t("deliveryAtCheckout")}</dd></div>
         </dl>
         <Link href="/checkout" className="block rounded-full bg-primary px-6 py-3.5 text-center font-medium text-primary-foreground shadow-soft transition hover:opacity-90">

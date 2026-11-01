@@ -9,6 +9,7 @@ import "./finder.css";
 import { ProductCard } from "@/components/product/ProductCard";
 import { products } from "@/data/products";
 import { Link, useRouter } from "@/i18n/navigation";
+import { usePrefs } from "@/store/prefs";
 import { BUDGETS, CARE_LEVELS, FINDER_LIGHTS, parseAnswers, rankProducts, STYLES, WATER_HABITS, type Answers } from "@/lib/finder";
 import { cn } from "@/lib/utils";
 
@@ -122,6 +123,9 @@ export function FinderView() {
 function Results({ answers, onRestart }: { answers: Answers; onRestart: () => void }) {
   const t = useTranslations("Finder");
   const matches = rankProducts(products, answers);
+  const setFinder = usePrefs((st) => st.setFinder);
+  // Remember the answers so the home page can suggest plants.
+  useEffect(() => { setFinder(answers); }, [answers.light, answers.water, answers.care, answers.style, answers.budget]); // eslint-disable-line react-hooks/exhaustive-deps
   const lightShortfall = answers.light === "low" && !matches[0]?.reasons.includes("light");
 
   return (

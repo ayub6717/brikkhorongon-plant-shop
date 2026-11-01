@@ -13,7 +13,11 @@
     "menu": "Menu",
     "toggleTheme": "Toggle theme",
     "language": "Language",
-    "skip": "Skip to content"
+    "skip": "Skip to content",
+    "search": "Search",
+    "garden": "My Garden",
+    "wishlist": "Wishlist",
+    "compare": "Compare"
   },
   "Home": {
     "hero": {
@@ -192,7 +196,9 @@
     "total": "Total",
     "checkout": "Proceed to checkout",
     "freeAway": "Add {amount} more for free delivery",
-    "freeUnlocked": "You've unlocked free delivery!"
+    "freeUnlocked": "You've unlocked free delivery!",
+    "freeProgress": "Progress to free delivery",
+    "deliveryByArea": "Delivery is estimated for Dhaka; the exact fee depends on your area."
   },
   "Checkout": {
     "title": "Checkout",
@@ -744,5 +750,106 @@
     "retake": "Retake the quiz",
     "browse": "Browse all plants",
     "progress": "Progress"
+  },
+  "Palette": {
+    "title": "Search and commands",
+    "placeholder": "Search plants, pages, or type a command…",
+    "open": "Open search",
+    "trigger": "Search",
+    "groups": {
+      "plants": "Plants",
+      "pages": "Pages",
+      "actions": "Actions",
+      "popular": "Popular plants",
+      "goto": "Go to"
+    },
+    "noResults": "No results for “{q}”",
+    "trackOrder": "Track order {id}",
+    "switchLang": "Switch to {lang}",
+    "resultCount": "{count} results",
+    "hintNav": "navigate",
+    "hintSelect": "select"
+  },
+  "Drawer": {
+    "title": "Your cart",
+    "items": "{count, plural, one {# item} other {# items}}",
+    "close": "Close cart",
+    "viewCart": "View full cart"
+  },
+  "Wishlist": {
+    "add": "Save {name} to wishlist",
+    "remove": "Remove {name} from wishlist",
+    "title": "Your wishlist",
+    "emptyTitle": "Nothing saved yet",
+    "emptyBody": "Tap the heart on any plant to keep it here.",
+    "browse": "Browse plants",
+    "moveToCart": "Add to cart",
+    "count": "{count, plural, one {# saved plant} other {# saved plants}}"
+  },
+  "Compare": {
+    "add": "Compare {name}",
+    "remove": "Remove {name} from comparison",
+    "full": "You can compare up to {max} plants. Remove one first.",
+    "bar": "Plant comparison",
+    "count": "{count, plural, one {# plant selected} other {# plants selected}}",
+    "clear": "Clear",
+    "open": "Compare",
+    "title": "Compare plants",
+    "need2": "Pick at least two plants to compare.",
+    "emptyBody": "Use the scale icon on plant cards to add them here.",
+    "price": "Price",
+    "category": "Category",
+    "light": "Light",
+    "water": "Water",
+    "difficulty": "Difficulty",
+    "size": "Style",
+    "lowest": "Lowest price",
+    "browse": "Browse plants",
+    "feature": "Feature"
+  },
+  "Coupon": {
+    "label": "Coupon code",
+    "placeholder": "Enter code",
+    "apply": "Apply",
+    "remove": "Remove coupon",
+    "applied": "{code} applied",
+    "unknown": "That code isn't valid.",
+    "min": "Spend at least {amount} to use this code.",
+    "discount": "Discount",
+    "freeShip": "Free delivery"
+  },
+  "Garden": {
+    "title": "My Garden",
+    "subtitle": "Your plants and when they need you next.",
+    "emptyTitle": "Your garden is empty",
+    "emptyBody": "Plants from delivered orders appear here with their watering schedule.",
+    "overdue": "Overdue by {days, plural, one {# day} other {# days}}",
+    "today": "Water today",
+    "soon": "In {days, plural, one {# day} other {# days}}",
+    "later": "In {days} days",
+    "waterNow": "Watered today",
+    "next": "Next watering",
+    "every": "Every {days} days",
+    "remindAll": "Add reminders to calendar",
+    "onTheWay": "{count, plural, one {# plant is} other {# plants are}} on the way",
+    "browse": "Shop plants"
+  },
+  "Reminders": {
+    "button": "Add care reminders",
+    "hint": "Download a calendar file with watering reminders.",
+    "calendar": "Brikkhorongon plant care",
+    "title": "Water {name}",
+    "description": "{name} needs water about every {days} days. Check the soil first."
+  },
+  "ForYou": {
+    "title": "Picked for you",
+    "body": "Based on your plant finder answers.",
+    "recent": "Recently viewed"
+  },
+  "Pwa": {
+    "install": "Install app",
+    "offlineTitle": "You're offline",
+    "offlineBody": "Check your connection. Care guides you've already opened still work.",
+    "retry": "Try again"
   }
 }

@@ -1,4 +1,5 @@
 import { useTranslations } from "next-intl";
+import { InstallButton } from "@/components/pwa/InstallButton";
 import { Link } from "@/i18n/navigation";
 
 export function Footer() {
@@ -23,9 +24,12 @@ export function Footer() {
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
             <li>{t("Footer.guarantee")}</li>
             <li><Link href="/track" className="hover:text-primary">{t("Nav.track")}</Link></li>
+            <li><Link href="/garden" className="hover:text-primary">{t("Nav.garden")}</Link></li>
+            <li><Link href="/wishlist" className="hover:text-primary">{t("Nav.wishlist")}</Link></li>
           </ul>
         </div>
       </div>
+      <div className="flex justify-center pb-5 empty:hidden"><InstallButton /></div>
       <p className="border-t border-border py-5 text-center text-xs text-muted-foreground">
         © {new Date().getFullYear()} {t("Brand.name")}. {t("Footer.rights")}
       </p>

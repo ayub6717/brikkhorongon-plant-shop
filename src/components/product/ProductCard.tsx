@@ -1,6 +1,8 @@
 import { Droplets, Sun } from "lucide-react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
+import { CompareButton } from "@/components/compare/CompareButton";
+import { WishlistButton } from "@/components/wishlist/WishlistButton";
 import { Link } from "@/i18n/navigation";
 import { formatPrice } from "@/lib/format";
 import type { Product } from "@/data/types";
@@ -20,6 +22,10 @@ export function ProductCard({ product, priority = false }: { product: Product; p
           sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
           className="object-cover transition duration-500 group-hover:scale-105"
         />
+        <div className="absolute right-3 top-3 z-10 flex flex-col gap-2">
+          <WishlistButton slug={product.slug} name={product.name} />
+          <CompareButton slug={product.slug} name={product.name} />
+        </div>
         <span className="absolute left-3 top-3 rounded-full bg-background/90 px-3 py-1 text-xs font-medium text-primary backdrop-blur">
           {t(`Categories.${product.category}.name`)}
         </span>

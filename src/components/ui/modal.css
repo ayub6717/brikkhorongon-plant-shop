@@ -1,0 +1,9 @@
+@keyframes modal-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modal-pop { from { opacity: 0; transform: translateY(-10px) scale(0.98); } to { opacity: 1; transform: none; } }
+@keyframes modal-slide { from { transform: translateX(100%); } to { transform: none; } }
+.modal-backdrop { animation: modal-fade 0.2s ease-out both; }
+.modal-center { animation: modal-pop 0.2s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.modal-side { animation: modal-slide 0.3s cubic-bezier(0.22, 1, 0.36, 1) both; }
+@media (prefers-reduced-motion: reduce) {
+  .modal-backdrop, .modal-center, .modal-side { animation: none; }
+}

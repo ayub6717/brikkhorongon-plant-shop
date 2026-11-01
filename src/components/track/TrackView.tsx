@@ -80,7 +80,7 @@ export function TrackView() {
 
           <section className="rounded-card border border-border bg-surface p-5 sm:p-6">
             <h2 className="mb-2 font-display text-xl font-semibold">{t("items")}</h2>
-            <OrderLines lines={order.lines} subtotal={order.subtotal} shipping={order.shipping} total={order.total} />
+            <OrderLines lines={order.lines} subtotal={order.subtotal} shipping={order.shipping} total={order.total} discount={order.discount} couponCode={order.coupon} />
           </section>
 
           <DemoControls order={order} />

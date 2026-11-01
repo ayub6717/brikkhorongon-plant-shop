@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
-import { NAV } from "./nav";
+import { NAV, NAV_MORE } from "./nav";
 
 /** True when `pathname` is the nav item's page or any page beneath it. */
 const isActive = (pathname: string, href: string) => pathname === href || pathname.startsWith(`${href}/`);
@@ -41,7 +41,7 @@ export function MobileNavLinks({ onNavigate }: { onNavigate: () => void }) {
 
   return (
     <ul>
-      {NAV.map(({ href, key }) => {
+      {[...NAV, ...NAV_MORE].map(({ href, key }) => {
         const active = isActive(pathname, href);
         return (
           <li key={key}>

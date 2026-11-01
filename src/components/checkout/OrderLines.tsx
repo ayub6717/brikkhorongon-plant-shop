@@ -10,13 +10,18 @@ export function OrderLines({
   subtotal,
   shipping,
   total,
+  discount = 0,
+  couponCode,
 }: {
   lines: OrderLine[];
   subtotal: number;
   shipping: number;
   total: number;
+  discount?: number;
+  couponCode?: string | null;
 }) {
   const t = useTranslations("Cart");
+  const tc = useTranslations("Coupon");
   const locale = useLocale();
 
   return (
@@ -37,6 +42,7 @@ export function OrderLines({
       </ul>
       <dl className="mt-3 space-y-2 border-t border-border pt-4 text-sm">
         <div className="flex justify-between"><dt className="text-muted-foreground">{t("subtotal")}</dt><dd>{formatPrice(subtotal, locale)}</dd></div>
+        {discount > 0 && <div className="flex justify-between text-primary"><dt>{tc("discount")}{couponCode ? ` (${couponCode})` : ""}</dt><dd>−{formatPrice(discount, locale)}</dd></div>}
         <div className="flex justify-between"><dt className="text-muted-foreground">{t("delivery")}</dt><dd>{shipping === 0 ? t("free") : formatPrice(shipping, locale)}</dd></div>
         <div className="flex justify-between pt-2 text-base font-semibold"><dt>{t("total")}</dt><dd className="text-primary">{formatPrice(total, locale)}</dd></div>
       </dl>

@@ -18,12 +18,46 @@ export type Payment = (typeof PAYMENTS)[number];
 
 // PLACEHOLDER delivery policy (BDT). Confirm the real numbers before launch.
 export const FREE_SHIPPING_THRESHOLD = 3000;
-const DHAKA_FEE = 60;
-const OUTSIDE_FEE = 120;
 
-export function calcShipping(subtotal: number, district?: District | ""): number {
+/** Flat fee per district outside Dhaka. */
+export const DISTRICT_FEES: Record<Exclude<District, "dhaka">, number> = {
+  chattogram: 120,
+  mymensingh: 120,
+  sylhet: 130,
+  rajshahi: 130,
+  khulna: 130,
+  barishal: 140,
+  rangpur: 140,
+  other: 150,
+};
+const DHAKA_INNER_FEE = 60;
+const DHAKA_OUTER_FEE = 100;
+
+/** Areas inside the Dhaka city delivery zone (English and Bangla spellings). */
+export const INNER_DHAKA_AREAS = [
+  "mirpur", "dhanmondi", "gulshan", "banani", "uttara", "mohammadpur", "bashundhara", "badda", "motijheel", "khilgaon",
+  "tejgaon", "farmgate", "mohakhali", "malibagh", "rampura", "shyamoli", "lalmatia", "baridhara", "niketan", "wari",
+  "paltan", "shantinagar", "jatrabari", "old dhaka", "shahbag", "kalabagan", "kawran bazar", "mogbazar",
+  "মিরপুর", "ধানমন্ডি", "গুলশান", "বনানী", "উত্তরা", "মোহাম্মদপুর", "বসুন্ধরা", "বাড্ডা", "মতিঝিল", "খিলগাঁও",
+  "তেজগাঁও", "ফার্মগেট", "মহাখালী", "মালিবাগ", "রামপুরা", "শ্যামলী", "লালমাটিয়া", "বারিধারা", "নিকেতন", "ওয়ারী",
+  "পল্টন", "শান্তিনগর", "যাত্রাবাড়ী", "শাহবাগ", "কলাবাগান",
+] as const;
+
+export const isInnerDhaka = (area?: string): boolean => {
+  const a = area?.trim().toLowerCase();
+  return !!a && INNER_DHAKA_AREAS.some((x) => a.includes(x));
+};
+
+/**
+ * Delivery fee for an order. Free above the threshold. Inside Dhaka the fee depends on the area
+ * (city zone vs. outer areas); elsewhere it is a flat per-district fee. With no district yet we
+ * show the lowest fee as an estimate.
+ */
+export function calcShipping(subtotal: number, district?: District | "", area?: string): number {
   if (subtotal <= 0 || subtotal >= FREE_SHIPPING_THRESHOLD) return 0;
-  return !district || district === "dhaka" ? DHAKA_FEE : OUTSIDE_FEE;
+  if (!district) return DHAKA_INNER_FEE;
+  if (district === "dhaka") return !area?.trim() || isInnerDhaka(area) ? DHAKA_INNER_FEE : DHAKA_OUTER_FEE;
+  return DISTRICT_FEES[district];
 }
 
 /** The next `count` delivery dates (YYYY-MM-DD), starting tomorrow. */

@@ -4,6 +4,9 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getFormatter, getTranslations, setRequestLocale } from "next-intl/server";
 import { AddToCart } from "@/components/cart/AddToCart";
+import { CompareButton } from "@/components/compare/CompareButton";
+import { RecentlyViewed, RecordView } from "@/components/product/RecentlyViewed";
+import { WishlistButton } from "@/components/wishlist/WishlistButton";
 import { ProductCard } from "@/components/product/ProductCard";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
@@ -84,6 +87,10 @@ export default async function ProductPage({ params }: Props) {
           <div className="mt-8">
             <AddToCart slug={product.slug} />
           </div>
+          <div className="mt-4 flex items-center gap-3">
+            <WishlistButton slug={product.slug} name={product.name} />
+            <CompareButton slug={product.slug} name={product.name} />
+          </div>
 
           <ul className="mt-8 space-y-3 rounded-card border border-border bg-surface/60 p-5 text-sm">
             <li className="flex items-start gap-3">
@@ -132,6 +139,9 @@ export default async function ProductPage({ params }: Props) {
           </section>
         </div>
       </div>
+
+      <RecordView slug={product.slug} />
+      <RecentlyViewed excludeSlug={product.slug} />
 
       {related.length > 0 && (
         <section aria-labelledby="related-heading" className="mt-20">

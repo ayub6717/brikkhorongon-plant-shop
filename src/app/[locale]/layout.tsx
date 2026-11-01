@@ -1,10 +1,14 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
+import { CartDrawer } from "@/components/cart/CartDrawer";
+import { CompareBar } from "@/components/compare/CompareBar";
+import { CommandPalette } from "@/components/palette/CommandPalette";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
+import { PwaRegister } from "@/components/pwa/PwaRegister";
 import { Providers } from "@/components/providers/Providers";
 import { routing } from "@/i18n/routing";
 import { SITE_URL } from "@/lib/site";
@@ -15,6 +19,8 @@ import "@fontsource/hind-siliguri/bengali-500.css";
 import "@fontsource/hind-siliguri/bengali-600.css";
 import "@fontsource/hind-siliguri/bengali-700.css";
 import "../globals.css";
+
+export const viewport: Viewport = { themeColor: [{ media: "(prefers-color-scheme: light)", color: "#faf7f0" }, { media: "(prefers-color-scheme: dark)", color: "#0f1712" }] };
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -31,6 +37,7 @@ export async function generateMetadata({
     metadataBase: new URL(SITE_URL),
     title: { default: `${t("name")} — ${t("tagline")}`, template: `%s | ${t("name")}` },
     description: t("tagline"),
+    icons: { apple: "/icons/apple-touch-icon.png" },
   };
 }
 
@@ -60,6 +67,10 @@ export default async function LocaleLayout({
             <Header />
             <main id="main" tabIndex={-1} className="flex-1 outline-none">{children}</main>
             <Footer />
+            <CommandPalette />
+            <CartDrawer />
+            <CompareBar />
+            <PwaRegister />
           </Providers>
         </NextIntlClientProvider>
       </body>
