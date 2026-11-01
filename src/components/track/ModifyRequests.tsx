@@ -1,5 +1,6 @@
 "use client";
 
+import { Select } from "@/components/ui/Select";
 import { Clock, Lock } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useId, useState, type FormEvent } from "react";
@@ -97,9 +98,7 @@ export function ModifyRequests({ order }: { order: Order }) {
             {type === "pot" && (
               <div>
                 <label htmlFor={`${uid}-pot`} className="mb-1.5 block text-sm font-medium">{t("potLabel")}</label>
-                <select id={`${uid}-pot`} value={pot} onChange={(e) => setPot(e.target.value)} className={inputCls}>
-                  {POTS.map((p) => <option key={p} value={p}>{t(`pots.${p}`)}</option>)}
-                </select>
+                <Select variant="field" id={`${uid}-pot`} value={pot} onChange={setPot} options={POTS.map((p) => ({ value: p, label: t(`pots.${p}`) }))} />
                 <p className="mt-1.5 text-xs text-muted-foreground">{t("potHint")}</p>
               </div>
             )}
@@ -113,10 +112,7 @@ export function ModifyRequests({ order }: { order: Order }) {
             {type === "date" && (
               <div>
                 <label htmlFor={`${uid}-date`} className="mb-1.5 block text-sm font-medium">{t("dateLabel")}</label>
-                <select id={`${uid}-date`} value={date} onChange={(e) => setDate(e.target.value)} aria-invalid={!!error} aria-describedby={error ? `${uid}-err` : undefined} className={inputCls}>
-                  <option value="">{t("dateChoose")}</option>
-                  {dates.map((d) => <option key={d} value={d}>{formatDateKey(d, locale)}</option>)}
-                </select>
+                <Select variant="field" id={`${uid}-date`} value={date} onChange={setDate} placeholder={t("dateChoose")} invalid={!!error} describedBy={error ? `${uid}-err` : undefined} options={dates.map((d) => ({ value: d, label: formatDateKey(d, locale) }))} />
               </div>
             )}
             {type === "custom" && (

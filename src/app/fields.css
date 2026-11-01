@@ -1,0 +1,6 @@
+/* Form fields show focus with a border colour (focus:border-primary), not the page-wide ring. */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: none;
+}

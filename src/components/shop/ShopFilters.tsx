@@ -2,6 +2,7 @@
 
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { Select } from "@/components/ui/Select";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "@/i18n/navigation";
@@ -85,7 +86,7 @@ export function ShopFilters({ resultCount }: { resultCount: number }) {
             onChange={(e) => onSearch(e.target.value)}
             placeholder={t("Shop.searchPlaceholder")}
             aria-label={t("Shop.searchPlaceholder")}
-            className="w-full rounded-full border border-border bg-surface py-2.5 pl-10 pr-4 text-sm outline-none placeholder:text-muted-foreground focus:border-primary"
+            className="w-full rounded-full border border-border bg-surface py-2.5 pl-10 pr-4 text-sm placeholder:text-muted-foreground focus:border-primary"
           />
         </div>
 
@@ -105,20 +106,15 @@ export function ShopFilters({ resultCount }: { resultCount: number }) {
           )}
         </button>
 
-        <label className="ml-auto flex items-center gap-2 text-sm">
-          <span className="text-muted-foreground max-sm:sr-only">{t("Shop.sortBy")}</span>
-          <select
+        <div className="ml-auto flex items-center gap-2 text-sm">
+          <span className="text-muted-foreground max-sm:sr-only" aria-hidden>{t("Shop.sortBy")}</span>
+          <Select
+            label={t("Shop.sortBy")}
             value={params.get("sort") ?? "featured"}
-            onChange={(e) => update("sort", e.target.value === "featured" ? null : e.target.value)}
-            className="rounded-full border border-border bg-surface px-3.5 py-2.5 text-sm outline-none focus:border-primary"
-          >
-            {SORTS.map((s) => (
-              <option key={s} value={s}>
-                {t(`Shop.sort.${s}`)}
-              </option>
-            ))}
-          </select>
-        </label>
+            onChange={(v) => update("sort", v === "featured" ? null : v)}
+            options={SORTS.map((s) => ({ value: s, label: t(`Shop.sort.${s}`) }))}
+          />
+        </div>
       </div>
 
       <div id="shop-filter-panel" className={cn("space-y-4 rounded-card border border-border bg-surface/60 p-4 sm:p-5", open ? "block" : "hidden lg:block")}>

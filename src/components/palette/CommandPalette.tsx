@@ -117,7 +117,9 @@ export function CommandPalette() {
           placeholder={t("placeholder")}
           autoComplete="off"
           spellCheck={false}
-          className="h-14 w-full bg-transparent text-base outline-none placeholder:text-muted-foreground"
+          // The global :focus-visible ring is unlayered and would beat the utility class, so opt out inline.
+          style={{ outline: "none" }}
+          className="h-14 w-full bg-transparent text-base placeholder:text-muted-foreground"
         />
         <kbd className="hidden shrink-0 rounded-md border border-border px-1.5 py-0.5 text-[11px] text-muted-foreground sm:block">Esc</kbd>
       </div>

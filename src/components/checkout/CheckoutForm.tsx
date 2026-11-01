@@ -14,6 +14,7 @@ import { useMounted, useTodayKey } from "@/lib/useMounted";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/store/cart";
 import { createOrderId, useOrders, type Order } from "@/store/orders";
+import { Select } from "@/components/ui/Select";
 import { CouponBox } from "@/components/cart/CouponBox";
 import { OrderLines } from "./OrderLines";
 
@@ -136,10 +137,9 @@ export function CheckoutForm() {
         <Section title={t("addressTitle")}>
           <div className="grid gap-4 sm:grid-cols-2">
             <Field id={`${uid}-district`} label={t("district")} error={err("district")}>
-              <select id={`${uid}-district`} defaultValue="" className={inputCls} {...aria("district", `${uid}-district`)} {...register("district")}>
-                <option value="" disabled>{t("districtPlaceholder")}</option>
-                {DISTRICTS.map((d) => <option key={d} value={d}>{t(`districts.${d}`)}</option>)}
-              </select>
+              <Controller control={control} name="district" render={({ field }) => (
+                <Select variant="field" id={`${uid}-district`} value={field.value ?? ""} onChange={field.onChange} placeholder={t("districtPlaceholder")} invalid={!!errors.district} describedBy={errors.district ? `${uid}-district-error` : undefined} options={DISTRICTS.map((d) => ({ value: d, label: t(`districts.${d}`) }))} />
+              )} />
             </Field>
             <Field id={`${uid}-area`} label={t("area")} error={err("area")}>
               <input id={`${uid}-area`} list={`${uid}-areas`} autoComplete="address-level2" className={inputCls} {...aria("area", `${uid}-area`)} {...register("area")} />
@@ -154,16 +154,14 @@ export function CheckoutForm() {
         <Section title={t("scheduleTitle")}>
           <div className="grid gap-4 sm:grid-cols-2">
             <Field id={`${uid}-date`} label={t("date")} error={err("date")}>
-              <select id={`${uid}-date`} defaultValue="" className={inputCls} {...aria("date", `${uid}-date`)} {...register("date")}>
-                <option value="" disabled>{t("datePlaceholder")}</option>
-                {dates.map((d) => <option key={d} value={d}>{formatDateKey(d, locale)}</option>)}
-              </select>
+              <Controller control={control} name="date" render={({ field }) => (
+                <Select variant="field" id={`${uid}-date`} value={field.value ?? ""} onChange={field.onChange} placeholder={t("datePlaceholder")} invalid={!!errors.date} describedBy={errors.date ? `${uid}-date-error` : undefined} options={dates.map((d) => ({ value: d, label: formatDateKey(d, locale) }))} />
+              )} />
             </Field>
             <Field id={`${uid}-slot`} label={t("slot")} error={err("slot")}>
-              <select id={`${uid}-slot`} defaultValue="" className={inputCls} {...aria("slot", `${uid}-slot`)} {...register("slot")}>
-                <option value="" disabled>{t("slotPlaceholder")}</option>
-                {SLOTS.map((s) => <option key={s} value={s}>{t(`slots.${s}`)}</option>)}
-              </select>
+              <Controller control={control} name="slot" render={({ field }) => (
+                <Select variant="field" id={`${uid}-slot`} value={field.value ?? ""} onChange={field.onChange} placeholder={t("slotPlaceholder")} invalid={!!errors.slot} describedBy={errors.slot ? `${uid}-slot-error` : undefined} options={SLOTS.map((x) => ({ value: x, label: t(`slots.${x}`) }))} />
+              )} />
             </Field>
           </div>
         </Section>

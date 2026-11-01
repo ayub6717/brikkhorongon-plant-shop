@@ -19,6 +19,7 @@ import "@fontsource/hind-siliguri/bengali-500.css";
 import "@fontsource/hind-siliguri/bengali-600.css";
 import "@fontsource/hind-siliguri/bengali-700.css";
 import "../globals.css";
+import "../fields.css";
 
 export const viewport: Viewport = { themeColor: [{ media: "(prefers-color-scheme: light)", color: "#faf7f0" }, { media: "(prefers-color-scheme: dark)", color: "#0f1712" }] };
 
