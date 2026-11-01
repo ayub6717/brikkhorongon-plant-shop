@@ -1,0 +1,70 @@
+/* Finder quiz: animated answer art, selection feedback and step transitions. */
+@keyframes fa-sway { from { transform: rotate(-5deg); } to { transform: rotate(5deg); } }
+@keyframes fa-drift { from { transform: translateX(-3px); } to { transform: translateX(3px); } }
+@keyframes fa-spin { to { transform: rotate(360deg); } }
+@keyframes fa-pulse { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+@keyframes fa-drop { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(17px); opacity: 0; } }
+@keyframes fa-droop { from { transform: rotate(0); } to { transform: rotate(14deg) translateY(1px); } }
+@keyframes fa-grow { 0%, 100% { transform: scaleY(0.55); } 50% { transform: scaleY(1); } }
+@keyframes fa-bloom { 0%, 8% { transform: translate(24px, 20px) scale(0.35) rotate(-20deg); opacity: 0.4; } 40%, 80% { transform: translate(24px, 20px) scale(1) rotate(0); opacity: 1; } 100% { transform: translate(24px, 20px) scale(0.35) rotate(-20deg); opacity: 0.4; } }
+@keyframes fa-flip { 0%, 100% { transform: scaleX(1); } 50% { transform: scaleX(0.12); } }
+@keyframes fa-stack { 0% { transform: translateY(-22px); opacity: 0; } 18% { transform: translateY(0); opacity: 1; } 88% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(0); opacity: 0; } }
+@keyframes fa-twinkle { 0%, 100% { transform: scale(0.5); opacity: 0.4; } 50% { transform: scale(1.15); opacity: 1; } }
+@keyframes fa-bob { from { transform: translateY(0); } to { transform: translateY(-1.6px); } }
+@keyframes fa-dash { 0% { stroke-dasharray: 0.3 0.7; stroke-dashoffset: 0; } 100% { stroke-dasharray: 0.3 0.7; stroke-dashoffset: -1; } }
+@keyframes fa-check { 0% { stroke-dashoffset: 1; } 100% { stroke-dashoffset: 0; } }
+
+.fa-sway, .fa-grow, .fa-droop, .fa-bob, .fa-drift, .fa-flip, .fa-twinkle { transform-box: fill-box; }
+.fa-sway { transform-origin: 50% 100%; animation: fa-sway 2.8s ease-in-out infinite alternate; }
+.fa-grow { transform-origin: 50% 100%; animation: fa-grow 2.6s ease-in-out infinite; }
+.fa-droop { transform-origin: 50% 100%; animation: fa-droop 3s ease-in-out infinite alternate; }
+.fa-bob { animation: fa-bob 1.8s ease-in-out infinite alternate; }
+.fa-drift { animation: fa-drift 3.5s ease-in-out infinite alternate; }
+.fa-spin { transform-box: fill-box; transform-origin: center; animation: fa-spin 16s linear infinite; }
+.fa-pulse { animation: fa-pulse 2.4s ease-in-out infinite; }
+.fa-drop { animation: fa-drop 2.4s ease-in infinite; }
+.fa-bloom { animation: fa-bloom 4s ease-in-out infinite; }
+.fa-flip { transform-origin: center; animation: fa-flip 2.2s ease-in-out infinite; }
+.fa-stack { animation: fa-stack 3.2s ease-out infinite; }
+.fa-twinkle { transform-origin: center; animation: fa-twinkle 2s ease-in-out infinite; }
+.fa-dash { animation: fa-dash 2.8s linear infinite; }
+
+/* step transition: question slides in, options follow one by one */
+@keyframes fa-enter { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.fa-enter { animation: fa-enter 0.4s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.fa-opt { animation: fa-enter 0.45s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--i, 0) * 70ms + 120ms) both; }
+
+/* option cards */
+.fa-card { position: relative; overflow: hidden; transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; }
+.fa-card:hover { transform: translateY(-2px); box-shadow: 0 10px 24px -14px rgb(28 42 34 / 0.35); }
+.fa-card:active { transform: scale(0.985); }
+.fa-art { transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.fa-card:hover .fa-art { transform: scale(1.1) rotate(-3deg); }
+
+/* chosen: art bounces, a soft ripple spreads and a tick draws itself */
+@keyframes fa-pop { 0% { transform: scale(1); } 35% { transform: scale(1.3) rotate(-6deg); } 70% { transform: scale(0.95) rotate(3deg); } 100% { transform: scale(1.12); } }
+@keyframes fa-ripple { from { transform: scale(0); opacity: 0.55; } to { transform: scale(3.2); opacity: 0; } }
+@keyframes fa-badge { 0% { transform: scale(0); } 70% { transform: scale(1.25); } 100% { transform: scale(1); } }
+.fa-card[aria-checked="true"] { box-shadow: 0 0 0 2px var(--primary), 0 14px 30px -16px rgb(28 42 34 / 0.45); }
+.fa-card[aria-checked="true"] .fa-art { animation: fa-pop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+.fa-card[aria-checked="true"]::before {
+  content: ""; position: absolute; left: 2.75rem; top: 50%; width: 5rem; height: 5rem; margin: -2.5rem 0 0 -2.5rem;
+  border-radius: 999px; background: var(--primary); opacity: 0; animation: fa-ripple 0.8s ease-out;
+}
+.fa-badge { animation: fa-badge 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s both; }
+.fa-badge path { stroke-dasharray: 1; animation: fa-check 0.35s ease-out 0.3s both; }
+
+/* progress sprout rides the end of the bar */
+@keyframes fa-hop { 0% { transform: translate(-50%, 0) scale(0.6); } 50% { transform: translate(-50%, -6px) scale(1.25); } 100% { transform: translate(-50%, 0) scale(1); } }
+.fa-sprout { transition: left 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+.fa-sprout > span { display: block; animation: fa-hop 0.5s ease-out; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fa-sway, .fa-grow, .fa-droop, .fa-bob, .fa-drift, .fa-spin, .fa-pulse, .fa-drop, .fa-bloom, .fa-flip, .fa-stack,
+  .fa-twinkle, .fa-dash, .fa-enter, .fa-opt, .fa-badge, .fa-badge path, .fa-sprout > span,
+  .fa-card[aria-checked="true"] .fa-art, .fa-card[aria-checked="true"]::before { animation: none !important; }
+  .fa-bloom { transform: translate(24px, 20px); }
+  .fa-drop { opacity: 0; }
+  .fa-dash { stroke-dasharray: none; }
+  .fa-card, .fa-art, .fa-sprout { transition: none; }
+}

@@ -1,9 +1,11 @@
 "use client";
 
-import { ArrowLeft, RotateCcw } from "lucide-react";
+import { ArrowLeft, Check, RotateCcw, Sprout } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { artFor } from "@/components/finder/OptionArt";
+import "./finder.css";
 import { ProductCard } from "@/components/product/ProductCard";
 import { products } from "@/data/products";
 import { Link, useRouter } from "@/i18n/navigation";
@@ -26,15 +28,24 @@ export function FinderView() {
 
   const [step, setStep] = useState(0);
   const [draft, setDraft] = useState<Partial<Answers>>({});
+  const picking = useRef<number | null>(null);
+
+  useEffect(() => () => { if (picking.current) window.clearTimeout(picking.current); }, []);
 
   function choose(key: (typeof QUESTIONS)[number]["key"], value: string) {
+    if (picking.current) return; // a choice is already playing its animation
     const next = { ...draft, [key]: value } as Partial<Answers>;
     setDraft(next);
-    if (step < QUESTIONS.length - 1) {
-      setStep(step + 1);
-    } else {
-      router.push(`/finder?${new URLSearchParams(next as Record<string, string>).toString()}`);
-    }
+    // Let the chosen answer's animation play before moving on.
+    const wait = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 120 : 800;
+    picking.current = window.setTimeout(() => {
+      picking.current = null;
+      if (step < QUESTIONS.length - 1) {
+        setStep(step + 1);
+      } else {
+        router.push(`/finder?${new URLSearchParams(next as Record<string, string>).toString()}`);
+      }
+    }, wait);
   }
 
   function restart() {
@@ -59,19 +70,24 @@ export function FinderView() {
         <div className="flex items-center justify-between text-sm text-muted-foreground">
           <span>{t("step", { current: step + 1, total: QUESTIONS.length })}</span>
           {step > 0 && (
-            <button type="button" onClick={() => setStep(step - 1)} className="inline-flex items-center gap-1.5 hover:text-primary">
+            <button type="button" onClick={() => { if (!picking.current) setStep(step - 1); }} className="inline-flex items-center gap-1.5 hover:text-primary">
               <ArrowLeft className="size-4 rtl:rotate-180" aria-hidden />{t("back")}
             </button>
           )}
         </div>
-        <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-muted" role="progressbar" aria-label={t("progress")} aria-valuemin={1} aria-valuemax={QUESTIONS.length} aria-valuenow={step + 1}>
-          <div className="h-full rounded-full bg-primary transition-all duration-300" style={{ width: `${((step + 1) / QUESTIONS.length) * 100}%` }} />
+        <div className="relative mt-3">
+          <div className="h-1.5 overflow-hidden rounded-full bg-muted" role="progressbar" aria-label={t("progress")} aria-valuemin={1} aria-valuemax={QUESTIONS.length} aria-valuenow={step + 1}>
+            <div className="h-full rounded-full bg-primary transition-all duration-500" style={{ width: `${((step + 1) / QUESTIONS.length) * 100}%` }} />
+          </div>
+          <div aria-hidden className="fa-sprout absolute top-0 -translate-y-1/2" style={{ left: `${((step + 1) / QUESTIONS.length) * 100}%` }}>
+            <span key={step} className="text-primary"><Sprout className="size-5" /></span>
+          </div>
         </div>
 
         <fieldset className="mt-8" key={q.key}>
-          <legend className="font-display text-2xl font-semibold sm:text-3xl">{t(`q.${q.key}.title`)}</legend>
+          <legend className="fa-enter font-display text-2xl font-semibold sm:text-3xl">{t(`q.${q.key}.title`)}</legend>
           <div role="radiogroup" className="mt-6 grid gap-3">
-            {q.options.map((o) => {
+            {q.options.map((o, i) => {
               const active = selected === o;
               return (
                 <button
@@ -80,10 +96,19 @@ export function FinderView() {
                   role="radio"
                   aria-checked={active}
                   onClick={() => choose(q.key, o)}
-                  className={cn("rounded-2xl border p-5 text-start transition", active ? "border-primary bg-muted/70" : "border-border bg-surface hover:border-primary/50")}
+                  style={{ "--i": i } as CSSProperties}
+                  className={cn("fa-opt fa-card flex items-center gap-4 rounded-2xl border p-4 text-start", active ? "border-primary bg-muted/70" : "border-border bg-surface hover:border-primary/50")}
                 >
-                  <span className="block font-medium">{t(`q.${q.key}.options.${o}.label`)}</span>
-                  <span className="mt-0.5 block text-sm text-muted-foreground">{t(`q.${q.key}.options.${o}.hint`)}</span>
+                  <span className="fa-art relative z-10 grid size-14 shrink-0 place-items-center rounded-xl bg-muted/80 p-1.5" aria-hidden>{artFor(q.key, o)}</span>
+                  <span className="relative z-10 min-w-0 flex-1">
+                    <span className="block font-medium">{t(`q.${q.key}.options.${o}.label`)}</span>
+                    <span className="mt-0.5 block text-sm text-muted-foreground">{t(`q.${q.key}.options.${o}.hint`)}</span>
+                  </span>
+                  {active && (
+                    <span className="fa-badge relative z-10 grid size-7 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground" aria-hidden>
+                      <Check className="size-4" strokeWidth={3} />
+                    </span>
+                  )}
                 </button>
               );
             })}
