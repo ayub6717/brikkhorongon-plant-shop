@@ -1,9 +1,9 @@
 import { CheckCircle2, ClipboardCheck, MapPin, Package, Truck, type LucideIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
-import { ORDER_STEPS, type Order, type OrderStatus } from "@/store/orders";
+import { ORDER_STEPS, stepIndex, type Order, type OrderStep } from "@/store/orders";
 
-const ICONS: Record<OrderStatus, LucideIcon> = {
+const ICONS: Record<OrderStep, LucideIcon> = {
   ordered: ClipboardCheck,
   packed: Package,
   shipped: Truck,
@@ -14,8 +14,17 @@ const ICONS: Record<OrderStatus, LucideIcon> = {
 export function Timeline({ order }: { order: Order }) {
   const t = useTranslations("Track");
   const locale = useLocale();
-  const currentIndex = ORDER_STEPS.indexOf(order.status);
+  const currentIndex = stepIndex(order.status);
   const fmt = new Intl.DateTimeFormat(locale === "bn" ? "bn-BD" : "en-GB", { dateStyle: "medium", timeStyle: "short" });
+
+  if (order.status === "cancelled") {
+    return (
+      <div role="status" className="rounded-card border border-accent/40 bg-accent/10 p-5">
+        <p className="font-medium text-accent">{t("steps.cancelled")}</p>
+        {order.cancelReason && <p className="mt-1 text-sm text-muted-foreground">{order.cancelReason}</p>}
+      </div>
+    );
+  }
 
   return (
     <ol aria-label={t("timelineLabel")} className="relative">

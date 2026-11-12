@@ -5,8 +5,10 @@ import { Hero } from "@/components/home/Hero";
 import { RecentlyViewed } from "@/components/product/RecentlyViewed";
 import { Teasers } from "@/components/home/Teasers";
 import { WhyUs } from "@/components/home/WhyUs";
+import { ensureCatalog } from "@/lib/server/catalog";
 
-export default function HomePage() {
+export default async function HomePage() {
+  await ensureCatalog();
   return (
     <>
       <Hero />

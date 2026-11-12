@@ -8,7 +8,7 @@ import { artFor } from "@/components/finder/OptionArt";
 import "./finder.css";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { ProductCard } from "@/components/product/ProductCard";
-import { products } from "@/data/products";
+import { getAllProducts } from "@/lib/catalog";
 import { Link, useRouter } from "@/i18n/navigation";
 import { usePrefs } from "@/store/prefs";
 import { BUDGETS, CARE_LEVELS, FINDER_LIGHTS, parseAnswers, rankProducts, STYLES, WATER_HABITS, type Answers } from "@/lib/finder";
@@ -121,7 +121,7 @@ export function FinderView() {
 
 function Results({ answers, onRestart }: Readonly<{ answers: Answers; onRestart: () => void }>) {
   const t = useTranslations("Finder");
-  const matches = rankProducts(products, answers);
+  const matches = rankProducts(getAllProducts(), answers);
   const setFinder = usePrefs((st) => st.setFinder);
   // Remember the answers so the home page can suggest plants.
   useEffect(() => { setFinder(answers); }, [answers.light, answers.water, answers.care, answers.style, answers.budget]); // eslint-disable-line react-hooks/exhaustive-deps

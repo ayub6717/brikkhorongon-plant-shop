@@ -9,7 +9,7 @@ import { Link, useRouter } from "@/i18n/navigation";
 import { resolveLines, subtotalOf } from "@/lib/cart-math";
 import { checkoutSchema, type CheckoutValues } from "@/lib/checkout-schema";
 import { computeTotals } from "@/lib/totals";
-import { DISTRICTS, INNER_DHAKA_AREAS, formatDateKey, getDeliveryDates, PAYMENTS, SLOTS } from "@/lib/shipping";
+import { DISTRICTS, INNER_DHAKA_AREAS, formatDateKey, getDeliveryDates, PAYMENTS, shippingConfig, SLOTS } from "@/lib/shipping";
 import { useMounted, useTodayKey } from "@/lib/useMounted";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/store/cart";
@@ -163,7 +163,7 @@ export function CheckoutForm() {
             </Field>
             <Field id={`${uid}-slot`} label={t("slot")} error={err("slot")}>
               <Controller control={control} name="slot" render={({ field }) => (
-                <Select variant="field" id={`${uid}-slot`} value={field.value ?? ""} onChange={field.onChange} placeholder={t("slotPlaceholder")} invalid={!!errors.slot} describedBy={errors.slot ? `${uid}-slot-error` : undefined} options={SLOTS.map((x) => ({ value: x, label: t(`slots.${x}`) }))} />
+                <Select variant="field" id={`${uid}-slot`} value={field.value ?? ""} onChange={field.onChange} placeholder={t("slotPlaceholder")} invalid={!!errors.slot} describedBy={errors.slot ? `${uid}-slot-error` : undefined} options={SLOTS.filter((x) => shippingConfig.slots.includes(x)).map((x) => ({ value: x, label: t(`slots.${x}`) }))} />
               )} />
             </Field>
           </div>
@@ -227,7 +227,7 @@ export function CheckoutForm() {
         <button type="submit" disabled={isSubmitting || createOrder.isPending} className="w-full rounded-full bg-primary px-6 py-3.5 font-medium text-primary-foreground shadow-soft transition hover:opacity-90 disabled:opacity-60">
           {isSubmitting ? t("placing") : t("placeOrder")}
         </button>
-        {createOrder.isError && <p role="alert" className="text-sm font-medium text-accent">{t("submitFailed")}</p>}
+        {createOrder.isError && <p role="alert" className="text-sm font-medium text-accent">{createOrder.error.message === "OUT_OF_STOCK" ? t("soldOut") : t("submitFailed")}</p>}
         <Link href="/cart" className="block text-center text-sm font-medium text-primary hover:underline">{t("backToCart")}</Link>
       </aside>
     </form>

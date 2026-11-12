@@ -9,7 +9,7 @@ import { Modal } from "@/components/ui/Modal";
 import { Link, usePathname } from "@/i18n/navigation";
 import { resolveLines, subtotalOf } from "@/lib/cart-math";
 import { formatPrice } from "@/lib/format";
-import { FREE_SHIPPING_THRESHOLD } from "@/lib/shipping";
+import { shippingConfig } from "@/lib/shipping";
 import { useMounted } from "@/lib/useMounted";
 import { useCart } from "@/store/cart";
 import { useUi } from "@/store/ui";
@@ -34,8 +34,8 @@ export function CartDrawer() {
   const resolved = mounted ? resolveLines(lines, locale) : [];
   const subtotal = subtotalOf(resolved);
   const count = resolved.reduce((n, l) => n + l.qty, 0);
-  const remaining = Math.max(FREE_SHIPPING_THRESHOLD - subtotal, 0);
-  const progress = Math.min((subtotal / FREE_SHIPPING_THRESHOLD) * 100, 100);
+  const remaining = Math.max(shippingConfig.threshold - subtotal, 0);
+  const progress = Math.min((subtotal / shippingConfig.threshold) * 100, 100);
 
   return (
     <Modal open={open} onClose={close} side label={td("title")}>

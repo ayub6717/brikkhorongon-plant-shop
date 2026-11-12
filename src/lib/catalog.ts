@@ -1,5 +1,4 @@
-import { products } from "@/data/products";
-import { productsBn } from "@/data/products.bn";
+import { catalogState } from "@/lib/catalog-state";
 import type { BonsaiStyle, CategorySlug, Difficulty, Light, Placement, Product } from "@/data/types";
 
 export const CATEGORY_SLUGS: CategorySlug[] = ["indoor", "calathea", "dracaena", "ficus", "orchids", "bonsai"];
@@ -22,21 +21,23 @@ export type ShopFilters = {
   sort: Sort;
 };
 
-export const getAllProducts = (): Product[] => products;
+const list = (): Product[] => catalogState.products;
+
+export const getAllProducts = (): Product[] => list();
 
 export const getFeaturedProducts = (limit = 8): Product[] =>
-  products.filter((p) => p.featured && !p.needsReview).slice(0, limit);
+  list().filter((p) => p.featured && !p.needsReview).slice(0, limit);
 
 export const getProductBySlug = (slug: string): Product | undefined =>
-  products.find((p) => p.slug === slug);
+  list().find((p) => p.slug === slug);
 
 export const countByCategory = (category: CategorySlug): number =>
-  products.filter((p) => p.category === category).length;
+  list().filter((p) => p.category === category).length;
 
 export const getProductImage = (slug: string) => getProductBySlug(slug)?.image;
 
 export const getRelatedProducts = (product: Product, limit = 4): Product[] =>
-  products
+  list()
     .filter((p) => p.category === product.category && p.id !== product.id && !p.needsReview)
     .slice(0, limit);
 
@@ -63,28 +64,28 @@ const inBucket = (price: number, bucket: PriceBucket) =>
 
 export function filterProducts(f: ShopFilters): Product[] {
   const q = f.q?.toLowerCase();
-  const list = products.filter(
+  const found = list().filter(
     (p) =>
       (!f.category || p.category === f.category) &&
       (!f.light || p.care.light === f.light) &&
       (!f.level || p.care.difficulty === f.level) &&
       (!f.price || inBucket(p.price, f.price)) &&
-      (!q || `${p.name} ${productsBn[p.slug]?.name ?? ""} ${p.description} ${productsBn[p.slug]?.description ?? ""}`.toLowerCase().includes(q)),
+      (!q || `${p.name} ${catalogState.bn[p.slug]?.name ?? ""} ${p.description} ${catalogState.bn[p.slug]?.description ?? ""}`.toLowerCase().includes(q)),
   );
 
   switch (f.sort) {
     case "priceAsc":
-      return list.sort((a, b) => a.price - b.price);
+      return found.sort((a, b) => a.price - b.price);
     case "priceDesc":
-      return list.sort((a, b) => b.price - a.price);
+      return found.sort((a, b) => b.price - a.price);
     case "nameAsc":
-      return list.sort((a, b) => a.name.localeCompare(b.name));
+      return found.sort((a, b) => a.name.localeCompare(b.name));
     default:
-      return list.sort((a, b) => Number(!!b.featured) - Number(!!a.featured) || a.id - b.id);
+      return found.sort((a, b) => Number(!!b.featured) - Number(!!a.featured) || a.id - b.id);
   }
 }
 
-export const getBonsai = (): Product[] => products.filter((p) => p.category === "bonsai");
+export const getBonsai = (): Product[] => list().filter((p) => p.category === "bonsai");
 
 /** Bonsai filtered by untrusted URL params (style / placement). */
 export function filterBonsai(raw: RawParams): { items: Product[]; style?: BonsaiStyle; placement?: Placement } {

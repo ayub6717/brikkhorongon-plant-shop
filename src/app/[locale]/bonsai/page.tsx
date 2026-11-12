@@ -8,6 +8,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { Link } from "@/i18n/navigation";
 import { BONSAI_STYLES, filterBonsai, getProductBySlug, PLACEMENTS } from "@/lib/catalog";
 import { cn } from "@/lib/utils";
+import { ensureCatalog } from "@/lib/server/catalog";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -24,6 +25,7 @@ const chip = (active: boolean) =>
   cn("rounded-full border px-4 py-2 text-sm transition", active ? "border-primary bg-primary text-primary-foreground" : "border-border hover:border-primary/50 hover:bg-muted");
 
 export default async function BonsaiPage({ searchParams }: Props) {
+  await ensureCatalog();
   const t = await getTranslations("Bonsai");
   const { items, style, placement } = filterBonsai(await searchParams);
   const hero = getProductBySlug("cloud-pine-bonsai")!.image;

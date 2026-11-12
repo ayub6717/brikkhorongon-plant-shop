@@ -12,6 +12,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public DbSet<Order> Orders => Set<Order>();
     public DbSet<OrderLine> OrderLines => Set<OrderLine>();
     public DbSet<Review> Reviews => Set<Review>();
+    public DbSet<OrderNote> OrderNotes => Set<OrderNote>();
+    public DbSet<PromoCode> PromoCodes => Set<PromoCode>();
+    public DbSet<ShopSettings> Settings => Set<ShopSettings>();
+    public DbSet<AuditEntry> AuditLog => Set<AuditEntry>();
+    public DbSet<ProductImage> ProductImages => Set<ProductImage>();
 
     protected override void OnModelCreating(ModelBuilder b)
     {
@@ -42,6 +47,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
             foreach (var money in new[] { nameof(Order.Subtotal), nameof(Order.Discount), nameof(Order.Shipping), nameof(Order.Total) })
                 e.Property(money).HasPrecision(12, 2);
             e.Property(o => o.CouponCode).HasMaxLength(30);
+            e.Property(o => o.PaymentStatus).HasMaxLength(20);
+            e.Property(o => o.CancelReason).HasMaxLength(200);
+            e.HasIndex(o => o.DeliveryDate);
+            e.HasMany(o => o.Notes).WithOne().HasForeignKey(n => n.OrderId).OnDelete(DeleteBehavior.Cascade);
             e.Property(o => o.CustomerName).HasMaxLength(80);
             e.Property(o => o.Phone).HasMaxLength(20);
             e.Property(o => o.Email).HasMaxLength(254);
@@ -82,6 +91,58 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
             e.Property(r => r.Status).HasConversion<string>().HasMaxLength(20);
             e.Property(r => r.Detail).HasMaxLength(300);
             e.Property(r => r.Value).HasMaxLength(200);
+        });
+
+        b.Entity<OrderNote>(e =>
+        {
+            e.ToTable("order_notes");
+            e.Property(n => n.Text).HasMaxLength(500);
+            e.Property(n => n.Author).HasMaxLength(80);
+        });
+
+        b.Entity<PromoCode>(e =>
+        {
+            e.ToTable("promo_codes");
+            e.HasKey(c => c.Code);
+            e.Property(c => c.Code).HasMaxLength(30);
+            e.Property(c => c.Kind).HasMaxLength(10);
+        });
+
+        b.Entity<ShopSettings>(e =>
+        {
+            e.ToTable("shop_settings");
+            e.Property(x => x.Id).ValueGeneratedNever();
+            e.Property(x => x.FreeShippingThreshold).HasPrecision(12, 2);
+            e.Property(x => x.DhakaInnerFee).HasPrecision(12, 2);
+            e.Property(x => x.DhakaOuterFee).HasPrecision(12, 2);
+            e.Property(x => x.Slots).HasMaxLength(80);
+            e.Property(x => x.ShopName).HasMaxLength(80);
+            e.Property(x => x.Phone).HasMaxLength(30);
+            e.Property(x => x.Email).HasMaxLength(254);
+            e.Property(x => x.Address).HasMaxLength(200);
+            // A small dictionary kept in one text column as JSON.
+            e.Property(x => x.DistrictFees).HasConversion(
+                v => System.Text.Json.JsonSerializer.Serialize(v, (System.Text.Json.JsonSerializerOptions?)null),
+                v => System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, decimal>>(v, (System.Text.Json.JsonSerializerOptions?)null) ?? new())
+                .HasColumnType("text");
+        });
+
+        b.Entity<AuditEntry>(e =>
+        {
+            e.ToTable("audit_log");
+            e.HasIndex(a => a.At);
+            e.Property(a => a.ActorId).HasMaxLength(450);
+            e.Property(a => a.ActorEmail).HasMaxLength(254);
+            e.Property(a => a.Action).HasMaxLength(60);
+            e.Property(a => a.Entity).HasMaxLength(40);
+            e.Property(a => a.EntityId).HasMaxLength(100);
+            e.Property(a => a.Detail).HasMaxLength(1000);
+        });
+
+        b.Entity<ProductImage>(e =>
+        {
+            e.ToTable("product_images");
+            e.Property(i => i.ContentType).HasMaxLength(30);
         });
 
         b.Entity<Review>(e =>

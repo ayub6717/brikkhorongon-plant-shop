@@ -12,5 +12,7 @@ public class Review
     public required string Text { get; set; }
     /// <summary>True when the author has a delivered order containing this plant. Shown as a "Verified purchase" badge.</summary>
     public bool VerifiedPurchase { get; set; }
+    /// <summary>Hidden by a moderator: kept in the database but not shown on the site.</summary>
+    public bool Hidden { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

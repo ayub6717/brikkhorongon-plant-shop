@@ -76,7 +76,7 @@ export function TrackView() {
             <p className="mt-1 text-sm text-muted-foreground">
               {t("eta")}: <strong className="font-medium text-foreground">{formatDateKey(order.delivery.date, locale)}, {tc(`slots.${order.delivery.slot}`)}</strong>
             </p>
-            <div className="mt-5"><DeliveryScene status={order.status} /></div>
+            {order.status !== "cancelled" && <div className="mt-5"><DeliveryScene status={order.status} /></div>}
             <div className="mt-6"><Timeline order={order} /></div>
           </section>
 

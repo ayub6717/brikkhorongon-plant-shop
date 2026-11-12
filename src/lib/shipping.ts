@@ -33,6 +33,18 @@ export const DISTRICT_FEES: Record<Exclude<District, "dhaka">, number> = {
 const DHAKA_INNER_FEE = 60;
 const DHAKA_OUTER_FEE = 100;
 
+/**
+ * The live delivery rules. They start as the placeholders above; with the server on, the shop owner's settings
+ * (Admin → Settings) replace them as soon as the catalog loads (see catalog-state.ts).
+ */
+export const shippingConfig = {
+  threshold: FREE_SHIPPING_THRESHOLD,
+  inner: DHAKA_INNER_FEE,
+  outer: DHAKA_OUTER_FEE,
+  fees: { ...DISTRICT_FEES } as Record<string, number>,
+  slots: [...SLOTS] as string[],
+};
+
 /** Areas inside the Dhaka city delivery zone (English and Bangla spellings). */
 export const INNER_DHAKA_AREAS = [
   "mirpur", "dhanmondi", "gulshan", "banani", "uttara", "mohammadpur", "bashundhara", "badda", "motijheel", "khilgaon",
@@ -54,10 +66,11 @@ export const isInnerDhaka = (area?: string): boolean => {
  * show the lowest fee as an estimate.
  */
 export function calcShipping(subtotal: number, district?: District | "", area?: string): number {
-  if (subtotal <= 0 || subtotal >= FREE_SHIPPING_THRESHOLD) return 0;
-  if (!district) return DHAKA_INNER_FEE;
-  if (district === "dhaka") return !area?.trim() || isInnerDhaka(area) ? DHAKA_INNER_FEE : DHAKA_OUTER_FEE;
-  return DISTRICT_FEES[district];
+  const c = shippingConfig;
+  if (subtotal <= 0 || subtotal >= c.threshold) return 0;
+  if (!district) return c.inner;
+  if (district === "dhaka") return !area?.trim() || isInnerDhaka(area) ? c.inner : c.outer;
+  return c.fees[district] ?? c.fees.other ?? DISTRICT_FEES.other;
 }
 
 /** The next `count` delivery dates (YYYY-MM-DD), starting tomorrow. */

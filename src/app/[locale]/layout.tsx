@@ -9,7 +9,9 @@ import { CommandPalette } from "@/components/palette/CommandPalette";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { PwaRegister } from "@/components/pwa/PwaRegister";
+import { CatalogHydrator } from "@/components/providers/CatalogHydrator";
 import { Providers } from "@/components/providers/Providers";
+import { ensureCatalog } from "@/lib/server/catalog";
 import { routing } from "@/i18n/routing";
 import { SITE_URL } from "@/lib/site";
 import "@fontsource-variable/inter";
@@ -52,6 +54,7 @@ export default async function LocaleLayout({
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   const t = await getTranslations({ locale });
+  const catalog = await ensureCatalog();
 
   return (
     <html
@@ -61,6 +64,7 @@ export default async function LocaleLayout({
       <body className="flex min-h-screen flex-col" suppressHydrationWarning>
         <NextIntlClientProvider>
           <Providers>
+            <CatalogHydrator payload={catalog} />
             <a href="#main" className="sr-only z-50 rounded-full bg-primary px-5 py-2.5 font-medium text-primary-foreground focus:not-sr-only focus:fixed focus:left-4 focus:top-4">
               {t("Nav.skip")}
             </a>

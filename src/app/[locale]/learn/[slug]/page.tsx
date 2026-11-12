@@ -8,6 +8,7 @@ import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { getProductBySlug } from "@/lib/catalog";
 import { SITE_URL } from "@/lib/site";
+import { ensureCatalog } from "@/lib/server/catalog";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
@@ -23,6 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function GuidePage({ params }: Props) {
+  await ensureCatalog();
   const { locale, slug } = await params;
   const guide = getGuide(slug);
   if (!guide) notFound();

@@ -1,6 +1,7 @@
 namespace BrikkhoRongon.Api.Services;
 
-public record Coupon(string Code, string Kind, int Value, int MinSubtotal);
+public record Coupon(string Code, string Kind, int Value, int MinSubtotal, DateTime? ExpiresAt = null, int? UsageLimit = null, int Used = 0);
+public record ShippingRules(decimal FreeThreshold, decimal DhakaInner, decimal DhakaOuter, IReadOnlyDictionary<string, decimal> DistrictFees);
 public record Totals(decimal Subtotal, decimal Discount, decimal Shipping, decimal Total, string? CouponCode, string? CouponProblem);
 
 /// <summary>
@@ -10,22 +11,19 @@ public record Totals(decimal Subtotal, decimal Discount, decimal Shipping, decim
 public static class Pricing
 {
     // DEMO campaigns. Replace with real ones (ideally stored in the database) before launch.
-    private static readonly Coupon[] Coupons =
+    public static readonly Coupon[] DefaultCoupons =
     [
         new("WELCOME10", "percent", 10, 500),
         new("PLANT100", "fixed", 100, 1500),
         new("FREESHIP", "freeShip", 0, 1000),
     ];
 
-    private const decimal FreeShippingThreshold = 3000;
-    private const decimal DhakaInnerFee = 60;
-    private const decimal DhakaOuterFee = 100;
-
-    private static readonly Dictionary<string, decimal> DistrictFees = new()
+    /// <summary>Used when no settings are passed in (tests, first start). The real values live in the shop_settings table.</summary>
+    public static readonly ShippingRules DefaultRules = new(3000, 60, 100, new Dictionary<string, decimal>
     {
         ["chattogram"] = 120, ["mymensingh"] = 120, ["sylhet"] = 130, ["rajshahi"] = 130,
         ["khulna"] = 130, ["barishal"] = 140, ["rangpur"] = 140, ["other"] = 150,
-    };
+    });
 
     public static readonly string[] Districts = ["dhaka", "chattogram", "sylhet", "rajshahi", "khulna", "barishal", "rangpur", "mymensingh", "other"];
     public static readonly string[] Slots = ["morning", "afternoon", "evening"];
@@ -49,14 +47,16 @@ public static class Pricing
         return a.Length > 0 && InnerDhakaAreas.Any(x => a.Contains(x));
     }
 
-    public static decimal Shipping(decimal subtotal, string district, string area)
+    public static decimal Shipping(decimal subtotal, string district, string area, ShippingRules? rules = null)
     {
-        if (subtotal <= 0 || subtotal >= FreeShippingThreshold) return 0;
-        if (district == "dhaka") return string.IsNullOrWhiteSpace(area) || IsInnerDhaka(area) ? DhakaInnerFee : DhakaOuterFee;
-        return DistrictFees.GetValueOrDefault(district, DistrictFees["other"]);
+        var r = rules ?? DefaultRules;
+        if (subtotal <= 0 || subtotal >= r.FreeThreshold) return 0;
+        if (district == "dhaka") return string.IsNullOrWhiteSpace(area) || IsInnerDhaka(area) ? r.DhakaInner : r.DhakaOuter;
+        return r.DistrictFees.TryGetValue(district, out var fee) ? fee : r.DistrictFees.GetValueOrDefault("other", 150);
     }
 
-    public static Totals Compute(decimal subtotal, string? couponCode, string district, string area)
+    public static Totals Compute(decimal subtotal, string? couponCode, string district, string area,
+        IEnumerable<Coupon>? coupons = null, ShippingRules? rules = null, DateTime? now = null)
     {
         decimal discount = 0;
         string? applied = null, problem = null;
@@ -65,8 +65,10 @@ public static class Pricing
         var wanted = couponCode?.Trim().ToUpperInvariant();
         if (!string.IsNullOrEmpty(wanted))
         {
-            var coupon = Coupons.FirstOrDefault(c => c.Code == wanted);
+            var coupon = (coupons ?? DefaultCoupons).FirstOrDefault(c => c.Code == wanted);
             if (coupon is null) problem = "COUPON_UNKNOWN";
+            else if (coupon.ExpiresAt is { } end && end <= (now ?? DateTime.UtcNow)) problem = "COUPON_EXPIRED";
+            else if (coupon.UsageLimit is { } limit && coupon.Used >= limit) problem = "COUPON_USED_UP";
             else if (subtotal < coupon.MinSubtotal) problem = "COUPON_MIN";
             else
             {
@@ -82,7 +84,7 @@ public static class Pricing
             }
         }
 
-        var shipping = freeShip ? 0 : Shipping(subtotal - discount, district, area);
+        var shipping = freeShip ? 0 : Shipping(subtotal - discount, district, area, rules);
         return new Totals(subtotal, discount, shipping, subtotal - discount + shipping, applied, problem);
     }
 }

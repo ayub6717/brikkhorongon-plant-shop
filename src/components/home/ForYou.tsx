@@ -3,7 +3,7 @@
 import { ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { ProductCard } from "@/components/product/ProductCard";
-import { products } from "@/data/products";
+import { getAllProducts } from "@/lib/catalog";
 import { Link } from "@/i18n/navigation";
 import { rankProducts } from "@/lib/finder";
 import { useMounted } from "@/lib/useMounted";
@@ -16,7 +16,7 @@ export function ForYou() {
   const mounted = useMounted();
   const answers = usePrefs((s) => s.finder);
   if (!mounted || !answers) return null;
-  const picks = rankProducts(products, answers, 4);
+  const picks = rankProducts(getAllProducts(), answers, 4);
   if (picks.length === 0) return null;
 
   return (

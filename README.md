@@ -74,9 +74,10 @@ flowchart LR
   A --> D[("PostgreSQL<br/>on Neon")]
 ```
 
-- **Accounts:** ASP.NET Identity (hashed passwords, lockout after 5 wrong tries), roles `Admin` / `Customer`, JWT sign-in.
+- **Accounts:** ASP.NET Identity (hashed passwords, lockout after 5 wrong tries), roles `Admin` (owner) / `Manager` / `Viewer` / `Delivery` / `Customer`, JWT sign-in.
 - **Orders:** the server prices every order itself (catalog, coupons, shipping); a tampered price from the browser is ignored. Guests track orders by a long random number.
-- **Admin dashboard** (`/admin`): sales stats, 7-day chart, best sellers, and an order list with filters and status actions. Admin-only on the server.
+- **Admin panel** (`/admin`, its own sidebar layout, English-only by design): dashboard and analytics (7/30/90-day revenue, average order value, new vs returning customers, sales by category, low stock); products (add / edit / hide / delete, photo upload, Bangla + English text, stock counts, bulk price/stock edit, CSV import/export); orders (filters, detail page with customer history, internal notes, cancel with restock, refund record, printable invoice and packing slip, CSV export); a daily delivery list by time slot; customers (history, lock/unlock); database-backed coupons (expiry, usage limit, minimum spend); settings (shipping fees, free-shipping line, delivery slots, shop info); review moderation; staff roles; a full audit log and password change. Every permission is enforced on the server (see `Auth/Policies.cs`); the UI only hides buttons.
+- **Live catalog:** with the server on, the storefront loads plants, coupons and delivery rules from `GET /api/catalog` (cached 60 s, and cleared the moment the shop team saves). If the API is unreachable it falls back to the built-in catalog. Orders decrease stock inside a database transaction, so the last plant can't be sold twice.
 - **Reviews:** signed-in customers only, one per plant, with a "Verified purchase" badge when the author has a delivered order of that plant.
 - **Safety:** per-IP rate limits, same-origin check on the proxy, ProblemDetails errors, secrets only in environment variables.
 - **Tests:** xUnit covers pricing, order ids and connection strings (`dotnet test backend/BrikkhoRongon.Api.Tests`).
@@ -123,7 +124,9 @@ API settings (`ConnectionStrings__Default`, `Jwt__Key`, `Admin__Email`, `Admin__
 
 ## Honest notes
 
-- **Server-backed today:** accounts, orders, the admin dashboard and reviews. **Still in the browser:** cart, wishlist and My Garden. Without the API the order-tracking demo panel stands in for the shop team.
+- Staff sign-ins use JWTs that carry the role, so a role change or an account lock takes effect at the person's next sign-in (tokens last a short while). Uploaded photos are stored in PostgreSQL (the free host's disk is wiped on every deploy); that is fine for a small shop, a bigger one would use object storage. Coupon codes are visible to anyone who inspects the catalog, so they suit public campaigns, not private one-off codes.
+
+- **Server-backed today:** accounts, catalog, orders, stock, coupons, settings, the admin panel and reviews. **Still in the browser:** cart, wishlist and My Garden. Without the API the order-tracking demo panel stands in for the shop team.
 - **Free hosting means cold starts:** the Render free plan sleeps after about 15 minutes idle, so the first request can take 30 to 50 seconds.
 - **Not built yet:** online payments and order emails (checkout supports cash on delivery in practice), refresh tokens (sign-in lasts 60 minutes).
 - **Placeholders to confirm before launch:** delivery fees and free-shipping threshold (`src/lib/shipping.ts`), demo coupon codes (`src/lib/coupons.ts`: `WELCOME10`, `PLANT100`, `FREESHIP`), the 24-hour arrival guarantee copy, and the sample bonsai names, ages and prices.

@@ -57,7 +57,7 @@ builder.Services
             RoleClaimType = "role",
         };
     });
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(Policies.Add);
 
 // Brute-force guard: each IP address may call the sign-in/sign-up endpoints 10 times a minute.
 builder.Services.AddRateLimiter(o =>
@@ -126,6 +126,7 @@ if (app.Configuration.GetValue("Database:AutoMigrate", true))
     await db.Database.MigrateAsync();
     await Seeder.SeedRolesAsync(scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>());
     await Seeder.SeedAsync(db);
+    await Seeder.SeedShopAsync(db);
     await Seeder.SeedAdminAsync(scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>(), builder.Configuration);
 }
 
@@ -134,6 +135,7 @@ app.MapCatalog();
 app.MapAuth();
 app.MapOrders();
 app.MapAdmin();
+app.MapAdminProducts();
 app.MapReviews();
 
 app.Run();

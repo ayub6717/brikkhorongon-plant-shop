@@ -20,15 +20,15 @@ public static class ReviewEndpoints
         {
             if (string.IsNullOrWhiteSpace(slug)) return Results.ValidationProblem(new Dictionary<string, string[]> { ["slug"] = ["slug is required."] });
             var me = principal.FindFirstValue("sub");
-            var admin = principal.IsInRole(Roles.Admin);
-            var rows = await db.Reviews.AsNoTracking().Where(r => r.Slug == slug).OrderByDescending(r => r.CreatedAt).ToListAsync(ct);
+            var admin = principal.IsInRole(Roles.Admin) || principal.IsInRole(Roles.Manager);
+            var rows = await db.Reviews.AsNoTracking().Where(r => r.Slug == slug && !r.Hidden).OrderByDescending(r => r.CreatedAt).ToListAsync(ct);
             return Results.Ok(rows.Select(r => ToDto(r, admin || (me is not null && r.UserId == me))));
         });
 
         // Public: average and star counts per plant, for the little "★ 4.5 (3)" badges on product cards.
         g.MapGet("/summaries", async Task<IResult> (AppDbContext db, CancellationToken ct) =>
         {
-            var rows = await db.Reviews.AsNoTracking().Select(r => new { r.Slug, r.Rating }).ToListAsync(ct);
+            var rows = await db.Reviews.AsNoTracking().Where(r => !r.Hidden).Select(r => new { r.Slug, r.Rating }).ToListAsync(ct);
             var summaries = rows.GroupBy(r => r.Slug).Select(x => new RatingSummaryDto(
                 x.Key, x.Count(), x.Average(r => r.Rating), [.. Enumerable.Range(1, 5).Select(star => x.Count(r => r.Rating == star))]));
             return Results.Ok(summaries);
@@ -68,7 +68,7 @@ public static class ReviewEndpoints
         {
             var review = await db.Reviews.FirstOrDefaultAsync(r => r.Id == id, ct);
             if (review is null) return Results.NotFound();
-            if (review.UserId != principal.FindFirstValue("sub") && !principal.IsInRole(Roles.Admin)) return Results.Forbid();
+            if (review.UserId != principal.FindFirstValue("sub") && !principal.IsInRole(Roles.Admin) && !principal.IsInRole(Roles.Manager)) return Results.Forbid();
             db.Reviews.Remove(review);
             await db.SaveChangesAsync(ct);
             return Results.NoContent();

@@ -112,3 +112,11 @@ body {
   .plant-draw, .plant-leaf, .plant-pot, .plant-pop, .plant-sway, .plant-spark { animation: none !important; }
   .plant-spark { opacity: 0; }
 }
+
+/* Printing from the admin (invoices, packing slips, delivery lists): show only the printable area. */
+@media print {
+  body * { visibility: hidden; }
+  .print-area, .print-area * { visibility: visible; }
+  .print-area { position: absolute; inset: 0 auto auto 0; width: 100%; }
+  html, body { height: auto !important; background: #fff !important; }
+}

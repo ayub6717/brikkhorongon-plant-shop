@@ -5,6 +5,7 @@ import { ProductCard } from "@/components/product/ProductCard";
 import { ShopFilters } from "@/components/shop/ShopFilters";
 import { Link } from "@/i18n/navigation";
 import { filterProducts, parseFilters } from "@/lib/catalog";
+import { ensureCatalog } from "@/lib/server/catalog";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -18,6 +19,7 @@ export async function generateMetadata({ params }: Pick<Props, "params">): Promi
 }
 
 export default async function ShopPage({ searchParams }: Props) {
+  await ensureCatalog();
   const t = await getTranslations("Shop");
   const items = filterProducts(parseFilters(await searchParams));
 

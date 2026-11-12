@@ -7,7 +7,7 @@ import { Link } from "@/i18n/navigation";
 import { resolveLines, subtotalOf } from "@/lib/cart-math";
 import { formatPrice } from "@/lib/format";
 import { computeTotals } from "@/lib/totals";
-import { FREE_SHIPPING_THRESHOLD } from "@/lib/shipping";
+import { shippingConfig } from "@/lib/shipping";
 import { useMounted } from "@/lib/useMounted";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { useCart } from "@/store/cart";
@@ -45,8 +45,8 @@ export function CartView() {
   const subtotal = subtotalOf(resolved);
   const { discount, couponCode } = computeTotals({ subtotal, coupon });
   const payable = subtotal - discount;
-  const remaining = Math.max(FREE_SHIPPING_THRESHOLD - payable, 0);
-  const progress = Math.min((payable / FREE_SHIPPING_THRESHOLD) * 100, 100);
+  const remaining = Math.max(shippingConfig.threshold - payable, 0);
+  const progress = Math.min((payable / shippingConfig.threshold) * 100, 100);
 
   return (
     <div className="grid gap-10 lg:grid-cols-[1fr_22rem]">

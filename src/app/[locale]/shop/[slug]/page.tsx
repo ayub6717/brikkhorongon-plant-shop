@@ -16,15 +16,18 @@ import { getAllProducts, getProductBySlug, getRelatedProducts } from "@/lib/cata
 import { formatPrice } from "@/lib/format";
 import { localizeProduct } from "@/lib/localize";
 import { absoluteUrl, SITE_URL } from "@/lib/site";
+import { ensureCatalog } from "@/lib/server/catalog";
 
 type Props = Readonly<{ params: Promise<{ locale: string; slug: string }> }>;
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  await ensureCatalog();
   return routing.locales.flatMap((locale) => getAllProducts().map((p) => ({ locale, slug: p.slug })));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
+  await ensureCatalog();
   const raw = getProductBySlug(slug);
   if (!raw) return {};
   const product = localizeProduct(raw, locale);
@@ -37,6 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ProductPage({ params }: Props) {
   const { locale, slug } = await params;
+  await ensureCatalog();
   const raw = getProductBySlug(slug);
   if (!raw) notFound();
   const product = localizeProduct(raw, locale);

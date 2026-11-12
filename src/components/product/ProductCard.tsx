@@ -8,11 +8,13 @@ import { Link } from "@/i18n/navigation";
 import { localizeProduct } from "@/lib/localize";
 import { formatPrice } from "@/lib/format";
 import type { Product } from "@/data/types";
+import { getStock } from "@/lib/catalog-state";
 
 export function ProductCard({ product: raw, priority = false }: Readonly<{ product: Product; priority?: boolean }>) {
   const t = useTranslations();
   const locale = useLocale();
   const product = localizeProduct(raw, locale);
+  const stock = getStock(product.slug);
 
   return (
     <article className="group relative flex flex-col overflow-hidden rounded-card border border-border bg-surface shadow-soft transition duration-300 hover:-translate-y-1">
@@ -32,6 +34,9 @@ export function ProductCard({ product: raw, priority = false }: Readonly<{ produ
         <span className="absolute left-3 top-3 rounded-full bg-background/90 px-3 py-1 text-xs font-medium text-primary backdrop-blur">
           {t(`Categories.${product.category}.name`)}
         </span>
+        {stock !== null && stock <= 0 && (
+          <span className="absolute bottom-3 left-3 rounded-full bg-foreground/85 px-3 py-1 text-xs font-medium text-background">{t("Product.outOfStock")}</span>
+        )}
       </div>
       <div className="flex flex-1 flex-col gap-3 p-4">
         <h3 className="font-display text-lg font-semibold leading-snug">

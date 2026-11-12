@@ -1,6 +1,7 @@
 namespace BrikkhoRongon.Api.Domain;
 
-public enum OrderStatus { Ordered, Packed, Shipped, OutForDelivery, Delivered }
+/// <summary>Cancelled is deliberately last: "moving forward" (status++) can never reach it by accident.</summary>
+public enum OrderStatus { Ordered, Packed, Shipped, OutForDelivery, Delivered, Cancelled }
 public enum RequestType { Pot, GiftNote, Date, Custom }
 public enum RequestStatus { Pending, Approved, Declined }
 
@@ -13,6 +14,9 @@ public class Order
     public string? UserId { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public OrderStatus Status { get; set; } = OrderStatus.Ordered;
+    /// <summary>unpaid | paid | refunded. Empty on old rows, which count as unpaid.</summary>
+    public string PaymentStatus { get; set; } = "unpaid";
+    public string? CancelReason { get; set; }
 
     public decimal Subtotal { get; set; }
     public decimal Discount { get; set; }
@@ -38,6 +42,17 @@ public class Order
     public List<OrderLine> Lines { get; set; } = [];
     public List<OrderEvent> History { get; set; } = [];
     public List<ModRequest> Requests { get; set; } = [];
+    public List<OrderNote> Notes { get; set; } = [];
+}
+
+/// <summary>A private note the shop team writes on an order. Customers never see these.</summary>
+public class OrderNote
+{
+    public int Id { get; set; }
+    public required string OrderId { get; set; }
+    public required string Text { get; set; }
+    public required string Author { get; set; }
+    public DateTime At { get; set; } = DateTime.UtcNow;
 }
 
 /// <summary>A snapshot of what was bought, at the price paid. Later catalog changes never rewrite past orders.</summary>

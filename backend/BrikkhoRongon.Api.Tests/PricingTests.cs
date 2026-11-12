@@ -82,4 +82,29 @@ public class PricingTests
                 Assert.True(t.Total >= 0);
             }
     }
+
+    [Fact]
+    public void Expired_coupon_is_refused()
+    {
+        var coupon = new Coupon("OLD", "percent", 10, 0, ExpiresAt: new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+        var t = Pricing.Compute(1000, "OLD", "dhaka", "", [coupon], now: new DateTime(2026, 6, 1, 0, 0, 0, DateTimeKind.Utc));
+        Assert.Equal("COUPON_EXPIRED", t.CouponProblem);
+        Assert.Equal(0, t.Discount);
+    }
+
+    [Fact]
+    public void Coupon_that_hit_its_usage_limit_is_refused()
+    {
+        var coupon = new Coupon("TENUSES", "fixed", 100, 0, UsageLimit: 10, Used: 10);
+        Assert.Equal("COUPON_USED_UP", Pricing.Compute(1000, "TENUSES", "dhaka", "", [coupon]).CouponProblem);
+    }
+
+    [Fact]
+    public void Shipping_uses_the_rules_it_is_given()
+    {
+        var rules = new ShippingRules(500, 20, 40, new Dictionary<string, decimal> { ["other"] = 99 });
+        Assert.Equal(0, Pricing.Shipping(500, "dhaka", "", rules));      // new free-shipping line
+        Assert.Equal(20, Pricing.Shipping(400, "dhaka", "Mirpur", rules));
+        Assert.Equal(99, Pricing.Shipping(400, "sylhet", "", rules));    // unknown district falls back to "other"
+    }
 }

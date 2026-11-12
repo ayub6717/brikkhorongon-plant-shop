@@ -174,7 +174,9 @@
     "levelHint": {
       "easy": "Forgiving and great for beginners.",
       "moderate": "Needs a little attention to light, water and humidity."
-    }
+    },
+    "outOfStock": "Out of stock",
+    "onlyLeft": "Only {count} left"
   },
   "NotFound": {
     "title": "This page has gone to seed",
@@ -275,7 +277,8 @@
     "giftPreview": "Your gift card",
     "giftSample": "Your message will appear here.",
     "giftTeaser": "Sending this as a gift? Add a card and message at checkout.",
-    "submitFailed": "We couldn't place your order. Please check the details and try again."
+    "submitFailed": "We couldn't place your order. Please check the details and try again.",
+    "soldOut": "Sorry, one of the plants in your cart just sold out. Please update your cart and try again."
   },
   "Order": {
     "title": "Order confirmed",
@@ -313,7 +316,8 @@
       "packed": "Packed with care",
       "shipped": "Shipped",
       "outForDelivery": "Out for delivery",
-      "delivered": "Delivered"
+      "delivered": "Delivered",
+      "cancelled": "Cancelled"
     },
     "stepHints": {
       "ordered": "We've received your order",

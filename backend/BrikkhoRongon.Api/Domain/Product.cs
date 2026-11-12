@@ -30,6 +30,12 @@ public class Product
     public Water Water { get; set; }
     public Difficulty Difficulty { get; set; }
 
+    /// <summary>Units on the shelf. null means "stock is not tracked" (always available).</summary>
+    public int? Stock { get; set; }
+    /// <summary>Hidden plants are not shown in the shop and cannot be ordered, but their old orders stay intact.</summary>
+    public bool Hidden { get; set; }
+    public DateTime? UpdatedAt { get; set; }
+
     public bool Featured { get; set; }
     /// <summary>Legacy data that should be double-checked before launch.</summary>
     public bool NeedsReview { get; set; }

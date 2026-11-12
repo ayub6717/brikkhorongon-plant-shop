@@ -5,7 +5,14 @@ import type { AdminOrdersPage, AdminStats, CreateOrderInput, Order, RatingSummar
  * Talks to the ASP.NET Core API through this site's own /api/bff routes (see lib/server/backend.ts).
  * Errors are thrown as Error(code) with a code such as "EMAIL_TAKEN", which the forms translate.
  */
-async function call<T>(path: string, init?: { method?: string; body?: unknown }): Promise<T> {
+/** An API failure. `message` is the error code; `fields` holds per-field validation messages when the server sent them. */
+export class ApiError extends Error {
+  constructor(readonly code: string, readonly fields?: Record<string, string[]>, readonly title?: string) {
+    super(code);
+  }
+}
+
+export async function call<T>(path: string, init?: { method?: string; body?: unknown }): Promise<T> {
   let res: Response;
   try {
     res = await fetch(`/api/bff${path}`, {
@@ -20,11 +27,11 @@ async function call<T>(path: string, init?: { method?: string; body?: unknown })
   if (res.status === 204) return undefined as T;
 
   const data = await res.json().catch(() => null);
-  if (!res.ok) throw new Error(errorCode(res.status, data));
+  if (!res.ok) throw new ApiError(errorCode(res.status, data), data?.errors, data?.title);
   return data as T;
 }
 
-function errorCode(status: number, data: { code?: string; errors?: Record<string, string[]> } | null): string {
+function errorCode(status: number, data: { code?: string; title?: string; errors?: Record<string, string[]> } | null): string {
   if (data?.code) return data.code;
   if (status === 429) return "RATE_LIMITED";
   if (status === 400 && data?.errors?.password) return "WEAK_PASSWORD";
@@ -87,9 +94,9 @@ export const httpOrders: ShopApi["orders"] = {
     return order;
   },
   addRequest: (orderId, request) => call<Order>(`/orders/${encodeURIComponent(orderId)}/requests`, { method: "POST", body: request }),
-  advance: (orderId) => call<Order>(`/admin/orders/${encodeURIComponent(orderId)}/advance`, { method: "POST" }),
-  resolveRequest: (orderId, requestId, status) =>
-    call<Order>(`/admin/orders/${encodeURIComponent(orderId)}/requests/${encodeURIComponent(requestId)}/resolve`, { method: "POST", body: { status } }),
+  advance: async (orderId) => (await call<{ order: Order }>(`/admin/orders/${encodeURIComponent(orderId)}/advance`, { method: "POST" })).order,
+  resolveRequest: async (orderId, requestId, status) =>
+    (await call<{ order: Order }>(`/admin/orders/${encodeURIComponent(orderId)}/requests/${encodeURIComponent(requestId)}/resolve`, { method: "POST", body: { status } })).order,
 };
 
 export const httpAdmin: ShopApi["admin"] = {

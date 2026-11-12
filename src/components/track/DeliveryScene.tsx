@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useEffect, useState, useSyncExternalStore, type CSSProperties } from "react";
-import type { OrderStatus } from "@/store/orders";
+import type { OrderStatus, OrderStep } from "@/store/orders";
 import "./delivery-scene.css";
 
 /**
@@ -15,7 +15,7 @@ import "./delivery-scene.css";
 
 type Phase = "prep" | "load" | "loaded" | "riding" | "ride" | "arrive" | "knock" | "handover" | "joy" | "reset";
 
-const STATUS_PHASE: Record<OrderStatus, Phase> = {
+const STATUS_PHASE: Record<OrderStep, Phase> = {
   ordered: "prep",
   packed: "loaded",
   shipped: "riding",
@@ -70,7 +70,7 @@ const useReducedMotion = () => useSyncExternalStore(subscribeRM, () => window.ma
 
 export function DeliveryScene({ status }: { status?: OrderStatus }) {
   const t = useTranslations("Track.story");
-  const fixed = status ? STATUS_PHASE[status] : null;
+  const fixed = status ? (STATUS_PHASE[status as OrderStep] ?? null) : null;
   const [idx, setIdx] = useState(0);
   const still = useReducedMotion();
 

@@ -3,12 +3,14 @@ import { guides } from "@/data/guides";
 import { getAllProducts } from "@/lib/catalog";
 import { SITE_URL } from "@/lib/site";
 import { routing } from "@/i18n/routing";
+import { ensureCatalog } from "@/lib/server/catalog";
 
 const STATIC = ["", "/shop", "/bonsai", "/learn", "/finder"];
 
 const url = (locale: string, path: string) => `${SITE_URL}${locale === routing.defaultLocale ? "" : `/${locale}`}${path}`;
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  await ensureCatalog();
   const paths = [
     ...STATIC,
     ...getAllProducts().map((p) => `/shop/${p.slug}`),

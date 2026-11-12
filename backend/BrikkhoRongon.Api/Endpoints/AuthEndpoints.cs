@@ -12,6 +12,7 @@ namespace BrikkhoRongon.Api.Endpoints;
 public record RegisterRequest(string Name, string Email, string Phone, string Password);
 public record LoginRequest(string Email, string Password);
 public record UpdateProfileRequest(string Name, string Phone);
+public record ChangePasswordRequest(string Current, string New);
 public record AddressRequest(string Label, string District, string Area, string Address);
 
 public record AddressDto(Guid Id, string Label, string District, string Area, string Address);
@@ -98,6 +99,20 @@ public static partial class AuthEndpoints
             await users.UpdateAsync(user);
             return Results.Ok(await ToDtoAsync(user, users, db));
         });
+
+        // Change your own password. Needs the current one, so a stolen session alone can't lock the owner out.
+        me.MapPost("/change-password", async Task<IResult> (ChangePasswordRequest? r, ClaimsPrincipal principal, UserManager<AppUser> users) =>
+        {
+            if (await CurrentAsync(principal, users) is not { } user) return Results.Unauthorized();
+            if (r is null || string.IsNullOrEmpty(r.Current)) return Problem(StatusCodes.Status400BadRequest, "INVALID_CREDENTIALS", "Enter your current password.");
+            if (r.New is null || r.New.Length < 8) return Results.ValidationProblem(new Dictionary<string, string[]> { ["password"] = ["Use at least 8 characters."] });
+            var result = await users.ChangePasswordAsync(user, r.Current, r.New);
+            if (!result.Succeeded)
+                return result.Errors.Any(e => e.Code == "PasswordMismatch")
+                    ? Problem(StatusCodes.Status400BadRequest, "INVALID_CREDENTIALS", "The current password is wrong.")
+                    : Results.ValidationProblem(new Dictionary<string, string[]> { ["password"] = [.. result.Errors.Select(e => e.Description)] });
+            return Results.NoContent();
+        }).RequireRateLimiting("auth");
 
         me.MapPost("/addresses", async Task<IResult> (AddressRequest r, ClaimsPrincipal principal, UserManager<AppUser> users, AppDbContext db) =>
         {

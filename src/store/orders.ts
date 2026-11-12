@@ -5,7 +5,10 @@ import type { CheckoutValues } from "@/lib/checkout-schema";
 export type OrderLine = { slug: string; name: string; image: string; price: number; qty: number };
 
 export const ORDER_STEPS = ["ordered", "packed", "shipped", "outForDelivery", "delivered"] as const;
-export type OrderStatus = (typeof ORDER_STEPS)[number];
+export type OrderStep = (typeof ORDER_STEPS)[number];
+/** The five steps an order moves through, or "cancelled" (set by the shop team, server only). */
+export type OrderStatus = OrderStep | "cancelled";
+export const stepIndex = (status: OrderStatus): number => (ORDER_STEPS as readonly string[]).indexOf(status);
 
 export const REQUEST_TYPES = ["pot", "giftNote", "date", "custom"] as const;
 export type RequestType = (typeof REQUEST_TYPES)[number];
@@ -42,6 +45,9 @@ export type Order = {
   status: OrderStatus;
   history: { status: OrderStatus; at: string }[];
   requests: ModRequest[];
+  /** unpaid | paid | refunded. Only the server tracks this. */
+  paymentStatus?: string;
+  cancelReason?: string;
 };
 
 /** Changes are only possible before the order leaves our hands. */
@@ -80,7 +86,7 @@ export const useOrders = create<OrdersState>()(
       advanceStatus: (orderId) =>
         set((s) => ({
           orders: patch(s.orders, orderId, (o) => {
-            const next = ORDER_STEPS[ORDER_STEPS.indexOf(o.status) + 1];
+            const next = ORDER_STEPS[stepIndex(o.status) + 1];
             if (!next) return o;
             return { ...o, status: next, history: [...o.history, { status: next, at: new Date().toISOString() }] };
           }),

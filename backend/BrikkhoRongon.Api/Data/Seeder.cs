@@ -16,7 +16,7 @@ public static class Seeder
 
     public static async Task SeedRolesAsync(RoleManager<IdentityRole> roles)
     {
-        foreach (var name in new[] { Roles.Admin, Roles.Customer })
+        foreach (var name in Roles.All)
             if (!await roles.RoleExistsAsync(name))
                 await roles.CreateAsync(new IdentityRole(name));
     }
@@ -40,6 +40,21 @@ public static class Seeder
                 throw new InvalidOperationException("Could not create the admin: " + string.Join("; ", created.Errors.Select(e => e.Description)));
         }
         if (!await users.IsInRoleAsync(user, Roles.Admin)) await users.AddToRoleAsync(user, Roles.Admin);
+    }
+
+    /// <summary>First start only: the demo promo codes and the default shop settings.</summary>
+    public static async Task SeedShopAsync(AppDbContext db, CancellationToken ct = default)
+    {
+        if (!await db.PromoCodes.AnyAsync(ct))
+        {
+            db.PromoCodes.AddRange(Services.Pricing.DefaultCoupons.Select(c => new PromoCode { Code = c.Code, Kind = c.Kind, Value = c.Value, MinSubtotal = c.MinSubtotal }));
+            await db.SaveChangesAsync(ct);
+        }
+        if (!await db.Settings.AnyAsync(ct))
+        {
+            db.Settings.Add(new ShopSettings());
+            await db.SaveChangesAsync(ct);
+        }
     }
 
     public static async Task SeedAsync(AppDbContext db, CancellationToken ct = default)
