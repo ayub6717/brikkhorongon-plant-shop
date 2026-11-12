@@ -188,6 +188,7 @@ public static class OrderEndpoints
                 order.History.Add(new OrderEvent { OrderId = order.Id, Status = order.Status });
                 // Cash on delivery: the money is collected when the parcel is handed over.
                 if (order.Status == OrderStatus.Delivered && order.Payment == "cod" && order.PaymentStatus != "refunded") order.PaymentStatus = "paid";
+                if (AdminSupport.KindFor(order.Status) is { } kind) db.Notify(order, kind);
                 db.Audit(who, "order.advance", "order", order.Id, $"-> {order.Status}");
                 await db.SaveChangesAsync(ct);
             }
@@ -234,6 +235,7 @@ public static class OrderEndpoints
                     if (request.Type == RequestType.Date) order.DeliveryDate = request.Value;
                     if (request.Type == RequestType.GiftNote) order.GiftNote = request.Value;
                 }
+                db.Notify(order, r.Status == RequestStatus.Approved ? "request.approved" : "request.declined");
                 db.Audit(who, "order.request", "order", order.Id, $"{request.Type} {r.Status}");
                 await db.SaveChangesAsync(ct);
             }
@@ -263,6 +265,7 @@ public static class OrderEndpoints
             order.Status = OrderStatus.Cancelled;
             order.CancelReason = string.IsNullOrEmpty(reason) ? null : reason;
             order.History.Add(new OrderEvent { OrderId = order.Id, Status = OrderStatus.Cancelled });
+            db.Notify(order, "order.cancelled");
             db.Audit(who, "order.cancel", "order", order.Id, reason);
             await db.SaveChangesAsync(ct);
             await tx.CommitAsync(ct);
@@ -277,6 +280,7 @@ public static class OrderEndpoints
             if (order.PaymentStatus != "paid" || order.Status is not (OrderStatus.Cancelled or OrderStatus.Delivered))
                 return Problem(StatusCodes.Status409Conflict, "NOT_REFUNDABLE", "Only paid orders that are cancelled or delivered can be refunded.");
             order.PaymentStatus = "refunded";
+            db.Notify(order, "order.refunded");
             db.Audit(who, "order.refund", "order", order.Id, $"৳{order.Total}");
             await db.SaveChangesAsync(ct);
             return Results.Ok(await DetailAsync(db, order.Id, ct));

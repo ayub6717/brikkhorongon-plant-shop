@@ -18,6 +18,23 @@ public static class AdminSupport
             Detail = detail is { Length: > 1000 } ? detail[..1000] : detail,
         });
 
+    /// <summary>Tells the customer about a change to their order. Guest orders have no account, so nothing is stored for them.</summary>
+    public static void Notify(this AppDbContext db, Order order, string kind)
+    {
+        if (order.UserId is { Length: > 0 } uid) db.Notifications.Add(new Notification { UserId = uid, Kind = kind, OrderId = order.Id });
+    }
+
+    /// <summary>The kind of notification for an order reaching a status (null when the customer needs no message for it).</summary>
+    public static string? KindFor(OrderStatus s) => s switch
+    {
+        OrderStatus.Packed => "order.packed",
+        OrderStatus.Shipped => "order.shipped",
+        OrderStatus.OutForDelivery => "order.outForDelivery",
+        OrderStatus.Delivered => "order.delivered",
+        OrderStatus.Cancelled => "order.cancelled",
+        _ => null,
+    };
+
     /// <summary>The single settings row. Created with the defaults the first time it is needed.</summary>
     public static async Task<ShopSettings> GetSettingsAsync(this AppDbContext db, CancellationToken ct = default)
     {

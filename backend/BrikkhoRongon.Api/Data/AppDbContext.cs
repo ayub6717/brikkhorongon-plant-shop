@@ -17,6 +17,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public DbSet<ShopSettings> Settings => Set<ShopSettings>();
     public DbSet<AuditEntry> AuditLog => Set<AuditEntry>();
     public DbSet<ProductImage> ProductImages => Set<ProductImage>();
+    public DbSet<Notification> Notifications => Set<Notification>();
 
     protected override void OnModelCreating(ModelBuilder b)
     {
@@ -129,6 +130,15 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
                     (a, c) => a != null && c != null && a.Count == c.Count && !a.Except(c).Any(),
                     v => v.Aggregate(0, (h, kv) => HashCode.Combine(h, kv.Key, kv.Value)),
                     v => new Dictionary<string, decimal>(v)));
+        });
+
+        b.Entity<Notification>(e =>
+        {
+            e.ToTable("notifications");
+            e.HasIndex(n => new { n.UserId, n.CreatedAt });
+            e.Property(n => n.UserId).HasMaxLength(450);
+            e.Property(n => n.Kind).HasMaxLength(40);
+            e.Property(n => n.OrderId).HasMaxLength(40);
         });
 
         b.Entity<AuditEntry>(e =>

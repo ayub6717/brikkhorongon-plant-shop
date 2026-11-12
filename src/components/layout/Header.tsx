@@ -1,5 +1,6 @@
 import { Heart, Leaf, Sprout } from "lucide-react";
 import { AccountLink } from "./AccountLink";
+import { NotificationBell } from "./NotificationBell";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { CartButton } from "@/components/cart/CartButton";
@@ -42,6 +43,7 @@ export function Header() {
             <Heart className="size-5" aria-hidden />
             <WishlistCount />
           </Link>
+          <NotificationBell />
           <AccountLink />
           <CartButton />
           <MobileNav />

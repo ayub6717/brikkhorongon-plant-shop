@@ -137,5 +137,6 @@ app.MapOrders();
 app.MapAdmin();
 app.MapAdminProducts();
 app.MapReviews();
+app.MapNotifications();
 
 app.Run();

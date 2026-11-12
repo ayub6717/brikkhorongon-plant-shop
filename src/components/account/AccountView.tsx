@@ -1,41 +1,37 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { MapPin, Trash2 } from "lucide-react";
+import { Bell, MapPin, Package, UserRound, LayoutDashboard } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { useId, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { Select } from "@/components/ui/Select";
-import { Link, useRouter } from "@/i18n/navigation";
-import { useAddAddress, useOrdersQuery, useRemoveAddress, useSessionQuery, useSignOut, useUpdateProfile } from "@/lib/api/queries";
+import { useSearchParams } from "next/navigation";
+import { NotificationList } from "@/components/layout/NotificationList";
+import { Link } from "@/i18n/navigation";
 import { usingServer } from "@/lib/api";
-import { addressSchema, type AddressValues } from "@/lib/auth-schema";
-import { BD_PHONE } from "@/lib/checkout-schema";
-import { DISTRICTS } from "@/lib/shipping";
+import { useNotifications } from "@/lib/api/notifications";
+import { useOrdersQuery, useSessionQuery } from "@/lib/api/queries";
+import { AddressesTab } from "./AddressesTab";
+import { OrdersTab } from "./OrdersTab";
+import { OverviewTab } from "./OverviewTab";
+import { ProfileTab } from "./ProfileTab";
+import { card } from "./shared";
 
-const inputCls = "w-full rounded-xl border border-border bg-background px-4 py-3 text-sm placeholder:text-muted-foreground focus:border-primary aria-[invalid=true]:border-accent";
-const card = "rounded-card border border-border bg-surface p-5 sm:p-6";
+const TABS = [
+  { id: "overview", icon: LayoutDashboard },
+  { id: "orders", icon: Package },
+  { id: "addresses", icon: MapPin },
+  { id: "notifications", icon: Bell },
+  { id: "profile", icon: UserRound },
+] as const;
+type TabId = (typeof TABS)[number]["id"];
 
+/** The customer's own dashboard: overview, orders, addresses, notifications and profile. */
 export function AccountView() {
   const t = useTranslations("Account");
-  const tc = useTranslations("Checkout");
-  const tt = useTranslations("Track");
+  const td = useTranslations("Dashboard");
   const locale = useLocale();
-  const uid = useId();
-  const router = useRouter();
+  const params = useSearchParams();
   const { data: user, isPending } = useSessionQuery();
   const { data: orders = [] } = useOrdersQuery();
-  const signOut = useSignOut();
-  const update = useUpdateProfile();
-  const addAddress = useAddAddress();
-  const removeAddress = useRemoveAddress();
-  const [name, setName] = useState<string | null>(null);
-  const [phone, setPhone] = useState<string | null>(null);
-  const [saved, setSaved] = useState(false);
-  const { register, handleSubmit, control, reset, formState: { errors } } = useForm<AddressValues>({
-    resolver: zodResolver(addressSchema),
-    defaultValues: { label: "", area: "", address: "" },
-  });
+  const { data: notes } = useNotifications(usingServer && Boolean(user));
 
   if (isPending) return <div className="h-64" aria-hidden />;
   if (!user) {
@@ -53,117 +49,52 @@ export function AccountView() {
 
   // Server orders are already this customer's; in the browser demo we match by email.
   const mine = usingServer ? orders : orders.filter((o) => o.customer.email.toLowerCase() === user.email.toLowerCase());
-  const nameV = name ?? user.name;
-  const phoneV = phone ?? user.phone;
-  const phoneBad = !BD_PHONE.test(phoneV.trim());
-  const nameBad = nameV.trim().length < 2;
-  const fmt = (iso: string) => new Intl.DateTimeFormat(locale === "bn" ? "bn-BD" : "en-GB", { dateStyle: "medium" }).format(new Date(iso));
-  const money = new Intl.NumberFormat(locale === "bn" ? "bn-BD" : "en-BD");
-  const err = (k: keyof AddressValues) => (errors[k]?.message ? t(`errors.${errors[k]?.message}`) : undefined);
+  const tabs = TABS.filter((x) => usingServer || x.id !== "notifications");
+  const asked = params.get("tab");
+  const tab: TabId = tabs.some((x) => x.id === asked) ? (asked as TabId) : "overview";
+  const unread = notes?.unread ?? 0;
+  const since = new Intl.DateTimeFormat(locale === "bn" ? "bn-BD" : "en-GB", { month: "long", year: "numeric" }).format(new Date(user.createdAt));
+  const initials = user.name.trim().split(/\s+/).slice(0, 2).map((w) => w[0]?.toUpperCase()).join("");
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[1fr_1fr]">
-      <div className="space-y-8">
-        <section className={card} aria-labelledby={`${uid}-profile`}>
-          <h2 id={`${uid}-profile`} className="font-display text-xl font-semibold">{t("profile")}</h2>
-          <p className="mt-1 text-sm text-muted-foreground">{user.email}</p>
-          <form
-            noValidate
-            className="mt-4 space-y-4"
-            onSubmit={(e) => {
-              e.preventDefault();
-              setSaved(false);
-              if (nameBad || phoneBad) return;
-              update.mutate({ name: nameV.trim(), phone: phoneV.trim() }, { onSuccess: () => setSaved(true) });
-            }}
-          >
-            <div>
-              <label htmlFor={`${uid}-n`} className="mb-1.5 block text-sm font-medium">{t("name")}</label>
-              <input id={`${uid}-n`} value={nameV} onChange={(e) => setName(e.target.value)} aria-invalid={nameBad || undefined} className={inputCls} />
-              {nameBad && <p role="alert" className="mt-1.5 text-xs font-medium text-accent">{t("errors.name")}</p>}
-            </div>
-            <div>
-              <label htmlFor={`${uid}-p`} className="mb-1.5 block text-sm font-medium">{t("phone")}</label>
-              <input id={`${uid}-p`} value={phoneV} onChange={(e) => setPhone(e.target.value)} inputMode="tel" aria-invalid={phoneBad || undefined} className={inputCls} />
-              {phoneBad && <p role="alert" className="mt-1.5 text-xs font-medium text-accent">{t("errors.phone")}</p>}
-            </div>
-            <div className="flex flex-wrap items-center gap-3">
-              <button type="submit" disabled={update.isPending} className="rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground disabled:opacity-60">{t("save")}</button>
-              {saved && <output className="text-sm font-medium text-primary">{t("saved")}</output>}
-            </div>
-          </form>
-          {user.roles?.includes("Admin") && <Link href="/admin" className="mt-4 block text-sm font-medium text-primary underline-offset-4 hover:underline">{t("adminLink")}</Link>}
-          <button type="button" onClick={() => signOut.mutate(undefined, { onSuccess: () => router.push("/") })} className="mt-6 text-sm font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">{t("signOut")}</button>
-        </section>
+    <div className="grid gap-6 lg:grid-cols-[16rem_1fr] lg:gap-8">
+      <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
+        <div className={`${card} flex items-center gap-3 !p-4`}>
+          <span className="grid size-11 shrink-0 place-items-center rounded-full bg-primary/10 font-semibold text-primary" aria-hidden>{initials || "?"}</span>
+          <div className="min-w-0">
+            <p className="truncate font-medium">{user.name}</p>
+            <p className="truncate text-xs text-muted-foreground">{user.email}</p>
+            <p className="text-xs text-muted-foreground">{td("memberSince", { date: since })}</p>
+          </div>
+        </div>
+        <nav aria-label={td("menu")} className="-mx-4 flex gap-1.5 overflow-x-auto px-4 pb-1 lg:mx-0 lg:flex-col lg:overflow-visible lg:px-0 lg:pb-0">
+          {tabs.map(({ id, icon: Icon }) => (
+            <Link
+              key={id}
+              href={id === "overview" ? "/account" : `/account?tab=${id}`}
+              aria-current={tab === id ? "page" : undefined}
+              className={`flex shrink-0 items-center gap-2.5 rounded-full px-4 py-2.5 text-sm font-medium transition lg:rounded-xl ${tab === id ? "bg-primary text-primary-foreground" : "text-foreground/80 hover:bg-muted"}`}
+            >
+              <Icon className="size-4" aria-hidden />
+              {td(`tabs.${id}`)}
+              {id === "notifications" && unread > 0 && <span className="ms-auto rounded-full bg-accent px-1.5 text-[10px] leading-4 text-white">{unread}</span>}
+            </Link>
+          ))}
+        </nav>
+      </aside>
 
-        <section className={card} aria-labelledby={`${uid}-orders`}>
-          <h2 id={`${uid}-orders`} className="font-display text-xl font-semibold">{t("orders")}</h2>
-          {mine.length === 0 ? (
-            <p className="mt-3 text-sm text-muted-foreground">{t("noOrders")}</p>
-          ) : (
-            <ul className="mt-4 divide-y divide-border">
-              {mine.map((o) => (
-                <li key={o.id} className="flex flex-wrap items-center justify-between gap-2 py-3 text-sm">
-                  <div>
-                    <p className="font-medium tracking-wide">{o.id}</p>
-                    <p className="text-xs text-muted-foreground">{fmt(o.createdAt)} · {tt(`steps.${o.status}`)}</p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="tabular-nums">৳{money.format(o.total)}</span>
-                    <Link href={`/track?id=${o.id}`} className="font-medium text-primary underline-offset-4 hover:underline">{t("track")}</Link>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
-      </div>
-
-      <section className={card} aria-labelledby={`${uid}-addr`}>
-        <h2 id={`${uid}-addr`} className="font-display text-xl font-semibold">{t("addresses")}</h2>
-        {user.addresses.length === 0 ? (
-          <p className="mt-3 text-sm text-muted-foreground">{t("noAddresses")}</p>
-        ) : (
-          <ul className="mt-4 space-y-3">
-            {user.addresses.map((a) => (
-              <li key={a.id} className="flex items-start justify-between gap-3 rounded-xl bg-muted/60 p-3 text-sm">
-                <div className="flex gap-2">
-                  <MapPin className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden />
-                  <p><strong className="font-medium">{a.label}</strong><br />{a.address}, {a.area}<br />{tc(`districts.${a.district}`)}</p>
-                </div>
-                <button type="button" onClick={() => removeAddress.mutate(a.id)} aria-label={t("removeAddress", { label: a.label })} className="p-1.5 text-muted-foreground transition hover:text-accent"><Trash2 className="size-4" aria-hidden /></button>
-              </li>
-            ))}
-          </ul>
+      <div className="min-w-0">
+        {tab === "overview" && <OverviewTab orders={mine} name={user.name} />}
+        {tab === "orders" && <OrdersTab orders={mine} />}
+        {tab === "addresses" && <AddressesTab user={user} />}
+        {tab === "notifications" && (
+          <div className="space-y-4">
+            <h2 className="font-display text-2xl font-semibold">{td("tabs.notifications")}</h2>
+            <section className={`${card} px-0 sm:px-0`}><NotificationList items={notes?.items ?? []} unread={unread} /></section>
+          </div>
         )}
-
-        <form noValidate className="mt-6 space-y-4 border-t border-border pt-5" onSubmit={handleSubmit((v) => addAddress.mutate(v, { onSuccess: () => reset({ label: "", area: "", address: "" }) }))}>
-          <h3 className="text-sm font-semibold">{t("addAddress")}</h3>
-          <div>
-            <label htmlFor={`${uid}-l`} className="mb-1.5 block text-sm font-medium">{t("label")}</label>
-            <input id={`${uid}-l`} placeholder={t("labelPlaceholder")} aria-invalid={errors.label ? true : undefined} className={inputCls} {...register("label")} />
-            {err("label") && <p role="alert" className="mt-1.5 text-xs font-medium text-accent">{err("label")}</p>}
-          </div>
-          <div>
-            <label htmlFor={`${uid}-d`} className="mb-1.5 block text-sm font-medium">{tc("district")}</label>
-            <Controller control={control} name="district" render={({ field }) => (
-              <Select variant="field" id={`${uid}-d`} value={field.value ?? ""} onChange={field.onChange} placeholder={tc("districtPlaceholder")} invalid={!!errors.district} options={DISTRICTS.map((d) => ({ value: d, label: tc(`districts.${d}`) }))} />
-            )} />
-            {err("district") && <p role="alert" className="mt-1.5 text-xs font-medium text-accent">{err("district")}</p>}
-          </div>
-          <div>
-            <label htmlFor={`${uid}-a`} className="mb-1.5 block text-sm font-medium">{tc("area")}</label>
-            <input id={`${uid}-a`} aria-invalid={errors.area ? true : undefined} className={inputCls} {...register("area")} />
-            {err("area") && <p role="alert" className="mt-1.5 text-xs font-medium text-accent">{err("area")}</p>}
-          </div>
-          <div>
-            <label htmlFor={`${uid}-ad`} className="mb-1.5 block text-sm font-medium">{tc("address")}</label>
-            <input id={`${uid}-ad`} aria-invalid={errors.address ? true : undefined} className={inputCls} {...register("address")} />
-            {err("address") && <p role="alert" className="mt-1.5 text-xs font-medium text-accent">{err("address")}</p>}
-          </div>
-          <button type="submit" disabled={addAddress.isPending} className="rounded-full border border-border px-6 py-3 text-sm font-medium transition hover:bg-muted disabled:opacity-60">{t("addAddressBtn")}</button>
-        </form>
-      </section>
+        {tab === "profile" && <ProfileTab user={user} />}
+      </div>
     </div>
   );
 }
