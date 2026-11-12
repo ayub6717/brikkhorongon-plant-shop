@@ -124,7 +124,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
             e.Property(x => x.DistrictFees).HasConversion(
                 v => System.Text.Json.JsonSerializer.Serialize(v, (System.Text.Json.JsonSerializerOptions?)null),
                 v => System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, decimal>>(v, (System.Text.Json.JsonSerializerOptions?)null) ?? new())
-                .HasColumnType("text");
+                .HasColumnType("text")
+                .Metadata.SetValueComparer(new Microsoft.EntityFrameworkCore.ChangeTracking.ValueComparer<Dictionary<string, decimal>>(
+                    (a, c) => a != null && c != null && a.Count == c.Count && !a.Except(c).Any(),
+                    v => v.Aggregate(0, (h, kv) => HashCode.Combine(h, kv.Key, kv.Value)),
+                    v => new Dictionary<string, decimal>(v)));
         });
 
         b.Entity<AuditEntry>(e =>

@@ -22,10 +22,10 @@ public record Analytics(int Days, decimal Revenue, int Orders, decimal AverageOr
     int NewCustomerOrders, int ReturningCustomerOrders, DayStat[] Series, CategorySale[] Categories, TopPlant[] TopPlants,
     LowStockItem[] LowStock, int OutOfStock, int LowStockAt);
 
-public record CustomerDto(string Id, string Name, string Email, string Phone, DateTime CreatedAt, bool Locked, string[] Roles,
+public record AdminCustomerDto(string Id, string Name, string Email, string Phone, DateTime CreatedAt, bool Locked, string[] Roles,
     int OrderCount, decimal TotalSpent, DateTime? LastOrderAt);
-public record CustomerDetail(CustomerDto Customer, OrderDto[] Orders, AddressDto[] Addresses);
-public record CustomersPage(CustomerDto[] Items, int Total, int Page, int PageSize);
+public record CustomerDetail(AdminCustomerDto Customer, OrderDto[] Orders, AddressDto[] Addresses);
+public record CustomersPage(AdminCustomerDto[] Items, int Total, int Page, int PageSize);
 public record LockInput(bool Locked);
 
 public record CouponDto(string Code, string Kind, int Value, int MinSubtotal, DateTime? ExpiresAt, int? UsageLimit, int Used, bool Active, DateTime CreatedAt);
@@ -357,7 +357,7 @@ public static partial class AdminEndpoints
     }
 
     // ---------- helpers ----------
-    private static async Task<CustomerDto[]> ToCustomersAsync(AppDbContext db, List<AppUser> rows, CancellationToken ct)
+    private static async Task<AdminCustomerDto[]> ToCustomersAsync(AppDbContext db, List<AppUser> rows, CancellationToken ct)
     {
         var ids = rows.Select(u => u.Id).ToList();
         var agg = await db.Orders.AsNoTracking().Where(o => o.UserId != null && ids.Contains(o.UserId) && o.Status != OrderStatus.Cancelled)
@@ -366,7 +366,7 @@ public static partial class AdminEndpoints
         return [.. rows.Select(u =>
         {
             var a = agg.FirstOrDefault(x => x.Id == u.Id);
-            return new CustomerDto(u.Id, u.FullName, u.Email ?? "", u.PhoneNumber ?? "", u.CreatedAt,
+            return new AdminCustomerDto(u.Id, u.FullName, u.Email ?? "", u.PhoneNumber ?? "", u.CreatedAt,
                 u.LockoutEnd is { } end && end > DateTimeOffset.UtcNow,
                 [.. roles.Where(r => r.UserId == u.Id).Select(r => r.Name!)], a?.Count ?? 0, a?.Spent ?? 0, a?.Last);
         })];

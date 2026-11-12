@@ -134,6 +134,52 @@ namespace BrikkhoRongon.Api.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("BrikkhoRongon.Api.Domain.AuditEntry", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("character varying(60)");
+
+                    b.Property<string>("ActorEmail")
+                        .IsRequired()
+                        .HasMaxLength(254)
+                        .HasColumnType("character varying(254)");
+
+                    b.Property<string>("ActorId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("character varying(450)");
+
+                    b.Property<DateTime>("At")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Detail")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<string>("Entity")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<string>("EntityId")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("At");
+
+                    b.ToTable("audit_log", (string)null);
+                });
+
             modelBuilder.Entity("BrikkhoRongon.Api.Domain.ModRequest", b =>
                 {
                     b.Property<string>("Id")
@@ -189,6 +235,10 @@ namespace BrikkhoRongon.Api.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<string>("CancelReason")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
                     b.Property<string>("CouponCode")
                         .HasMaxLength(30)
                         .HasColumnType("character varying(30)");
@@ -240,6 +290,11 @@ namespace BrikkhoRongon.Api.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
+                    b.Property<string>("PaymentStatus")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -273,6 +328,8 @@ namespace BrikkhoRongon.Api.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedAt");
+
+                    b.HasIndex("DeliveryDate");
 
                     b.HasIndex("UserId");
 
@@ -347,6 +404,38 @@ namespace BrikkhoRongon.Api.Migrations
                     b.ToTable("order_lines", (string)null);
                 });
 
+            modelBuilder.Entity("BrikkhoRongon.Api.Domain.OrderNote", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("At")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Author")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)");
+
+                    b.Property<string>("OrderId")
+                        .IsRequired()
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("order_notes", (string)null);
+                });
+
             modelBuilder.Entity("BrikkhoRongon.Api.Domain.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -387,6 +476,9 @@ namespace BrikkhoRongon.Api.Migrations
                     b.Property<bool>("Featured")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("Hidden")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("ImageHeight")
                         .HasColumnType("integer");
 
@@ -424,6 +516,12 @@ namespace BrikkhoRongon.Api.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<int?>("Stock")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Water")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -439,6 +537,66 @@ namespace BrikkhoRongon.Api.Migrations
                     b.ToTable("products", (string)null);
                 });
 
+            modelBuilder.Entity("BrikkhoRongon.Api.Domain.ProductImage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<byte[]>("Data")
+                        .IsRequired()
+                        .HasColumnType("bytea");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("product_images", (string)null);
+                });
+
+            modelBuilder.Entity("BrikkhoRongon.Api.Domain.PromoCode", b =>
+                {
+                    b.Property<string>("Code")
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Kind")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<int>("MinSubtotal")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("UsageLimit")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Used")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Value")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Code");
+
+                    b.ToTable("promo_codes", (string)null);
+                });
+
             modelBuilder.Entity("BrikkhoRongon.Api.Domain.Review", b =>
                 {
                     b.Property<Guid>("Id")
@@ -452,6 +610,9 @@ namespace BrikkhoRongon.Api.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("Hidden")
+                        .HasColumnType("boolean");
 
                     b.Property<int>("Rating")
                         .HasColumnType("integer");
@@ -486,6 +647,63 @@ namespace BrikkhoRongon.Api.Migrations
                         .IsUnique();
 
                     b.ToTable("reviews", (string)null);
+                });
+
+            modelBuilder.Entity("BrikkhoRongon.Api.Domain.ShopSettings", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<decimal>("DhakaInnerFee")
+                        .HasPrecision(12, 2)
+                        .HasColumnType("numeric(12,2)");
+
+                    b.Property<decimal>("DhakaOuterFee")
+                        .HasPrecision(12, 2)
+                        .HasColumnType("numeric(12,2)");
+
+                    b.Property<string>("DistrictFees")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(254)
+                        .HasColumnType("character varying(254)");
+
+                    b.Property<decimal>("FreeShippingThreshold")
+                        .HasPrecision(12, 2)
+                        .HasColumnType("numeric(12,2)");
+
+                    b.Property<int>("LowStockAt")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<string>("ShopName")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)");
+
+                    b.Property<string>("Slots")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("shop_settings", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -664,6 +882,15 @@ namespace BrikkhoRongon.Api.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("BrikkhoRongon.Api.Domain.OrderNote", b =>
+                {
+                    b.HasOne("BrikkhoRongon.Api.Domain.Order", null)
+                        .WithMany("Notes")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("BrikkhoRongon.Api.Domain.Review", b =>
                 {
                     b.HasOne("BrikkhoRongon.Api.Domain.AppUser", null)
@@ -729,6 +956,8 @@ namespace BrikkhoRongon.Api.Migrations
                     b.Navigation("History");
 
                     b.Navigation("Lines");
+
+                    b.Navigation("Notes");
 
                     b.Navigation("Requests");
                 });
