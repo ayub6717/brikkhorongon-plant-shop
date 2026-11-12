@@ -18,6 +18,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public DbSet<AuditEntry> AuditLog => Set<AuditEntry>();
     public DbSet<ProductImage> ProductImages => Set<ProductImage>();
     public DbSet<Notification> Notifications => Set<Notification>();
+    public DbSet<PasswordReset> PasswordResets => Set<PasswordReset>();
 
     protected override void OnModelCreating(ModelBuilder b)
     {
@@ -130,6 +131,15 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
                     (a, c) => a != null && c != null && a.Count == c.Count && !a.Except(c).Any(),
                     v => v.Aggregate(0, (h, kv) => HashCode.Combine(h, kv.Key, kv.Value)),
                     v => new Dictionary<string, decimal>(v)));
+        });
+
+        b.Entity<PasswordReset>(e =>
+        {
+            e.ToTable("password_resets");
+            e.HasIndex(r => r.TokenHash).IsUnique();
+            e.HasIndex(r => r.UserId);
+            e.Property(r => r.UserId).HasMaxLength(450);
+            e.Property(r => r.TokenHash).HasMaxLength(64);
         });
 
         b.Entity<Notification>(e =>

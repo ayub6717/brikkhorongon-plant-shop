@@ -72,6 +72,9 @@ export function AuthForm({ mode }: Readonly<{ mode: "login" | "register" }>) {
           <label htmlFor={`${uid}-password`} className="mb-1.5 block text-sm font-medium">{t("password")}</label>
           <input id={`${uid}-password`} type="password" autoComplete={register ? "new-password" : "current-password"} className={inputCls} {...aria("password")} {...field("password")} />
           {register && !errors.password && <p className="mt-1.5 text-xs text-muted-foreground">{t("passwordHint")}</p>}
+          {!register && usingServer && (
+            <p className="mt-1.5 text-xs"><Link href="/forgot-password" className="font-medium text-primary underline-offset-4 hover:underline">{t("forgotLink")}</Link></p>
+          )}
           {errMsg("password")}
         </div>
         {failure && <p role="alert" className="text-sm font-medium text-accent">{t.has(`errors.${failure}`) ? t(`errors.${failure}`) : t("errors.GENERIC")}</p>}

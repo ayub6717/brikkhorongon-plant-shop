@@ -32,7 +32,14 @@ builder.Services
         o.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15); // ...lock the account for 15 minutes
     })
     .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<AppDbContext>();
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
+
+// ---- Email: Resend when Resend:ApiKey is set, otherwise a stand-in that only logs (see Services/Mailer.cs) ----
+if (!string.IsNullOrWhiteSpace(builder.Configuration["Resend:ApiKey"]))
+    builder.Services.AddHttpClient<BrikkhoRongon.Api.Services.IMailer, BrikkhoRongon.Api.Services.ResendMailer>(c => c.Timeout = TimeSpan.FromSeconds(10));
+else
+    builder.Services.AddSingleton<BrikkhoRongon.Api.Services.IMailer, BrikkhoRongon.Api.Services.LogMailer>();
 
 // ---- Sign-in token (JWT) ----
 var jwt = builder.Configuration.GetSection("Jwt").Get<JwtOptions>() ?? new JwtOptions();
@@ -133,6 +140,7 @@ if (app.Configuration.GetValue("Database:AutoMigrate", true))
 app.MapGet("/health", () => Results.Ok(new { status = "ok" })).ExcludeFromDescription();
 app.MapCatalog();
 app.MapAuth();
+app.MapPasswordReset();
 app.MapOrders();
 app.MapAdmin();
 app.MapAdminProducts();

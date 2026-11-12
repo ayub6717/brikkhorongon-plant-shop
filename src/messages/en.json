@@ -1286,6 +1286,20 @@
     "changePassword": "Change password",
     "passwordChanged": "Password changed."
   },
+  "Recovery": {
+    "forgotTitle": "Forgot your password?",
+    "forgotLead": "Enter the email you signed up with and we'll send you a link to choose a new password.",
+    "sendLink": "Send reset link",
+    "sent": "If an account exists for that email, a reset link is on its way. It works for 1 hour. Check your spam folder too.",
+    "backToLogin": "Back to sign in",
+    "resetTitle": "Choose a new password",
+    "resetLead": "For {email}.",
+    "setPassword": "Save new password",
+    "done": "Your password has been changed. You can sign in now.",
+    "badLink": "This reset link is incomplete. Please use the link from your email, or ask for a new one.",
+    "expired": "This link has expired or was already used.",
+    "askAgain": "Ask for a new link"
+  },
   "Account": {
     "title": "My account",
     "loginTitle": "Sign in",
@@ -1341,6 +1355,7 @@
     },
     "password": "Password",
     "passwordHint": "At least 8 characters, with a letter and a number.",
+    "forgotLink": "Forgot your password?",
     "adminLink": "Admin dashboard"
   },
   "Admin": {

@@ -17,6 +17,10 @@ services:
         sync: false
       - key: Admin__Password
         sync: false              # typed into the dashboard only, never into git
+      - key: Resend__ApiKey
+        sync: false              # optional: sends reset and order emails. Typed into the dashboard only, never into git
+      - key: Email__From
+        sync: false              # e.g. Brikkhorongon <hello@your-domain>
       - key: Cors__Origins__0
         value: https://brikkhorongon-plant-shop.vercel.app
       - key: ForwardedHeaders__TrustAll

@@ -29,3 +29,19 @@ export function authHandler(kind: "login" | "register") {
     return Response.json(data.user); // the token itself is never sent to the page
   };
 }
+
+/** "Forgot password" and "reset password": no session cookie is involved, so this just forwards and passes on the status. */
+export function recoveryHandler(kind: "forgot-password" | "reset-password") {
+  return async function POST(req: Request) {
+    if (!isSameOrigin(req)) return forbidden();
+    let res: Response;
+    try {
+      res = await callBackend(`/api/auth/${kind}`, { method: "POST", body: await req.text(), ip: clientIp(req) });
+    } catch {
+      return unreachable();
+    }
+    if (res.ok) return new Response(null, { status: 204 });
+    const data = await res.json().catch(() => null);
+    return Response.json({ code: data?.code, errors: data?.errors }, { status: res.status });
+  };
+}
