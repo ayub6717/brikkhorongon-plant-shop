@@ -71,14 +71,12 @@ const rememberId = (id: string) => {
 
 export const httpOrders: ShopApi["orders"] = {
   async list() {
-    const ids = readIds();
     const user = await call<User | null>("/me");
-    const [mine, guest] = await Promise.all([
-      user ? call<Order[]>("/me/orders") : Promise.resolve([] as Order[]),
-      ids.length ? call<Order[]>("/orders/lookup", { method: "POST", body: { ids } }) : Promise.resolve([] as Order[]),
-    ]);
-    const byId = new Map([...guest, ...mine].map((o) => [o.id, o]));
-    return [...byId.values()].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    // A signed-in customer sees only their own orders. Order numbers remembered by this browser belong
+    // to whoever (or no one) placed them here, so they must not leak into another account's dashboard.
+    if (user) return call<Order[]>("/me/orders");
+    const ids = readIds();
+    return ids.length ? call<Order[]>("/orders/lookup", { method: "POST", body: { ids } }) : [];
   },
   async get(id) {
     try {
