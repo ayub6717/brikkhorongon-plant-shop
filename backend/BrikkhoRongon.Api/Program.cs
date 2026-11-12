@@ -17,8 +17,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // The connection string (with the password) lives in user-secrets locally and in an environment variable in production.
 builder.Services.AddDbContext<AppDbContext>(o =>
-    o.UseNpgsql(builder.Configuration.GetConnectionString("Default")
-        ?? throw new InvalidOperationException("ConnectionStrings:Default is not set. See backend/README.md.")));
+    o.UseNpgsql(ConnectionStrings.Normalize(builder.Configuration.GetConnectionString("Default")
+        ?? throw new InvalidOperationException("ConnectionStrings:Default is not set. See backend/README.md."))));
 
 // ---- Accounts: Identity (users, password hashing, roles) ----
 builder.Services
@@ -86,8 +86,21 @@ builder.Services.AddCors(o => o.AddPolicy("web", p => p.WithOrigins(origins).All
 var app = builder.Build();
 
 // The storefront server forwards the visitor's address in X-Forwarded-For so rate limiting counts real visitors.
-// Only trusted proxies (by default: this machine) are believed; configure KnownProxies before deploying.
-app.UseForwardedHeaders(new ForwardedHeadersOptions { ForwardedHeaders = ForwardedHeaders.XForwardedFor });
+// Locally only this machine is believed. On a host such as Render the connection arrives from the host's own proxy,
+// whose address we cannot know in advance, so production sets ForwardedHeaders__TrustAll=true. The proxy appends the
+// caller's address to the list, so ForwardedHeaders__Limit=2 makes us read the address the storefront reported
+// (the second from the end) instead of the proxy's own.
+var forwarded = new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor,
+    ForwardLimit = builder.Configuration.GetValue("ForwardedHeaders:Limit", 1),
+};
+if (builder.Configuration.GetValue("ForwardedHeaders:TrustAll", false))
+{
+    forwarded.KnownNetworks.Clear();
+    forwarded.KnownProxies.Clear();
+}
+app.UseForwardedHeaders(forwarded);
 app.UseExceptionHandler();
 app.UseStatusCodePages();
 app.UseCors("web");
@@ -101,7 +114,13 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();      // /scalar/v1  (a page where you can try the endpoints)
     app.UseSwaggerUI(o => o.SwaggerEndpoint("/openapi/v1.json", "BrikkhoRongon API v1")); // /swagger
 
-    // Convenience for local work: create/upgrade tables, create the roles, load the catalog.
+}
+
+// On start: create/upgrade the tables, create the roles, load the catalog, and create the admin account when
+// Admin:Email / Admin:Password are provided (secrets locally; environment variables on the host). Fine for a
+// single-instance demo; a bigger system would run migrations as a separate deploy step.
+if (app.Configuration.GetValue("Database:AutoMigrate", true))
+{
     using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     await db.Database.MigrateAsync();

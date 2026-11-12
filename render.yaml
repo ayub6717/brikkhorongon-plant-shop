@@ -1,0 +1,25 @@
+# Render Blueprint: Render reads this file when you create a "Blueprint" from the GitHub repo.
+# The database lives elsewhere (Neon, free and permanent), so its address is typed into the dashboard once.
+services:
+  - type: web
+    name: brikkhorongon-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: ConnectionStrings__Default
+        sync: false              # paste the Neon connection string in the dashboard
+      - key: Jwt__Key
+        generateValue: true      # Render makes a long random value for us
+      - key: Admin__Email
+        sync: false
+      - key: Admin__Password
+        sync: false              # typed into the dashboard only, never into git
+      - key: Cors__Origins__0
+        value: https://brikkhorongon-plant-shop.vercel.app
+      - key: ForwardedHeaders__TrustAll
+        value: "true"
+      - key: ForwardedHeaders__Limit
+        value: "2"
