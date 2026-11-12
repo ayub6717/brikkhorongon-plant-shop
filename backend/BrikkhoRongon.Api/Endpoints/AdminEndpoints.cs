@@ -50,11 +50,19 @@ public static class AdminEndpoints
         });
 
         // GET /api/admin/orders?status=packed&q=dhaka&page=1
-        g.MapGet("/orders", async Task<IResult> (AppDbContext db, OrderStatus? status, string? q, int? page, CancellationToken ct) =>
+        g.MapGet("/orders", async Task<IResult> (AppDbContext db, string? status, string? q, int? page, CancellationToken ct) =>
         {
             const int pageSize = 20;
+            // The storefront sends camelCase ("outForDelivery"); query-string enum binding is case-sensitive, so parse it ourselves.
+            OrderStatus? wanted = null;
+            if (!string.IsNullOrWhiteSpace(status))
+            {
+                if (!Enum.TryParse<OrderStatus>(status, ignoreCase: true, out var parsed) || !Enum.IsDefined(parsed))
+                    return Results.ValidationProblem(new Dictionary<string, string[]> { ["status"] = ["Unknown order status."] });
+                wanted = parsed;
+            }
             var query = OrderEndpoints.Everything(db).AsNoTracking().AsQueryable();
-            if (status is not null) query = query.Where(o => o.Status == status);
+            if (wanted is not null) query = query.Where(o => o.Status == wanted);
             if (!string.IsNullOrWhiteSpace(q))
             {
                 var like = $"%{q.Trim()}%";

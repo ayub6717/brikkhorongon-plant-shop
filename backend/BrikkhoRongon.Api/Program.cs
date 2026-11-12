@@ -97,7 +97,7 @@ var forwarded = new ForwardedHeadersOptions
 };
 if (builder.Configuration.GetValue("ForwardedHeaders:TrustAll", false))
 {
-    forwarded.KnownNetworks.Clear();
+    forwarded.KnownIPNetworks.Clear();
     forwarded.KnownProxies.Clear();
 }
 app.UseForwardedHeaders(forwarded);

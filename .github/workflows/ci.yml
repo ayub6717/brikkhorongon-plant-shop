@@ -28,6 +28,7 @@ jobs:
         with:
           dotnet-version: 10.0.x
       - run: dotnet build backend/BrikkhoRongon.Api/BrikkhoRongon.Api.csproj -c Release
+      - run: dotnet test backend/BrikkhoRongon.Api.Tests/BrikkhoRongon.Api.Tests.csproj -c Release
 
   e2e:
     runs-on: ubuntu-latest
