@@ -5,9 +5,11 @@ import { Clock, Lock } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useId, useState, type FormEvent } from "react";
 import { formatDateKey, getDeliveryDates } from "@/lib/shipping";
+import { useAddRequest } from "@/lib/api/queries";
+import type { NewRequest } from "@/lib/api/types";
 import { useTodayKey } from "@/lib/useMounted";
 import { cn } from "@/lib/utils";
-import { canModify, REQUEST_TYPES, useOrders, type ModRequest, type Order, type RequestType } from "@/store/orders";
+import { canModify, REQUEST_TYPES, type ModRequest, type Order, type RequestType } from "@/store/orders";
 
 export const POTS = ["terracotta", "whiteCeramic", "cement", "woven", "none"] as const;
 
@@ -35,7 +37,8 @@ export function ModifyRequests({ order }: { order: Order }) {
   const t = useTranslations("Track");
   const locale = useLocale();
   const uid = useId();
-  const addRequest = useOrders((s) => s.addRequest);
+  const addMutation = useAddRequest();
+  const addRequest = (orderId: string, request: NewRequest) => addMutation.mutate({ orderId, request });
   const todayKey = useTodayKey();
   const describe = useDescribe();
 

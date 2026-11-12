@@ -1,7 +1,19 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-export type Review = { id: string; slug: string; name: string; rating: number; title: string; text: string; at: string };
+export type Review = {
+  id: string;
+  slug: string;
+  name: string;
+  rating: number;
+  title: string;
+  text: string;
+  at: string;
+  /** Server only: the author has a delivered order with this plant. */
+  verified?: boolean;
+  /** Server only: whether the current visitor may delete it (author or shop team). */
+  canDelete?: boolean;
+};
 
 /**
  * Reviews written in this browser. There is no backend yet, so reviews are local to the device

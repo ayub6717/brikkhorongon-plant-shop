@@ -13,7 +13,7 @@ import { useMounted, useTodayKey } from "@/lib/useMounted";
 import type { CareReminder } from "@/lib/ics";
 import { cn } from "@/lib/utils";
 import { useGarden } from "@/store/garden";
-import { useOrders } from "@/store/orders";
+import { useOrdersQuery } from "@/lib/api/queries";
 import { PlantPhotos } from "./PlantPhotos";
 import { CareReminderButton } from "./CareReminderButton";
 
@@ -22,11 +22,11 @@ export function GardenView() {
   const locale = useLocale();
   const mounted = useMounted();
   const today = useTodayKey();
-  const orders = useOrders((s) => s.orders);
+  const { data: orders = [], isPending } = useOrdersQuery();
   const watered = useGarden((s) => s.watered);
   const markWatered = useGarden((s) => s.markWatered);
 
-  if (!mounted || !today) return <div className="h-64" aria-hidden />;
+  if (!mounted || !today || isPending) return <div className="h-64" aria-hidden />;
 
   // One entry per plant: the most recent delivery, with its total quantity.
   const arrived = new Map<string, { arrivedKey: string; qty: number }>();

@@ -7,8 +7,8 @@ import { useId, useState, type FormEvent } from "react";
 import { OrderLines } from "@/components/checkout/OrderLines";
 import { Link, useRouter } from "@/i18n/navigation";
 import { formatDateKey } from "@/lib/shipping";
-import { useMounted } from "@/lib/useMounted";
-import { useOrders } from "@/store/orders";
+import { usingServer } from "@/lib/api";
+import { useOrderQuery, useOrdersQuery, useSessionQuery } from "@/lib/api/queries";
 import { DeliveryScene } from "./DeliveryScene";
 import { DemoControls } from "./DemoControls";
 import { ModifyRequests } from "./ModifyRequests";
@@ -23,12 +23,16 @@ export function TrackView() {
   const uid = useId();
   const router = useRouter();
   const params = useSearchParams();
-  const mounted = useMounted();
-  const orders = useOrders((s) => s.orders);
+  const { data: orders = [] } = useOrdersQuery(); // only for the "recent orders" chips
+  const { data: user } = useSessionQuery();
+  // With a real server only the shop team (Admin role) may move orders along; the demo site lets everyone.
+  const showDemoControls = !usingServer || user?.roles?.includes("Admin");
 
   const queryId = normalize(params.get("id") ?? "");
   const [value, setValue] = useState(queryId);
-  const order = queryId ? orders.find((o) => o.id === queryId) : undefined;
+  // Look the order up by its number (not in my own list), so the shop team can open any customer's order.
+  const { data: order, isPending: orderPending } = useOrderQuery(queryId || undefined);
+  const isPending = Boolean(queryId) && orderPending;
 
   function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -60,7 +64,7 @@ export function TrackView() {
         </button>
       </form>
 
-      {!mounted ? (
+      {isPending ? (
         <div className="h-64" aria-hidden />
       ) : order ? (
         <div className="mt-10 space-y-6">
@@ -83,7 +87,7 @@ export function TrackView() {
             <OrderLines lines={order.lines} subtotal={order.subtotal} shipping={order.shipping} total={order.total} discount={order.discount} couponCode={order.coupon} />
           </section>
 
-          <DemoControls order={order} />
+          {showDemoControls && <DemoControls order={order} />}
         </div>
       ) : (
         <div className="mt-10">

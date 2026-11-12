@@ -9,17 +9,15 @@ import { Link } from "@/i18n/navigation";
 import { localizeProduct } from "@/lib/localize";
 import { getProductBySlug } from "@/lib/catalog";
 import { formatDateKey } from "@/lib/shipping";
-import { useMounted } from "@/lib/useMounted";
-import { useOrders } from "@/store/orders";
+import { useOrderQuery } from "@/lib/api/queries";
 
 export function OrderConfirmation({ id }: { id: string }) {
   const t = useTranslations("Order");
   const tc = useTranslations("Checkout");
   const locale = useLocale();
-  const mounted = useMounted();
-  const order = useOrders((s) => s.orders.find((o) => o.id === id));
+  const { data: order, isPending } = useOrderQuery(id);
 
-  if (!mounted) return <div className="h-64" aria-hidden />;
+  if (isPending) return <div className="h-64" aria-hidden />;
 
   if (!order) {
     return (

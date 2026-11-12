@@ -1,11 +1,13 @@
 "use client";
 
-import { Star, Trash2 } from "lucide-react";
+import { BadgeCheck, Star, Trash2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useId, useState } from "react";
-import { useMounted } from "@/lib/useMounted";
+import { usingServer } from "@/lib/api";
+import { useAddReview, useRemoveReview, useReviewsQuery, useSessionQuery } from "@/lib/api/queries";
+import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
-import { summarize, useReviews } from "@/store/reviews";
+import { summarize } from "@/store/reviews";
 import { Stars } from "./Stars";
 
 const inputCls = "w-full rounded-xl border border-border bg-background px-4 py-3 text-sm placeholder:text-muted-foreground focus:border-primary aria-[invalid=true]:border-accent";
@@ -14,10 +16,10 @@ export function Reviews({ slug, name }: Readonly<{ slug: string; name: string }>
   const t = useTranslations("Reviews");
   const locale = useLocale();
   const uid = useId();
-  const mounted = useMounted();
-  const all = useReviews((s) => s.reviews);
-  const add = useReviews((s) => s.add);
-  const remove = useReviews((s) => s.remove);
+  const { data: reviews = [] } = useReviewsQuery(slug);
+  const { data: user } = useSessionQuery();
+  const addReview = useAddReview();
+  const removeReview = useRemoveReview();
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
   const [author, setAuthor] = useState("");
@@ -28,16 +30,17 @@ export function Reviews({ slug, name }: Readonly<{ slug: string; name: string }>
 
   const nf = new Intl.NumberFormat(locale === "bn" ? "bn-BD" : "en", { maximumFractionDigits: 1 });
   const date = (iso: string) => new Intl.DateTimeFormat(locale === "bn" ? "bn-BD" : "en-GB", { dateStyle: "medium" }).format(new Date(iso));
-  const reviews = mounted ? all.filter((r) => r.slug === slug) : [];
   const { count, average, distribution } = summarize(reviews);
 
   const submit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const next = { rating: rating < 1, author: author.trim().length < 2, text: text.trim().length < 10 };
+    // On the server the name comes from the signed-in account, so only the demo needs to check it.
+    const next = { rating: rating < 1, author: !usingServer && author.trim().length < 2, text: text.trim().length < 10 };
     setErrors(next);
     if (next.rating || next.author || next.text) return;
-    add({ slug, name: author.trim(), rating, title: title.trim(), text: text.trim() });
-    setRating(0); setTitle(""); setText(""); setThanks(true);
+    addReview.mutate({ slug, name: usingServer ? (user?.name ?? "") : author.trim(), rating, title: title.trim(), text: text.trim() }, {
+      onSuccess: () => { addReview.reset(); setRating(0); setTitle(""); setText(""); setThanks(true); },
+    });
   };
 
   return (
@@ -64,10 +67,16 @@ export function Reviews({ slug, name }: Readonly<{ slug: string; name: string }>
           ) : (
             <div className="rounded-card border border-dashed border-border bg-surface/60 p-5 text-sm text-muted-foreground">{t("none")}</div>
           )}
-          <p className="mt-3 text-xs text-muted-foreground">{t("localNote")}</p>
+          {!usingServer && <p className="mt-3 text-xs text-muted-foreground">{t("localNote")}</p>}
         </div>
 
         <div className="space-y-8">
+          {usingServer && !user ? (
+            <div className="rounded-card border border-border bg-surface p-5 sm:p-6">
+              <p className="text-sm">{t("signInToReview")}</p>
+              <Link href="/login" className="mt-3 inline-block rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition hover:opacity-90">{t("signIn")}</Link>
+            </div>
+          ) : (
           <form onSubmit={submit} noValidate className="space-y-4 rounded-card border border-border bg-surface p-5 sm:p-6">
             <h3 className="font-display text-xl font-semibold">{t("write", { name })}</h3>
             <fieldset aria-invalid={errors.rating ? true : undefined} onMouseLeave={() => setHover(0)} className="min-w-0">
@@ -83,11 +92,11 @@ export function Reviews({ slug, name }: Readonly<{ slug: string; name: string }>
               </div>
               {errors.rating && <p role="alert" className="mt-1.5 text-xs font-medium text-accent">{t("errRating")}</p>}
             </fieldset>
-            <div>
+            {!usingServer && <div>
               <label htmlFor={`${uid}-name`} className="mb-1.5 block text-sm font-medium">{t("yourName")}</label>
               <input id={`${uid}-name`} value={author} onChange={(e) => setAuthor(e.target.value)} maxLength={40} autoComplete="name" aria-invalid={errors.author ? true : undefined} className={inputCls} />
               {errors.author && <p role="alert" className="mt-1.5 text-xs font-medium text-accent">{t("errName")}</p>}
-            </div>
+            </div>}
             <div>
               <label htmlFor={`${uid}-title`} className="mb-1.5 block text-sm font-medium">{t("reviewTitle")}</label>
               <input id={`${uid}-title`} value={title} onChange={(e) => setTitle(e.target.value)} maxLength={80} className={inputCls} />
@@ -101,8 +110,10 @@ export function Reviews({ slug, name }: Readonly<{ slug: string; name: string }>
             <div className="flex flex-wrap items-center gap-3">
               <button type="submit" className="rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition hover:opacity-90">{t("submit")}</button>
               {thanks && <output className="text-sm font-medium text-primary">{t("thanks")}</output>}
+              {addReview.isError && <p role="alert" className="text-sm font-medium text-accent">{addReview.error?.message === "ALREADY_REVIEWED" ? t("alreadyReviewed") : t("submitFailed")}</p>}
             </div>
           </form>
+          )}
 
           {reviews.length > 0 && (
             <ul className="space-y-4">
@@ -113,10 +124,10 @@ export function Reviews({ slug, name }: Readonly<{ slug: string; name: string }>
                       <Stars value={r.rating} label={t("outOf", { value: nf.format(r.rating) })} />
                       {r.title && <p className="mt-1 font-medium">{r.title}</p>}
                     </div>
-                    <button type="button" onClick={() => remove(r.id)} aria-label={t("delete")} className="p-1.5 text-muted-foreground transition hover:text-accent"><Trash2 className="size-4" aria-hidden /></button>
+                    {(r.canDelete ?? true) && <button type="button" onClick={() => removeReview.mutate(r.id)} aria-label={t("delete")} className="p-1.5 text-muted-foreground transition hover:text-accent"><Trash2 className="size-4" aria-hidden /></button>}
                   </div>
                   <p className="mt-2 whitespace-pre-wrap break-words text-sm leading-relaxed text-foreground/90">{r.text}</p>
-                  <p className="mt-3 text-xs text-muted-foreground">{r.name} · {date(r.at)}</p>
+                  <p className="mt-3 flex flex-wrap items-center gap-x-2 text-xs text-muted-foreground">{r.name} · {date(r.at)}{r.verified && <span className="inline-flex items-center gap-1 font-medium text-primary"><BadgeCheck className="size-3.5" aria-hidden />{t("verified")}</span>}</p>
                 </li>
               ))}
             </ul>

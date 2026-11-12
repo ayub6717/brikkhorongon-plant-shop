@@ -13,7 +13,7 @@ import { DISTRICTS, INNER_DHAKA_AREAS, formatDateKey, getDeliveryDates, PAYMENTS
 import { useMounted, useTodayKey } from "@/lib/useMounted";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/store/cart";
-import { createOrderId, useOrders, type Order } from "@/store/orders";
+import { useCreateOrder } from "@/lib/api/queries";
 import { GiftCardPreview } from "@/components/gift/GiftCardPreview";
 import { GIFT_CARDS } from "@/lib/gift";
 import { Select } from "@/components/ui/Select";
@@ -57,7 +57,7 @@ export function CheckoutForm() {
   const lines = useCart((s) => s.lines);
   const clearCart = useCart((s) => s.clear);
   const coupon = useCart((s) => s.coupon);
-  const addOrder = useOrders((s) => s.addOrder);
+  const createOrder = useCreateOrder();
 
   const {
     register,
@@ -99,28 +99,25 @@ export function CheckoutForm() {
   });
 
   const onSubmit = (v: CheckoutValues) => {
-    const now = new Date().toISOString();
-    const order: Order = {
-      id: createOrderId(),
-      createdAt: now,
-      lines: orderLines,
-      subtotal,
-      ...(couponCode ? { discount, coupon: couponCode } : {}),
-      shipping,
-      total,
-      customer: { name: v.name, phone: v.phone, email: v.email, district: v.district, area: v.area, address: v.address },
-      delivery: { date: v.date, slot: v.slot },
-      payment: v.payment,
-      giftCard: v.giftCard,
-      giftNote: v.giftNote,
-      note: v.note,
-      status: "ordered",
-      history: [{ status: "ordered", at: now }],
-      requests: [],
-    };
-    addOrder(order);
-    clearCart();
-    router.push(`/order/${order.id}`);
+    // Only what the customer chose goes out. Prices, discount and delivery fee are worked out by whoever stores the order.
+    createOrder.mutate(
+      {
+        lines: resolved.map(({ product, qty }) => ({ slug: product.slug, qty })),
+        coupon: couponCode,
+        customer: { name: v.name, phone: v.phone, email: v.email, district: v.district, area: v.area, address: v.address },
+        delivery: { date: v.date, slot: v.slot },
+        payment: v.payment,
+        giftCard: v.giftCard,
+        giftNote: v.giftNote,
+        note: v.note,
+      },
+      {
+        onSuccess: (order) => {
+          clearCart();
+          router.push(`/order/${order.id}`);
+        },
+      },
+    );
   };
 
   return (
@@ -227,9 +224,10 @@ export function CheckoutForm() {
         <h2 className="font-display text-2xl font-semibold">{t("summary")}</h2>
         <CouponBox subtotal={subtotal} />
         <OrderLines lines={orderLines} subtotal={subtotal} shipping={shipping} total={total} discount={discount} couponCode={couponCode} />
-        <button type="submit" disabled={isSubmitting} className="w-full rounded-full bg-primary px-6 py-3.5 font-medium text-primary-foreground shadow-soft transition hover:opacity-90 disabled:opacity-60">
+        <button type="submit" disabled={isSubmitting || createOrder.isPending} className="w-full rounded-full bg-primary px-6 py-3.5 font-medium text-primary-foreground shadow-soft transition hover:opacity-90 disabled:opacity-60">
           {isSubmitting ? t("placing") : t("placeOrder")}
         </button>
+        {createOrder.isError && <p role="alert" className="text-sm font-medium text-accent">{t("submitFailed")}</p>}
         <Link href="/cart" className="block text-center text-sm font-medium text-primary hover:underline">{t("backToCart")}</Link>
       </aside>
     </form>
